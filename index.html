@@ -248,8 +248,53 @@
   }
   .gm-stage.scene-garden{background:linear-gradient(to bottom,#BFE6F2 0%,#BFE6F2 34%,#4FB477 34%,#3a9c63 100%)}
   .gm-stage.scene-yard{background:linear-gradient(to bottom,#BFE6F2 0%,#BFE6F2 30%,#8FCB86 30%,#6fb56a 100%)}
-  .gm-stage.scene-park{background:linear-gradient(to bottom,#BFE6F2 0%,#BFE6F2 40%,#7BC47F 40%,#5ea564 100%)}
-  .gm-stage.scene-house{background:#E8D8B8}
+  .gm-stage.scene-park{
+    background-image:
+      repeating-linear-gradient(to right, #FFF6E5 0 8px, transparent 8px 26px),
+      linear-gradient(#08313F 0 3px, transparent 3px),
+      linear-gradient(to bottom, #BFE6F2 0%, #BFE6F2 40%, #7BC47F 40%, #5ea564 100%);
+    background-position: 0 34%, 0 38%, 0 0;
+    background-size: 100% 30px, 100% 100%, 100% 100%;
+    background-repeat: repeat-x, no-repeat, no-repeat;
+  }
+  .gm-stage.scene-house{
+    background:linear-gradient(to bottom, #F3E4C4 0%, #F3E4C4 55%, #8B5E34 55%, #8B5E34 58%, #C9975A 58%, #C9975A 100%);
+  }
+  .gm-stage.scene-backyard{background:linear-gradient(to bottom,#BFE6F2 0%,#BFE6F2 32%,#6fb56a 32%,#4c8f52 100%)}
+  .gm-window{
+    display:none;position:absolute;top:12%;left:10%;
+    width:52px;height:52px;background:#BFE6F2;
+    border:4px solid var(--ink);border-radius:4px;
+  }
+  .gm-window::before, .gm-window::after{
+    content:'';position:absolute;background:var(--ink);
+  }
+  .gm-window::before{left:calc(50% - 2px);top:0;bottom:0;width:4px}
+  .gm-window::after{top:calc(50% - 2px);left:0;right:0;height:4px}
+  .gm-door{
+    display:none;position:absolute;bottom:0;right:12%;
+    width:44px;height:78px;background:#8B5E34;
+    border:4px solid var(--ink);border-radius:6px 6px 0 0;
+  }
+  .gm-door::after{
+    content:'';position:absolute;right:6px;top:50%;
+    width:6px;height:6px;border-radius:50%;background:var(--sun);
+  }
+  .gm-fence{
+    display:none;position:absolute;left:0;right:0;top:20%;height:26px;
+    background-image:repeating-linear-gradient(to right, #FFF6E5 0 10px, transparent 10px 30px);
+    border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);
+  }
+  .gm-stage.scene-house .gm-window{display:block}
+  .gm-stage.scene-house .gm-door{display:block}
+  .gm-stage.scene-backyard .gm-fence{display:block}
+  .gm-grandpa{
+    position:absolute;font-size:34px;line-height:1;
+    transform:translate(-50%,-50%);
+    transition:left .55s ease, top .55s ease;
+    z-index:2;
+    pointer-events:none;
+  }
   .gm-stage.scene-finale{background:linear-gradient(160deg,#FFC93C,#FF6B5B)}
 
   .gm-caption{
@@ -383,6 +428,7 @@
         <button class="tool on" data-voice="on" id="voiceOnBtn">🗣️ On</button>
         <button class="tool" data-voice="off" id="voiceOffBtn">🤐 Off</button>
       </div>
+      <button class="tool" id="cycleVoiceBtn" style="margin-top:8px;width:100%">🔄 Try Another Voice</button>
 
       <p class="settings-label" id="lblBg">Background</p>
       <div class="tools2" id="bgRow">
@@ -550,20 +596,45 @@ function applyLanguage(){
 let voiceOn = true;
 const synth = window.speechSynthesis || null;
 let bennyVoice = null;
+let voicePool = [];
+let voiceIndex = -1;
 
-function pickVoice(){
+function buildVoicePool(){
   if(!synth) return;
   const voices = synth.getVoices();
   const english = voices.filter(v=>/en/i.test(v.lang));
-  const pool = english.length ? english : voices;
+  voicePool = english.length ? english : voices;
+}
+
+function pickVoice(){
+  if(!synth) return;
+  buildVoicePool();
+  const pool = voicePool;
   bennyVoice =
+    pool.find(v=>/natural|neural|premium|enhanced/i.test(v.name) && /male/i.test(v.name) && !/female/i.test(v.name)) ||
+    pool.find(v=>/natural|neural|premium|enhanced/i.test(v.name)) ||
     pool.find(v=>/male/i.test(v.name) && !/female/i.test(v.name)) ||
     pool.find(v=>/\b(david|daniel|alex|fred|guy|mark|tom|james|george|arthur|oliver|aaron|eddy|rocko)\b/i.test(v.name)) ||
     pool[0] || null;
+  voiceIndex = pool.indexOf(bennyVoice);
 }
 if(synth){
   pickVoice();
   synth.onvoiceschanged = pickVoice;
+}
+
+function cycleVoice(){
+  if(!synth) return;
+  if(!voicePool.length) buildVoicePool();
+  if(!voicePool.length) return;
+  voiceIndex = (voiceIndex + 1) % voicePool.length;
+  bennyVoice = voicePool[voiceIndex];
+  voiceOn = true;
+  const onBtn = document.getElementById('voiceOnBtn');
+  const offBtn = document.getElementById('voiceOffBtn');
+  if(onBtn) onBtn.classList.add('on');
+  if(offBtn) offBtn.classList.remove('on');
+  benny("Hi! This is my voice now.");
 }
 
 let mouthTimer = null, mouthFallback = null;
@@ -591,8 +662,8 @@ function speak(text){
   synth.cancel();
   const u = new SpeechSynthesisUtterance(text);
   if(bennyVoice) u.voice = bennyVoice;
-  u.pitch = 1.8;
-  u.rate = 1.02;
+  u.pitch = 1.2;
+  u.rate = 0.98;
   u.onstart = startMouth;
   u.onend = stopMouth;
   u.onerror = stopMouth;
@@ -1652,9 +1723,11 @@ function gameGrandma(){
       count:5, emoji:'🐱', doneEmoji:'😻', toneHz:600, complete:'All the cats are purring!' },
     { title:'Walk the Irish Setter', bgClass:'scene-park', instruction:'Tap to catch up with her.',
       count:6, emoji:'🐕', doneEmoji:'🦮', toneHz:520, complete:'A very good walk for a very good dog!' },
-    { title:"Tidy Up After Grandpa", bgClass:'scene-house', instruction:'Grandpa strikes again — tap to clean up!',
-      count:7, emoji:'🧦', doneEmoji:'✨', toneHz:380, complete:"Tidied up. Grandpa owes her one!" }
+    { title:"Chase Grandpa's Messes", bgClass:'scene-house', instruction:'He keeps moving — tap what he leaves behind!',
+      special:'messes' }
   ];
+
+  const MESS_ITEMS = ['🧦','📰','🔧','🥾','🧢','🪣','🔨','🧻','🥫','🍌'];
 
   const stageEl = document.getElementById('gmStage');
   const dotsEl = document.getElementById('gmDots');
@@ -1673,6 +1746,7 @@ function gameGrandma(){
   }
 
   function layoutScene(scene){
+    if(scene.special === 'messes'){ layoutMessScene(scene); return; }
     stageEl.className = 'gm-stage ' + scene.bgClass;
     stageEl.innerHTML = `<div class="gm-caption">${scene.instruction}</div>`;
     sceneChip.textContent = 'Scene ' + (sceneIndex+1) + ' of ' + SCENES.length;
@@ -1690,10 +1764,81 @@ function gameGrandma(){
     setDots();
   }
 
+  function layoutMessScene(scene){
+    stageEl.className = 'gm-stage scene-house';
+    stageEl.innerHTML = `
+      <div class="gm-caption" id="gmMessCaption">${scene.instruction}</div>
+      <div class="gm-window"></div>
+      <div class="gm-door"></div>
+      <div class="gm-fence"></div>
+      <div class="gm-grandpa" id="gmGrandpa" style="left:50%;top:38%">👴</div>`;
+    sceneChip.textContent = 'Scene ' + (sceneIndex+1) + ' of ' + SCENES.length;
+    msg.textContent = '';
+    tapped = 0;
+
+    const TOTAL = 10, INDOOR = 5;
+    const grandpa = document.getElementById('gmGrandpa');
+    const caption = document.getElementById('gmMessCaption');
+    let movedOutside = false, stopped = false;
+
+    function randPos(){ return { x: 12 + Math.random()*76, y: 22 + Math.random()*62 }; }
+
+    function dropMess(x, y){
+      const ox = Math.max(8, Math.min(92, x + (Math.random()<0.5 ? -9 : 9)));
+      const oy = Math.max(16, Math.min(88, y + (Math.random()<0.5 ? -7 : 7)));
+      const el = document.createElement('button');
+      el.className = 'gm-item';
+      el.textContent = MESS_ITEMS[Math.floor(Math.random()*MESS_ITEMS.length)];
+      el.style.left = ox + '%';
+      el.style.top = oy + '%';
+      el.addEventListener('click', ()=> collectMess(el));
+      stageEl.appendChild(el);
+    }
+
+    function collectMess(el){
+      if(el.classList.contains('done')) return;
+      el.classList.add('done');
+      el.textContent = '✨';
+      el.style.pointerEvents = 'none';
+      tone(380, 130, 'sawtooth', 0.12);
+      setTimeout(()=>{ el.style.opacity = '0'; }, 260);
+      tapped++;
+      if(tapped === INDOOR && !movedOutside){
+        movedOutside = true;
+        caption.textContent = "He's headed for the backyard!";
+        setTimeout(()=>{
+          if(document.body.contains(stageEl)) stageEl.className = 'gm-stage scene-backyard';
+        }, 500);
+      }
+      if(tapped >= TOTAL){
+        stopped = true;
+        caption.textContent = scene.instruction;
+        msg.textContent = "Tidied up. Grandpa owes her one!";
+        benny("Tidied up. Grandpa owes her one!");
+        setTimeout(nextScene, 1300);
+      }
+    }
+
+    function wander(){
+      if(stopped || !document.body.contains(stageEl)) return;
+      const p = randPos();
+      grandpa.style.left = p.x + '%';
+      grandpa.style.top = p.y + '%';
+      setTimeout(()=>{
+        if(stopped || !document.body.contains(stageEl)) return;
+        dropMess(p.x, p.y);
+        setTimeout(wander, 650 + Math.random()*350);
+      }, 550);
+    }
+    wander();
+    setDots();
+  }
+
   function tapItem(el, scene){
     if(el.classList.contains('done')) return;
     el.classList.add('done');
     el.textContent = scene.doneEmoji;
+    el.style.pointerEvents = 'none';
     tone(scene.toneHz, 130, 'triangle', 0.16);
     setTimeout(()=>{ el.style.opacity = '0'; }, 260);
     tapped++;
@@ -1781,6 +1926,7 @@ document.getElementById('musicOnBtn').addEventListener('click', ()=>setMusic(tru
 document.getElementById('musicOffBtn').addEventListener('click', ()=>setMusic(false));
 document.getElementById('voiceOnBtn').addEventListener('click', ()=>setVoice(true));
 document.getElementById('voiceOffBtn').addEventListener('click', ()=>setVoice(false));
+document.getElementById('cycleVoiceBtn').addEventListener('click', cycleVoice);
 document.querySelectorAll('#bgRow .tool').forEach(b=>b.addEventListener('click', ()=>setBackground(b.dataset.bg)));
 document.querySelectorAll('#langRow .tool').forEach(b=>b.addEventListener('click', ()=>setLanguage(b.dataset.lang)));
 
