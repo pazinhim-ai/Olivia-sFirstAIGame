@@ -95,6 +95,7 @@
   .card:hover,.card:focus-visible{transform:translate(-3px,-3px) rotate(0deg);box-shadow:9px 9px 0 var(--ink)}
   .card:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
   .card .emo{font-size:38px;display:block;line-height:1}
+  .card .emo svg{width:40px;height:40px;display:block}
   .card h3{font-size:20px;margin:8px 0 4px;text-transform:uppercase;letter-spacing:-.3px}
   .card p{font-size:14px;color:#3C5A63}
   .card .who{
@@ -209,6 +210,7 @@
     max-width:460px;margin:0 auto 22px;
   }
   .hero-card .hero-emo{font-size:44px;display:block;margin-bottom:4px}
+  .hero-card .hero-emo svg{width:52px;height:52px;display:block;margin:0 auto}
   .hero-card h2{font-size:24px;text-transform:uppercase;letter-spacing:-.4px;margin-bottom:6px}
   .hero-card p{font-size:14px;color:#3C5A63;margin-bottom:14px}
 
@@ -227,7 +229,8 @@
     padding:34px 26px;box-shadow:var(--drop);
     max-width:340px;margin:0 20px;
   }
-  .bday-emoji{font-size:40px;margin-bottom:8px}
+  .bday-emoji{font-size:40px;margin-bottom:8px;display:flex;justify-content:center;align-items:center;gap:10px}
+  .bday-emoji svg{width:42px;height:42px;display:block}
   .bday-card h2{font-size:26px;text-transform:uppercase;letter-spacing:-.5px;color:var(--coral);text-shadow:2px 2px 0 var(--ink)}
   .bday-card p{margin-top:6px;font-size:16px;font-weight:bold;color:var(--water)}
   .bday-card .btn{margin-top:18px}
@@ -320,10 +323,27 @@
   .gm-finale .gm-love{color:var(--water)}
   #gmConfetti{position:absolute;inset:0;width:100%;height:100%}
 
+  .book-textarea{
+    display:block;width:100%;min-height:76px;resize:vertical;
+    font:inherit;font-size:15px;line-height:26px;
+    padding:8px 10px;margin-top:4px;
+    border:3px solid var(--ink);border-radius:14px;
+    background-color:#fff;color:var(--ink);
+    background-image:repeating-linear-gradient(to bottom, transparent 0 25px, #DCEEF4 25px 26px);
+  }
+  .book-textarea:focus-visible{outline:4px solid var(--sun);outline-offset:2px}
+
+  .snowstage{
+    position:relative;height:320px;overflow:hidden;
+    background:linear-gradient(to bottom, #BFE6F2 0%, #BFE6F2 68%, #EAF7FB 68%, #EAF7FB 100%);
+    border:3px solid var(--ink);border-radius:16px;
+  }
+  .snowstage svg{display:block}
+
   .paper{position:relative;height:320px;background:#fff;border:3px solid var(--ink);border-radius:16px;overflow:hidden}
   .paper canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:none}
   .palette{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-  .swatch{width:34px;height:34px;border-radius:50%;border:3px solid var(--ink);cursor:pointer;padding:0}
+  .swatch{width:34px;height:34px;border-radius:50%;border:3px solid var(--ink);cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-size:14px;background:#DCEEF4}
   .swatch.on{outline:3px solid var(--sun);outline-offset:2px;transform:scale(1.14)}
   .swatch:focus-visible{outline:4px solid var(--sun);outline-offset:2px}
   .tools2{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
@@ -334,6 +354,7 @@
     padding:10px 16px;
   }
   .tool.on{background:var(--lily)}
+  .tool:disabled{opacity:.35;cursor:default}
   .tool:focus-visible{outline:4px solid var(--sun);outline-offset:2px}
 
   .strings{display:flex;flex-direction:column;gap:10px;margin-top:6px}
@@ -347,6 +368,42 @@
   .string .dot{width:14px;height:14px;border-radius:50%;background:var(--ink);flex-shrink:0}
   .string.on{filter:brightness(1.3) saturate(1.3);transform:scale(1.02)}
   .string:focus-visible{outline:4px solid var(--lily);outline-offset:2px}
+
+  .fretboard{
+    border:4px solid var(--ink);border-radius:14px;
+    padding:10px;display:flex;flex-direction:column;gap:8px;
+  }
+  .fret-row{display:flex;gap:6px}
+  .fret-cell{
+    flex:1;height:38px;border-radius:8px;
+    background:#DCEEF4;border:2px solid var(--ink);
+    cursor:pointer;font-size:12px;font-weight:bold;color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .1s;
+  }
+  .fret-cell.open{background:var(--sun)}
+  .fret-cell:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+  .piano-wrap{position:relative;height:170px;background:#0B4F6C;border:4px solid var(--ink);border-radius:14px;padding:10px 10px 6px;display:flex;gap:2px}
+  .piano-white{
+    flex:1;background:#FFF6E5;border:2px solid var(--ink);border-radius:0 0 6px 6px;
+    cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;
+    font-size:11px;font-weight:bold;color:#3C5A63;
+  }
+  .piano-white:active{background:#DCEEF4}
+  .piano-black{
+    position:absolute;top:10px;width:8%;height:58%;background:#08313F;
+    border:2px solid #08313F;border-radius:0 0 4px 4px;cursor:pointer;z-index:2;
+  }
+  .piano-black:active{background:#3C5A63}
+
+  .drum-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .drum-pad{
+    padding:24px 0;border:4px solid var(--ink);border-radius:16px;
+    background:#DCEEF4;cursor:pointer;font-weight:bold;font-size:15px;color:var(--ink);
+  }
+  .drum-pad:active{transform:scale(0.96);background:var(--sun)}
+  .drum-pad:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
 
   .critter{
     text-align:center;font-size:64px;line-height:1;margin:6px 0 2px;
@@ -398,7 +455,11 @@
 <div id="birthdayOverlay" class="bday-overlay">
   <canvas id="bdayConfetti"></canvas>
   <div class="bday-card">
-    <div class="bday-emoji">🎉🎂🎉</div>
+    <div class="bday-emoji">
+      <svg viewBox="0 0 60 60"><circle cx="14" cy="18" r="4" fill="#FF6B5B"/><circle cx="34" cy="10" r="3" fill="#FFC93C"/><circle cx="46" cy="24" r="4" fill="#4FB477"/><circle cx="20" cy="40" r="3" fill="#9B5DE5"/><circle cx="42" cy="42" r="3" fill="#12718F"/><rect x="26" y="26" width="6" height="6" fill="#FF8FB1" transform="rotate(20 29 29)"/></svg>
+      <svg viewBox="0 0 60 60"><rect x="12" y="30" width="36" height="20" rx="3" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/><rect x="12" y="30" width="36" height="8" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><rect x="27" y="10" width="6" height="14" fill="#FFC93C" stroke="#08313F" stroke-width="2"/><path d="M30 6 Q34 10 30 12 Q26 10 30 6 Z" fill="#FF9F1C"/></svg>
+      <svg viewBox="0 0 60 60"><circle cx="46" cy="18" r="4" fill="#FFC93C"/><circle cx="26" cy="10" r="3" fill="#FF6B5B"/><circle cx="14" cy="24" r="4" fill="#12718F"/><circle cx="40" cy="40" r="3" fill="#4FB477"/><circle cx="18" cy="42" r="3" fill="#9B5DE5"/><rect x="28" y="26" width="6" height="6" fill="#FF8FB1" transform="rotate(-20 31 29)"/></svg>
+    </div>
     <h2>Happy Birthday<br>Grandma!</h2>
     <p>Love, Olivia</p>
     <button class="btn" id="bdayGo">Come on in →</button>
@@ -410,25 +471,25 @@
   <p class="sub" id="pageSub">Nine mini-games, one family, one very chatty frog. Pick a card to play.</p>
 
   <div class="tools">
-    <button class="musicbtn" id="settingsBtn">⚙️ <span id="settingsLabel">Settings</span></button>
+    <button class="musicbtn" id="settingsBtn"><svg viewBox="0 0 60 60" width="14" height="14" style="vertical-align:-2px"><circle cx="30" cy="30" r="10" fill="none" stroke="#BFE6F2" stroke-width="6"/><g stroke="#BFE6F2" stroke-width="6" stroke-linecap="round"><line x1="30" y1="4" x2="30" y2="14"/><line x1="30" y1="46" x2="30" y2="56"/><line x1="4" y1="30" x2="14" y2="30"/><line x1="46" y1="30" x2="56" y2="30"/><line x1="12" y1="12" x2="19" y2="19"/><line x1="41" y1="41" x2="48" y2="48"/><line x1="48" y1="12" x2="41" y2="19"/><line x1="19" y1="41" x2="12" y2="48"/></g></svg> <span id="settingsLabel">Settings</span></button>
   </div>
 
   <div id="settingsOverlay" class="settings-overlay" style="display:none">
     <div class="settings-card">
-      <h2 id="settingsTitle">⚙️ Settings</h2>
+      <h2><svg viewBox="0 0 60 60" width="20" height="20" style="vertical-align:-4px"><circle cx="30" cy="30" r="10" fill="none" stroke="#08313F" stroke-width="6"/><g stroke="#08313F" stroke-width="6" stroke-linecap="round"><line x1="30" y1="4" x2="30" y2="14"/><line x1="30" y1="46" x2="30" y2="56"/><line x1="4" y1="30" x2="14" y2="30"/><line x1="46" y1="30" x2="56" y2="30"/><line x1="12" y1="12" x2="19" y2="19"/><line x1="41" y1="41" x2="48" y2="48"/><line x1="48" y1="12" x2="41" y2="19"/><line x1="19" y1="41" x2="12" y2="48"/></g></svg> <span id="settingsTitle">Settings</span></h2>
 
       <p class="settings-label" id="lblMusic">Music</p>
       <div class="tools2" id="musicToggleRow">
-        <button class="tool on" data-music="on" id="musicOnBtn">🎵 On</button>
-        <button class="tool" data-music="off" id="musicOffBtn">🔇 Off</button>
+        <button class="tool on" data-music="on" id="musicOnBtn"><svg viewBox="0 0 60 60" width="15" height="15" style="vertical-align:-2px"><circle cx="16" cy="46" r="8" fill="#08313F"/><circle cx="40" cy="40" r="8" fill="#08313F"/><rect x="22" y="14" width="4" height="32" fill="#08313F"/><rect x="46" y="10" width="4" height="30" fill="#08313F"/><path d="M22 14 L50 10 L50 18 L22 22 Z" fill="#08313F"/></svg> On</button>
+        <button class="tool" data-music="off" id="musicOffBtn"><svg viewBox="0 0 60 60" width="15" height="15" style="vertical-align:-2px"><circle cx="16" cy="46" r="8" fill="#08313F"/><circle cx="40" cy="40" r="8" fill="#08313F"/><rect x="22" y="14" width="4" height="32" fill="#08313F"/><rect x="46" y="10" width="4" height="30" fill="#08313F"/><path d="M22 14 L50 10 L50 18 L22 22 Z" fill="#08313F"/><line x1="8" y1="8" x2="52" y2="52" stroke="#FF6B5B" stroke-width="5" stroke-linecap="round"/></svg> Off</button>
       </div>
 
       <p class="settings-label" id="lblVoice">Benny's Voice</p>
       <div class="tools2" id="voiceToggleRow">
-        <button class="tool on" data-voice="on" id="voiceOnBtn">🗣️ On</button>
-        <button class="tool" data-voice="off" id="voiceOffBtn">🤐 Off</button>
+        <button class="tool on" data-voice="on" id="voiceOnBtn"><svg viewBox="0 0 60 60" width="15" height="15" style="vertical-align:-2px"><path d="M8 14 h34 a6 6 0 0 1 6 6 v14 a6 6 0 0 1 -6 6 h-18 l-10 10 v-10 h-6 a6 6 0 0 1 -6 -6 v-14 a6 6 0 0 1 6 -6 Z" fill="#08313F"/></svg> On</button>
+        <button class="tool" data-voice="off" id="voiceOffBtn"><svg viewBox="0 0 60 60" width="15" height="15" style="vertical-align:-2px"><path d="M8 14 h34 a6 6 0 0 1 6 6 v14 a6 6 0 0 1 -6 6 h-18 l-10 10 v-10 h-6 a6 6 0 0 1 -6 -6 v-14 a6 6 0 0 1 6 -6 Z" fill="#08313F"/><line x1="4" y1="6" x2="56" y2="54" stroke="#FF6B5B" stroke-width="5" stroke-linecap="round"/></svg> Off</button>
       </div>
-      <button class="tool" id="cycleVoiceBtn" style="margin-top:8px;width:100%">🔄 Try Another Voice</button>
+      <button class="tool" id="cycleVoiceBtn" style="margin-top:8px;width:100%"><svg viewBox="0 0 60 60" width="15" height="15" style="vertical-align:-2px"><path d="M46 30 A16 16 0 1 1 40 18" fill="none" stroke="#08313F" stroke-width="5" stroke-linecap="round"/><path d="M40 8 L40 20 L52 20 Z" fill="#08313F"/></svg> Try Another Voice</button>
 
       <p class="settings-label" id="lblBg">Background</p>
       <div class="tools2" id="bgRow">
@@ -440,12 +501,12 @@
 
       <p class="settings-label" id="lblLang">Language</p>
       <div class="tools2" id="langRow">
-        <button class="tool on" data-lang="en">🇬🇧 English</button>
-        <button class="tool" data-lang="es">🇪🇸 Español</button>
-        <button class="tool" data-lang="ru">🇷🇺 Русский</button>
-        <button class="tool" data-lang="pt">🇵🇹 Português</button>
-        <button class="tool" data-lang="ja">🇯🇵 日本語</button>
-        <button class="tool" data-lang="fr">🇫🇷 Français</button>
+        <button class="tool on" data-lang="en"><svg viewBox="0 0 60 40" width="20" height="14" style="vertical-align:-2px"><rect width="60" height="40" fill="#12305E"/><path d="M0 0 L60 40 M60 0 L0 40" stroke="#FFFFFF" stroke-width="8"/><path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/><path d="M30 0 V40 M0 20 H60" stroke="#FFFFFF" stroke-width="10"/><path d="M30 0 V40 M0 20 H60" stroke="#C8102E" stroke-width="5"/></svg> English</button>
+        <button class="tool" data-lang="es"><svg viewBox="0 0 60 40" width="20" height="14" style="vertical-align:-2px"><rect width="60" height="40" fill="#AA151B"/><rect y="10" width="60" height="20" fill="#F1BF00"/></svg> Español</button>
+        <button class="tool" data-lang="ru"><svg viewBox="0 0 60 40" width="20" height="14" style="vertical-align:-2px"><rect width="60" height="13.3" fill="#FFFFFF"/><rect y="13.3" width="60" height="13.3" fill="#0039A6"/><rect y="26.6" width="60" height="13.4" fill="#D52B1E"/></svg> Русский</button>
+        <button class="tool" data-lang="pt"><svg viewBox="0 0 60 40" width="20" height="14" style="vertical-align:-2px"><rect width="24" height="40" fill="#046A38"/><rect x="24" width="36" height="40" fill="#DA291C"/><circle cx="24" cy="20" r="7" fill="#F5C400" stroke="#08313F" stroke-width="1"/></svg> Português</button>
+        <button class="tool" data-lang="ja"><svg viewBox="0 0 60 40" width="20" height="14" style="vertical-align:-2px"><rect width="60" height="40" fill="#FFFFFF" stroke="#08313F" stroke-width="1"/><circle cx="30" cy="20" r="10" fill="#BC002D"/></svg> 日本語</button>
+        <button class="tool" data-lang="fr"><svg viewBox="0 0 60 40" width="20" height="14" style="vertical-align:-2px"><rect width="20" height="40" fill="#0055A4"/><rect x="20" width="20" height="40" fill="#FFFFFF"/><rect x="40" width="20" height="40" fill="#EF4135"/></svg> Français</button>
         <button class="tool" data-lang="ca">Català</button>
       </div>
 
@@ -455,7 +516,7 @@
 
   <div id="hubWrap">
     <div class="hero-card">
-      <span class="hero-emo">🎂</span>
+      <span class="hero-emo"><svg viewBox="0 0 60 60"><rect x="12" y="30" width="36" height="20" rx="3" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/><rect x="12" y="30" width="36" height="8" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><rect x="27" y="10" width="6" height="14" fill="#FFC93C" stroke="#08313F" stroke-width="2"/><path d="M30 6 Q34 10 30 12 Q26 10 30 6 Z" fill="#FF9F1C"/></svg></span>
       <h2 id="heroTitle">Grandma's Day</h2>
       <p id="heroText">A whole day made just for Berty — plants, cats, the dog, and Grandpa's messes.</p>
       <button class="btn" id="heroPlay">Play Berty's Game →</button>
@@ -493,7 +554,7 @@ const UI = {
     title: 'The Pond<br>Carnival',
     sub: 'Nine mini-games, one family, one very chatty frog. Pick a card to play.',
     settingsBtn: 'Settings',
-    settingsTitle: '⚙️ Settings',
+    settingsTitle: 'Settings',
     lblMusic: 'Music', lblVoice: "Benny's Voice", lblBg: 'Background', lblLang: 'Language',
     done: 'Done',
     heroTitle: "Grandma's Day",
@@ -505,7 +566,7 @@ const UI = {
     title: 'El Carnaval<br>del Estanque',
     sub: 'Nueve minijuegos, una familia, una rana muy habladora. Elige una carta para jugar.',
     settingsBtn: 'Ajustes',
-    settingsTitle: '⚙️ Ajustes',
+    settingsTitle: 'Ajustes',
     lblMusic: 'Música', lblVoice: 'Voz de Benny', lblBg: 'Fondo', lblLang: 'Idioma',
     done: 'Listo',
     heroTitle: 'El Día de la Abuela',
@@ -517,7 +578,7 @@ const UI = {
     title: 'Карнавал<br>у Пруда',
     sub: 'Девять мини-игр, одна семья и болтливая лягушка. Выбери карточку, чтобы играть.',
     settingsBtn: 'Настройки',
-    settingsTitle: '⚙️ Настройки',
+    settingsTitle: 'Настройки',
     lblMusic: 'Музыка', lblVoice: 'Голос Бенни', lblBg: 'Фон', lblLang: 'Язык',
     done: 'Готово',
     heroTitle: 'День Бабушки',
@@ -529,7 +590,7 @@ const UI = {
     title: 'O Carnaval<br>da Lagoa',
     sub: 'Nove minijogos, uma família, um sapo muito tagarela. Escolha uma carta para jogar.',
     settingsBtn: 'Configurações',
-    settingsTitle: '⚙️ Configurações',
+    settingsTitle: 'Configurações',
     lblMusic: 'Música', lblVoice: 'Voz do Benny', lblBg: 'Fundo', lblLang: 'Idioma',
     done: 'Concluído',
     heroTitle: 'O Dia da Vovó',
@@ -541,7 +602,7 @@ const UI = {
     title: '池の<br>カーニバル',
     sub: '9つのミニゲーム、一つの家族、おしゃべりなカエル。カードを選んで遊ぼう。',
     settingsBtn: '設定',
-    settingsTitle: '⚙️ 設定',
+    settingsTitle: '設定',
     lblMusic: '音楽', lblVoice: 'ベニーの声', lblBg: '背景', lblLang: '言語',
     done: '完了',
     heroTitle: 'おばあちゃんの一日',
@@ -553,7 +614,7 @@ const UI = {
     title: "Le Carnaval<br>de l'Étang",
     sub: 'Neuf mini-jeux, une famille, une grenouille très bavarde. Choisis une carte pour jouer.',
     settingsBtn: 'Paramètres',
-    settingsTitle: '⚙️ Paramètres',
+    settingsTitle: 'Paramètres',
     lblMusic: 'Musique', lblVoice: 'Voix de Benny', lblBg: 'Arrière-plan', lblLang: 'Langue',
     done: 'Terminé',
     heroTitle: 'La Journée de Mamie',
@@ -565,7 +626,7 @@ const UI = {
     title: "El Carnaval<br>de l'Estany",
     sub: 'Nou minijocs, una família, una granota molt xerraire. Tria una carta per jugar.',
     settingsBtn: 'Configuració',
-    settingsTitle: '⚙️ Configuració',
+    settingsTitle: 'Configuració',
     lblMusic: 'Música', lblVoice: "Veu d'en Benny", lblBg: 'Fons', lblLang: 'Idioma',
     done: 'Fet',
     heroTitle: "El Dia de l'Àvia",
@@ -638,6 +699,7 @@ function cycleVoice(){
 }
 
 let mouthTimer = null, mouthFallback = null;
+let currentUtterance = null;
 function startMouth(){
   const mc = document.getElementById('mouthClosed');
   const mo = document.getElementById('mouthOpen');
@@ -665,8 +727,9 @@ function speak(text){
   u.pitch = 1.2;
   u.rate = 0.98;
   u.onstart = startMouth;
-  u.onend = stopMouth;
-  u.onerror = stopMouth;
+  u.onend = ()=>{ stopMouth(); currentUtterance = null; };
+  u.onerror = ()=>{ stopMouth(); currentUtterance = null; };
+  currentUtterance = u;
   synth.speak(u);
   return true;
 }
@@ -766,7 +829,7 @@ function stopMusic(){
 }
 
 const GAMES = [
-  {id:'flies', emo:'🪰',
+  {id:'flies', emo:'<svg viewBox="0 0 60 60"><ellipse cx="16" cy="20" rx="12" ry="7" fill="#BFE6F2" stroke="#08313F" stroke-width="2" transform="rotate(-20 16 20)"/><ellipse cx="44" cy="20" rx="12" ry="7" fill="#BFE6F2" stroke="#08313F" stroke-width="2" transform="rotate(20 44 20)"/><ellipse cx="30" cy="34" rx="10" ry="14" fill="#08313F"/><circle cx="30" cy="16" r="8" fill="#08313F"/></svg>',
    title:{en:'Catch the Flies', es:'Atrapa las Moscas', ru:'Лови Мух', pt:'Pegue as Moscas', ja:'ハエをつかまえよう', fr:'Attrape les Mouches', ca:'Atrapa les Mosques'},
    who:{en:'Benny the Frog', es:'Benny la Rana', ru:'Бенни Лягушка', pt:'Benny, o Sapo', ja:'カエルのベニー', fr:'Benny la Grenouille', ca:'Benny la Granota'},
    text:{en:'Tap as many flies as you can in 30 seconds. They do not stick around!',
@@ -776,7 +839,7 @@ const GAMES = [
          ja:'30秒でできるだけ多くのハエをタップしよう。すぐ飛んでいっちゃうよ!',
          fr:'Touche un maximum de mouches en 30 secondes. Elles ne restent pas longtemps !',
          ca:'Toca totes les mosques que puguis en 30 segons. No es queden quietes!'}},
-  {id:'recipe', emo:'🍰',
+  {id:'recipe', emo:'<svg viewBox="0 0 60 60"><path d="M16 30 L44 30 L40 52 L20 52 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><path d="M12 30 Q30 8 48 30 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/><circle cx="30" cy="12" r="4" fill="#FFC93C" stroke="#08313F" stroke-width="2"/></svg>',
    title:{en:'Elizabeth\'s Recipe', es:'La Receta de Elizabeth', ru:'Рецепт Элизабет', pt:'A Receita da Elizabeth', ja:'エリザベスのレシピ', fr:"La Recette d'Elizabeth", ca:"La Recepta d'Elizabeth"},
    who:{en:'Mum Elizabeth', es:'Mamá Elizabeth', ru:'Мама Элизабет', pt:'Mamãe Elizabeth', ja:'ママのエリザベス', fr:'Maman Elizabeth', ca:'Mama Elizabeth'},
    text:{en:'Mum shows you the ingredients in order. Repeat the recipe from memory.',
@@ -786,9 +849,9 @@ const GAMES = [
          ja:'ママが材料を順番に見せてくれるよ。記憶してレシピを繰り返そう。',
          fr:"Maman te montre les ingrédients dans l'ordre. Répète la recette de mémoire.",
          ca:'La mama et mostra els ingredients en ordre. Repeteix la recepta de memòria.'}},
-  {id:'duel', emo:'✊',
+  {id:'duel', emo:'<svg viewBox="0 0 60 60"><rect x="16" y="24" width="28" height="24" rx="8" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><rect x="20" y="12" width="8" height="18" rx="4" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><rect x="30" y="10" width="8" height="20" rx="4" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><rect x="40" y="14" width="8" height="18" rx="4" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/></svg>',
    title:{en:'Duel with Sam', es:'Duelo con Sam', ru:'Дуэль с Сэмом', pt:'Duelo com Sam', ja:'サムとの対決', fr:'Duel avec Sam', ca:'Duel amb en Sam'},
-   who:{en:'Sam, big brother', es:'Sam, el hermano mayor', ru:'Сэм, старший брат', pt:'Sam, o irmão mais velho', ja:'お兄ちゃんのサム', fr:'Sam, le grand frère', ca:'En Sam, el germà gran'},
+   who:{en:'Sam, little brother', es:'Sam, el hermano menor', ru:'Сэм, младший брат', pt:'Sam, o irmão mais novo', ja:'弟のサム', fr:'Sam, le petit frère', ca:'En Sam, el germà petit'},
    text:{en:'Rock, paper, scissors. First one to 3 points wins the duel.',
          es:'Piedra, papel o tijera. El primero en llegar a 3 puntos gana el duelo.',
          ru:'Камень, ножницы, бумага. Кто первым наберёт 3 очка, побеждает в дуэли.',
@@ -796,7 +859,7 @@ const GAMES = [
          ja:'じゃんけん対決!先に3ポイント取った方が勝ち。',
          fr:'Pierre, feuille, ciseaux. Le premier à 3 points gagne le duel.',
          ca:'Pedra, paper o tisora. El primer a arribar a 3 punts guanya el duel.'}},
-  {id:'jack', emo:'🐦',
+  {id:'jack', emo:'<svg viewBox="0 0 60 60"><path d="M12 38 Q4 34 8 44 Q14 42 16 36 Z" fill="#4FB477" stroke="#08313F" stroke-width="2"/><ellipse cx="28" cy="34" rx="16" ry="12" fill="#4FB477" stroke="#08313F" stroke-width="3"/><circle cx="42" cy="24" r="8" fill="#4FB477" stroke="#08313F" stroke-width="3"/><path d="M48 24 L56 22 L48 28 Z" fill="#FF9F1C" stroke="#08313F" stroke-width="2"/><circle cx="44" cy="22" r="1.6" fill="#08313F"/></svg>',
    title:{en:'Animal Translator', es:'Traductor de Animales', ru:'Переводчик Животных', pt:'Tradutor de Animais', ja:'動物通訳', fr:"Traducteur d'Animaux", ca:"Traductor d'Animals"},
    who:{en:'Jack, the hero', es:'Jack, el protagonista', ru:'Джек, герой', pt:'Jack, o herói', ja:'主人公のジャック', fr:'Jack, le héros', ca:"En Jack, l'heroi"},
    text:{en:'Jack is the only person who understands animals. Listen to what they say and work out what they need.',
@@ -806,17 +869,17 @@ const GAMES = [
          ja:'ジャックは動物の言葉が分かる唯一の人。何を言っているか聞いて、何が必要か当ててみよう。',
          fr:"Jack est le seul à comprendre les animaux. Écoute ce qu'ils disent et devine ce dont ils ont besoin.",
          ca:"En Jack és l'únic que entén els animals. Escolta què diuen i esbrina què necessiten."}},
-  {id:'frank', emo:'🎸',
-   title:{en:'Frank\'s Tune', es:'La Melodía de Frank', ru:'Мелодия Фрэнка', pt:'A Melodia do Frank', ja:'フランクのメロディ', fr:'La Mélodie de Frank', ca:"La Melodia d'en Frank"},
+  {id:'frank', emo:'<svg viewBox="0 0 60 60"><rect x="26" y="6" width="4" height="26" fill="#8B5E34" stroke="#08313F" stroke-width="1.5"/><circle cx="20" cy="34" r="11" fill="#FFC93C" stroke="#08313F" stroke-width="3"/><circle cx="34" cy="42" r="15" fill="#FF9F1C" stroke="#08313F" stroke-width="3"/><circle cx="34" cy="42" r="4" fill="#08313F"/></svg>',
+   title:{en:"Frank's Music Corner", es:'El Rincón Musical de Frank', ru:'Музыкальный Уголок Фрэнка', pt:'O Cantinho Musical do Frank', ja:'フランクの音楽コーナー', fr:'Le Coin Musique de Frank', ca:'El Racó Musical d\'en Frank'},
    who:{en:'Dad Frank', es:'Papá Frank', ru:'Папа Фрэнк', pt:'Papai Frank', ja:'パパのフランク', fr:'Papa Frank', ca:'El papa Frank'},
-   text:{en:'Frank plays a short guitar riff. Listen close, then play it back — no rush.',
-         es:'Frank toca un riff corto de guitarra. Escucha con calma y repítelo — sin prisa.',
-         ru:'Фрэнк играет короткий гитарный рифф. Слушай внимательно и повтори — не спеша.',
-         pt:'Frank toca um riff curto de violão. Escute com atenção e repita — sem pressa.',
-         ja:'フランクが短いギターのフレーズを弾くよ。よく聞いて、ゆっくり繰り返そう。',
-         fr:'Frank joue un court riff de guitare. Écoute bien, puis rejoue-le — sans te presser.',
-         ca:'En Frank toca un riff curt de guitarra. Escolta amb calma i repeteix-lo — sense pressa.'}},
-  {id:'coloring', emo:'🖍️',
+   text:{en:'Pick an instrument — guitar, violin, piano, or drums — and play around, no rules.',
+         es:'Elige un instrumento — guitarra, violín, piano o batería — y toca lo que quieras, sin reglas.',
+         ru:'Выбери инструмент — гитару, скрипку, пианино или барабаны — и играй как хочешь, без правил.',
+         pt:'Escolha um instrumento — violão, violino, piano ou bateria — e toque à vontade, sem regras.',
+         ja:'楽器を選ぼう — ギター、バイオリン、ピアノ、ドラム — 自由に演奏してみよう。',
+         fr:'Choisis un instrument — guitare, violon, piano ou batterie — et joue librement, sans règles.',
+         ca:'Tria un instrument — guitarra, violí, piano o bateria — i toca com vulguis, sense regles.'}},
+  {id:'coloring', emo:'<svg viewBox="0 0 60 60"><path d="M22 12 L38 12 L38 40 L30 52 L22 40 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/><path d="M22 12 L38 12 L36 20 L24 20 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><path d="M30 40 L34 40 L30 52 L26 40 Z" fill="#08313F"/></svg>',
    title:{en:'Jenny\'s Coloring Corner', es:'El Rincón de Colorear de Jenny', ru:'Уголок Раскрасок Дженни', pt:'Cantinho de Colorir da Jenny', ja:'ジェニーの塗り絵コーナー', fr:'Le Coin Coloriage de Jenny', ca:'El Racó de Colorejar de la Jenny'},
    who:{en:'Jenny', es:'Jenny', ru:'Дженни', pt:'Jenny', ja:'ジェニー', fr:'Jenny', ca:'La Jenny'},
    text:{en:'Pick a color and a tool — pencil, brush, or eraser — and draw whatever you like.',
@@ -826,7 +889,7 @@ const GAMES = [
          ja:'色と道具(えんぴつ、ブラシ、消しゴム)を選んで、好きなものを描こう。',
          fr:'Choisis une couleur et un outil — crayon, pinceau ou gomme — et dessine ce que tu veux.',
          ca:'Tria un color i una eina — llapis, pinzell o goma — i dibuixa el que vulguis.'}},
-  {id:'cars', emo:'🚗',
+  {id:'cars', emo:'<svg viewBox="0 0 60 60"><path d="M10 38 L14 24 Q16 20 22 20 L38 20 Q44 20 46 24 L50 38 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/><rect x="10" y="36" width="40" height="8" rx="2" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/><rect x="20" y="24" width="20" height="8" fill="#BFE6F2" stroke="#08313F" stroke-width="2"/><circle cx="18" cy="46" r="5" fill="#08313F"/><circle cx="42" cy="46" r="5" fill="#08313F"/></svg>',
    title:{en:'Dodge with Señor', es:'Esquiva con Señor', ru:'Уклонись с Сеньором', pt:'Desvie com o Señor', ja:'セニョールと車よけ', fr:'Esquive avec Señor', ca:'Esquiva amb en Señor'},
    who:{en:'Señor Spanish Teacher', es:'Señor, el profe de español', ru:'Сеньор, учитель испанского', pt:'Señor, o professor de espanhol', ja:'スペイン語の先生セニョール', fr:"Señor, le prof d'espagnol", ca:"En Señor, el profe d'espanyol"},
    text:{en:'Stay in your lane and dodge the traffic. Use the arrows or the buttons.',
@@ -836,7 +899,7 @@ const GAMES = [
          ja:'車線を守って車をよけよう。矢印かボタンを使ってね。',
          fr:'Reste dans ta voie et évite le trafic. Utilise les flèches ou les boutons.',
          ca:"Queda't al teu carril i esquiva el trànsit. Fes servir les fletxes o els botons."}},
-  {id:'snacks', emo:'🧺',
+  {id:'snacks', emo:'<svg viewBox="0 0 60 60"><path d="M20 14 Q30 26 40 14" fill="none" stroke="#08313F" stroke-width="3"/><path d="M12 26 L48 26 L42 48 L18 48 Z" fill="#8B5E34" stroke="#08313F" stroke-width="3"/><path d="M12 26 Q30 34 48 26" fill="none" stroke="#08313F" stroke-width="2"/></svg>',
    title:{en:'Catch with Benny', es:'Atrapa con Benny', ru:'Лови с Бенни', pt:'Pegue com o Benny', ja:'ベニーとキャッチ', fr:'Attrape avec Benny', ca:'Atrapa amb en Benny'},
    who:{en:'Benny the Frog', es:'Benny la Rana', ru:'Бенни Лягушка', pt:'Benny, o Sapo', ja:'カエルのベニー', fr:'Benny la Grenouille', ca:'En Benny la Granota'},
    text:{en:'Snacks fall from above — slide the basket to catch as many as you can.',
@@ -845,7 +908,27 @@ const GAMES = [
          pt:'Os lanches caem lá de cima — mova a cesta e pegue o máximo que puder.',
          ja:'おやつが上から落ちてくるよ — かごを動かしてできるだけ多くキャッチしよう。',
          fr:"Des friandises tombent d'en haut — déplace le panier pour en attraper le plus possible.",
-         ca:'El menjar cau des de dalt — mou la cistella per atrapar-ne tants com puguis.'}}
+         ca:'El menjar cau des de dalt — mou la cistella per atrapar-ne tants com puguis.'}},
+  {id:'book', emo:'<svg viewBox="0 0 60 60"><path d="M30 16 Q18 10 8 14 L8 44 Q18 40 30 46 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><path d="M30 16 Q42 10 52 14 L52 44 Q42 40 30 46 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><line x1="30" y1="16" x2="30" y2="46" stroke="#08313F" stroke-width="2"/></svg>',
+   title:{en:"Martin's Storybook", es:'El Cuento de Martin', ru:'Книжка Мартина', pt:'O Livro do Martin', ja:'マーティンのおはなし帳', fr:"Le Livre de Martin", ca:'El Conte d\'en Martin'},
+   who:{en:'Martin', es:'Martin', ru:'Мартин', pt:'Martin', ja:'マーティン', fr:'Martin', ca:'En Martin'},
+   text:{en:'Write a bit of story, draw a bit of picture, then flip the page and do it again.',
+         es:'Escribe un poco de historia, dibuja un poco, y pasa la página para seguir.',
+         ru:'Напиши немного истории, нарисуй немного картинки, переверни страницу и продолжай.',
+         pt:'Escreva um pouco da história, desenhe um pouco, e vire a página para continuar.',
+         ja:'すこしお話を書いて、すこし絵を描いて、ページをめくって続けよう。',
+         fr:"Écris un peu de l'histoire, dessine un peu, puis tourne la page et recommence.",
+         ca:'Escriu una mica de la història, dibuixa una mica, i passa la pàgina per seguir.'}},
+  {id:'snowman', emo:'<svg viewBox="0 0 60 60"><circle cx="30" cy="42" r="14" fill="#FFFFFF" stroke="#08313F" stroke-width="3"/><circle cx="30" cy="22" r="10" fill="#FFFFFF" stroke="#08313F" stroke-width="3"/><circle cx="30" cy="42" r="2" fill="#08313F"/><circle cx="26" cy="20" r="1.6" fill="#08313F"/><circle cx="34" cy="20" r="1.6" fill="#08313F"/><path d="M30 22 L38 24 L30 26 Z" fill="#FF9F1C"/></svg>',
+   title:{en:"Martin's Snowman", es:'El Muñeco de Nieve de Martin', ru:'Снеговик Мартина', pt:'O Boneco de Neve do Martin', ja:'マーティンの雪だるま', fr:'Le Bonhomme de Neige de Martin', ca:"El Ninot de Neu d'en Martin"},
+   who:{en:'Martin', es:'Martin', ru:'Мартин', pt:'Martin', ja:'マーティン', fr:'Martin', ca:'En Martin'},
+   text:{en:'Pick a hat, a scarf, arms, eyes, a mouth, and even a pet friend — mix and match to build your own snowman.',
+         es:'Elige un sombrero, una bufanda, brazos, ojos, una boca, y hasta una mascota — combina lo que quieras.',
+         ru:'Выбери шапку, шарф, руки, глаза, рот и даже питомца — собери своего снеговика.',
+         pt:'Escolha um chapéu, um cachecol, braços, olhos, uma boca, e até um bichinho de estimação — combine como quiser.',
+         ja:'帽子、マフラー、うで、目、口、そしてペットも選んで、自分だけの雪だるまを作ろう。',
+         fr:'Choisis un chapeau, une écharpe, des bras, des yeux, une bouche, et même un animal de compagnie — assemble-les comme tu veux.',
+         ca:'Tria un barret, una bufanda, braços, ulls, una boca, i fins i tot una mascota — combina el que vulguis.'}}
 ];
 
 function showHub(){
@@ -890,6 +973,8 @@ function start(id){
   if(id==='cars') gameCars();
   if(id==='snacks') gameSnacks();
   if(id==='grandma') gameGrandma();
+  if(id==='book') gameBook();
+  if(id==='snowman') gameSnowman();
 }
 
 /* ============ 1. Catch the Flies ============ */
@@ -897,7 +982,7 @@ function gameFlies(){
   benny("Aim carefully! Each fly only sticks around for a second and a half.");
   openStage(`
     <div class="bar">
-      <h2>🪰 Catch the Flies</h2>
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><ellipse cx="16" cy="20" rx="12" ry="7" fill="#BFE6F2" stroke="#08313F" stroke-width="2" transform="rotate(-20 16 20)"/><ellipse cx="44" cy="20" rx="12" ry="7" fill="#BFE6F2" stroke="#08313F" stroke-width="2" transform="rotate(20 44 20)"/><ellipse cx="30" cy="34" rx="10" ry="14" fill="#08313F"/><circle cx="30" cy="16" r="8" fill="#08313F"/></svg> Catch the Flies</h2>
       <div class="counters">
         <span class="chip" id="score">Score: 0</span>
         <span class="chip" id="clock">30 s</span>
@@ -954,7 +1039,7 @@ function gameRecipe(){
   benny("Watch the order of the ingredients, then repeat it back.");
   openStage(`
     <div class="bar">
-      <h2>🍰 Elizabeth's Recipe</h2>
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><path d="M16 30 L44 30 L40 52 L20 52 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><path d="M12 30 Q30 8 48 30 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/><circle cx="30" cy="12" r="4" fill="#FFC93C" stroke="#08313F" stroke-width="2"/></svg> Elizabeth's Recipe</h2>
       <div class="counters">
         <span class="chip" id="level">Level 1</span>
         <button class="mute" id="mute" aria-label="Turn sound off">🔊</button>
@@ -1036,7 +1121,7 @@ function gameDuel(){
   benny("Sam thinks he is unbeatable. First to 3 points!");
   openStage(`
     <div class="bar">
-      <h2>✊ Duel with Sam</h2>
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><rect x="16" y="24" width="28" height="24" rx="8" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><rect x="20" y="12" width="8" height="18" rx="4" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><rect x="30" y="10" width="8" height="20" rx="4" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><rect x="40" y="14" width="8" height="18" rx="4" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/></svg> Duel with Sam</h2>
       <div class="counters">
         <span class="chip" id="pts">You 0 – 0 Sam</span>
       </div>
@@ -1099,7 +1184,7 @@ function gameJack(){
   benny("Nobody else in the family hears any of this. Just Jack. And me, obviously.");
   openStage(`
     <div class="bar">
-      <h2>🐦 Animal Translator</h2>
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><path d="M12 38 Q4 34 8 44 Q14 42 16 36 Z" fill="#4FB477" stroke="#08313F" stroke-width="2"/><ellipse cx="28" cy="34" rx="16" ry="12" fill="#4FB477" stroke="#08313F" stroke-width="3"/><circle cx="42" cy="24" r="8" fill="#4FB477" stroke="#08313F" stroke-width="3"/><path d="M48 24 L56 22 L48 28 Z" fill="#FF9F1C" stroke="#08313F" stroke-width="2"/><circle cx="44" cy="22" r="1.6" fill="#08313F"/></svg> Animal Translator</h2>
       <div class="counters">
         <span class="chip" id="jscore">Correct: 0</span>
         <span class="chip" id="jround">1 of 5</span>
@@ -1193,86 +1278,148 @@ function gameJack(){
 
 /* ============ 5. Frank's Tune ============ */
 function gameFrank(){
-  benny("Frank's pretty relaxed about this — take your time.");
+  benny("Frank's music corner — pick an instrument and play whatever you like.");
   openStage(`
     <div class="bar">
-      <h2>🎸 Frank's Tune</h2>
-      <div class="counters">
-        <span class="chip" id="flevel">Verse 1</span>
-        <button class="mute" id="fmute" aria-label="Turn sound off">🔊</button>
-      </div>
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><rect x="26" y="6" width="4" height="26" fill="#8B5E34" stroke="#08313F" stroke-width="1.5"/><circle cx="20" cy="34" r="11" fill="#FFC93C" stroke="#08313F" stroke-width="3"/><circle cx="34" cy="42" r="15" fill="#FF9F1C" stroke="#08313F" stroke-width="3"/><circle cx="34" cy="42" r="4" fill="#08313F"/></svg> Frank's Music Corner</h2>
     </div>
-    <div class="strings" id="strings"></div>
-    <p class="message" id="fmsg">Press "Play it for me" to begin.</p>
+    <div class="tools2" id="instrumentTabs">
+      <button class="tool on" data-inst="guitar"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><rect x="18" y="4" width="3" height="16" fill="#8B5E34"/><circle cx="13" cy="22" r="7" fill="#FFC93C" stroke="#08313F" stroke-width="2"/><circle cx="23" cy="28" r="10" fill="#FF9F1C" stroke="#08313F" stroke-width="2"/><circle cx="23" cy="28" r="3" fill="#08313F"/></svg> Guitar</button>
+      <button class="tool" data-inst="violin"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><rect x="18" y="2" width="3" height="14" fill="#5A3A22"/><path d="M14 16 Q10 22 14 28 Q18 34 22 28 Q26 22 22 16 Q18 12 14 16 Z" fill="#8B5E34" stroke="#08313F" stroke-width="2"/></svg> Violin</button>
+      <button class="tool" data-inst="piano"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><rect x="4" y="8" width="32" height="24" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><rect x="10" y="8" width="4" height="14" fill="#08313F"/><rect x="18" y="8" width="4" height="14" fill="#08313F"/><rect x="26" y="8" width="4" height="14" fill="#08313F"/></svg> Piano</button>
+      <button class="tool" data-inst="drums"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><ellipse cx="20" cy="14" rx="14" ry="6" fill="#FF6B5B" stroke="#08313F" stroke-width="2"/><rect x="6" y="14" width="28" height="14" fill="#FF6B5B" stroke="#08313F" stroke-width="2"/><ellipse cx="20" cy="28" rx="14" ry="6" fill="#FF6B5B" stroke="#08313F" stroke-width="2"/></svg> Drums</button>
+    </div>
+    <div id="instrumentStage"></div>
     <div class="actions">
-      <button class="btn" id="fgo">Play it for me</button>
       <button class="btn quiet" data-back>← Back to the carnival</button>
     </div>`);
 
-  const NOTES = [220.00, 261.63, 293.66, 329.63, 392.00, 440.00];
-  const LABELS = ['A','C','D','E','G','A'];
+  const stageArea = document.getElementById('instrumentStage');
 
-  const stringsEl = document.getElementById('strings');
-  stringsEl.innerHTML = LABELS.map((l,i)=>`<button class="string" data-i="${i}"><span class="dot"></span>${l}</button>`).join('');
-  const buttons = [...document.querySelectorAll('.string')];
+  const STRING_SETS = {
+    guitar: { open:[220.00,261.63,293.66,329.63,392.00,440.00], labels:['A','C','D','E','G','A'], color:'#8B5E34', waveType:'triangle' },
+    violin: { open:[196.00,293.66,440.00,659.25], labels:['G','D','A','E'], color:'#5A3A22', waveType:'sawtooth' }
+  };
+  const FRET_COUNT = 6;
 
-  const msg = document.getElementById('fmsg');
-  const elLevel = document.getElementById('flevel');
-  let seq = [], pos = 0, yourTurn = false, speed = 620;
-
-  const muteBtn = document.getElementById('fmute');
-  muteBtn.textContent = soundOn ? '🔊' : '🔇';
-  muteBtn.addEventListener('click',()=>{
-    soundOn = !soundOn;
-    muteBtn.textContent = soundOn ? '🔊' : '🔇';
-    muteBtn.setAttribute('aria-label', soundOn ? 'Turn sound off' : 'Turn sound on');
-    if(soundOn) tone(293.66,150,'triangle',0.15);
-  });
-
-  function flash(i,ms){
-    const dur = ms || 520;
-    buttons[i].classList.add('on');
-    tone(NOTES[i], dur - 60, 'triangle', 0.18);
-    setTimeout(()=>buttons[i].classList.remove('on'), dur);
-  }
-
-  function play(){
-    yourTurn = false; pos = 0;
-    elLevel.textContent = 'Verse ' + seq.length;
-    msg.textContent = 'Listen close...';
-    seq.forEach((v,k)=> setTimeout(()=>flash(v, speed*0.8), speed*k + 400));
-    setTimeout(()=>{ yourTurn = true; msg.textContent = 'Your turn — play it back.'; }, speed*seq.length + 500);
-  }
-
-  function nextVerse(){
-    seq.push(Math.floor(Math.random()*6));
-    speed = 620;
-    play();
-  }
-
-  buttons.forEach(b=>b.addEventListener('click',()=>{
-    if(!yourTurn) return;
-    const i = +b.dataset.i;
-    flash(i, 260);
-    if(i === seq[pos]){
-      pos++;
-      if(pos === seq.length){
-        yourTurn = false;
-        chime();
-        msg.textContent = 'Nice and steady. Next verse...';
-        benny(seq.length>=5 ? "You've got real rhythm, you know." : "That's it, you've got the feel for it.");
-        setTimeout(nextVerse, 1200);
+  function renderStrings(key){
+    const set = STRING_SETS[key];
+    let rowsHtml = '';
+    set.open.forEach((openFreq, si)=>{
+      let cellsHtml = '';
+      for(let f=0; f<FRET_COUNT; f++){
+        const label = f===0 ? set.labels[si] : '';
+        cellsHtml += `<button class="fret-cell${f===0?' open':''}" data-string="${si}" data-fret="${f}">${label}</button>`;
       }
-    } else {
-      yourTurn = false;
-      msg.textContent = "No rush — let's try that bit again, a little slower.";
-      benny("Everyone fumbles a note sometimes. Just listen and try again.");
-      speed += 140;
-      setTimeout(play, 900);
-    }
+      rowsHtml += `<div class="fret-row">${cellsHtml}</div>`;
+    });
+    stageArea.innerHTML = `<div class="fretboard" style="background:${set.color}">${rowsHtml}</div>`;
+    const cells = [...stageArea.querySelectorAll('.fret-cell')];
+    cells.forEach(c=>c.addEventListener('click', ()=>{
+      const si = +c.dataset.string, f = +c.dataset.fret;
+      const freq = set.open[si] * Math.pow(2, f/12);
+      tone(freq, 380, set.waveType, 0.18);
+      c.style.transform = 'scale(0.9)';
+      setTimeout(()=>{ c.style.transform=''; }, 120);
+    }));
+  }
+
+  function renderPiano(){
+    const WHITE = [
+      {name:'C', freq:261.63}, {name:'D', freq:293.66}, {name:'E', freq:329.63},
+      {name:'F', freq:349.23}, {name:'G', freq:392.00}, {name:'A', freq:440.00}, {name:'B', freq:493.88}
+    ];
+    const BLACK = [
+      {freq:277.18, pos:1}, {freq:311.13, pos:2}, {freq:369.99, pos:4}, {freq:415.30, pos:5}, {freq:466.16, pos:6}
+    ];
+    const whiteHtml = WHITE.map(k=>`<button class="piano-white" data-freq="${k.freq}">${k.name}</button>`).join('');
+    const blackHtml = BLACK.map(k=>`<button class="piano-black" data-freq="${k.freq}" style="left:${(k.pos*(100/7)) - 4}%"></button>`).join('');
+    stageArea.innerHTML = `<div class="piano-wrap">${whiteHtml}${blackHtml}</div>`;
+    const keys = [...stageArea.querySelectorAll('.piano-white, .piano-black')];
+    keys.forEach(k=>k.addEventListener('click', ()=>{
+      tone(+k.dataset.freq, 420, 'sine', 0.2);
+    }));
+  }
+
+  function playNoise(duration, filterFreq, filterType, vol){
+    const c = audioCtx(); if(!c) return;
+    const bufferSize = Math.floor(c.sampleRate * duration);
+    const buffer = c.createBuffer(1, bufferSize, c.sampleRate);
+    const data = buffer.getChannelData(0);
+    for(let i=0;i<bufferSize;i++){ data[i] = Math.random()*2 - 1; }
+    const noise = c.createBufferSource();
+    noise.buffer = buffer;
+    const filter = c.createBiquadFilter();
+    filter.type = filterType || 'highpass';
+    filter.frequency.value = filterFreq || 1000;
+    const gain = c.createGain();
+    gain.gain.setValueAtTime(vol || 0.3, c.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + duration);
+    noise.connect(filter); filter.connect(gain); gain.connect(c.destination);
+    noise.start();
+  }
+  function playKick(){
+    const c = audioCtx(); if(!c) return;
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = 'sine';
+    const now = c.currentTime;
+    o.frequency.setValueAtTime(140, now);
+    o.frequency.exponentialRampToValueAtTime(45, now + 0.22);
+    g.gain.setValueAtTime(0.5, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+    o.connect(g); g.connect(c.destination);
+    o.start(now); o.stop(now + 0.3);
+  }
+  function playTom(){
+    const c = audioCtx(); if(!c) return;
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = 'sine';
+    const now = c.currentTime;
+    o.frequency.setValueAtTime(220, now);
+    o.frequency.exponentialRampToValueAtTime(110, now + 0.18);
+    g.gain.setValueAtTime(0.4, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+    o.connect(g); g.connect(c.destination);
+    o.start(now); o.stop(now + 0.24);
+  }
+
+  function renderDrums(){
+    stageArea.innerHTML = `
+      <div class="drum-grid">
+        <button class="drum-pad" data-pad="kick">Kick</button>
+        <button class="drum-pad" data-pad="snare">Snare</button>
+        <button class="drum-pad" data-pad="hihat">Hi-Hat</button>
+        <button class="drum-pad" data-pad="tom">Tom</button>
+        <button class="drum-pad" data-pad="cymbal" style="grid-column:span 2">Cymbal</button>
+      </div>`;
+    const pads = [...stageArea.querySelectorAll('.drum-pad')];
+    pads.forEach(p=>p.addEventListener('click', ()=>{
+      const type = p.dataset.pad;
+      if(type === 'kick') playKick();
+      else if(type === 'snare') playNoise(0.18, 1800, 'bandpass', 0.35);
+      else if(type === 'hihat') playNoise(0.07, 6000, 'highpass', 0.22);
+      else if(type === 'tom') playTom();
+      else if(type === 'cymbal') playNoise(0.5, 5000, 'highpass', 0.22);
+      p.style.transform = 'scale(0.94)';
+      setTimeout(()=>{ p.style.transform = ''; }, 100);
+    }));
+  }
+
+  function renderInstrument(key){
+    if(key === 'guitar') renderStrings('guitar');
+    else if(key === 'violin') renderStrings('violin');
+    else if(key === 'piano') renderPiano();
+    else if(key === 'drums') renderDrums();
+  }
+
+  const tabBtns = [...document.querySelectorAll('#instrumentTabs .tool')];
+  tabBtns.forEach(b=>b.addEventListener('click', ()=>{
+    tabBtns.forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    renderInstrument(b.dataset.inst);
   }));
 
-  document.getElementById('fgo').addEventListener('click',()=>{ seq=[]; nextVerse(); });
+  renderInstrument('guitar');
 }
 
 /* ============ 6. Jenny's Coloring Corner ============ */
@@ -1280,7 +1427,7 @@ function gameColoring(){
   benny("Jenny set up her coloring corner. Pick a color, pick a tool, and go for it.");
   openStage(`
     <div class="bar">
-      <h2>🖍️ Jenny's Coloring Corner</h2>
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><path d="M22 12 L38 12 L38 40 L30 52 L22 40 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/><path d="M22 12 L38 12 L36 20 L24 20 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><path d="M30 40 L34 40 L30 52 L26 40 Z" fill="#08313F"/></svg> Jenny's Coloring Corner</h2>
       <div class="counters">
         <span class="chip" id="ctool">Pencil</span>
       </div>
@@ -1297,7 +1444,7 @@ function gameColoring(){
       <button class="btn quiet" data-back>← Back to the carnival</button>
     </div>`);
 
-  const COLORS = ['#08313F','#FF6B5B','#FFC93C','#4FB477','#12718F','#9B5DE5','#FF8FB1','#8B5E34','#FF9F1C','#FFFFFF'];
+  const COLORS = ['#000000','#08313F','#FF3B30','#FF6B5B','#FF9F1C','#FFC93C','#FFF176','#4FB477','#2E8B57','#7FE3C6','#12718F','#4FC3F7','#1E3A8A','#9B5DE5','#C77DFF','#FF8FB1','#FF5D9E','#8B5E34','#808080','#FFFFFF'];
   const WIDTHS = {pencil:4, brush:16, eraser:26};
   const NAMES  = {pencil:'Pencil', brush:'Brush', eraser:'Eraser'};
 
@@ -1392,7 +1539,7 @@ function gameCars(){
   benny("Señor is timing you. ¡Cuidado! — that means \"careful!\" Dodge every car you can.");
   openStage(`
     <div class="bar">
-      <h2>🚗 Dodge with Señor</h2>
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><path d="M10 38 L14 24 Q16 20 22 20 L38 20 Q44 20 46 24 L50 38 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/><rect x="10" y="36" width="40" height="8" rx="2" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/><rect x="20" y="24" width="20" height="8" fill="#BFE6F2" stroke="#08313F" stroke-width="2"/><circle cx="18" cy="46" r="5" fill="#08313F"/><circle cx="42" cy="46" r="5" fill="#08313F"/></svg> Dodge with Señor</h2>
       <div class="counters">
         <span class="chip" id="cscore">Score: 0</span>
         <span class="chip" id="cbest">Best: 0</span>
@@ -1503,7 +1650,7 @@ function gameSnacks(){
   benny("Careful — not everything falling is food. Catch the snacks, leave the trash!");
   openStage(`
     <div class="bar">
-      <h2>🧺 Catch with Benny</h2>
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><path d="M20 14 Q30 26 40 14" fill="none" stroke="#08313F" stroke-width="3"/><path d="M12 26 L48 26 L42 48 L18 48 Z" fill="#8B5E34" stroke="#08313F" stroke-width="3"/><path d="M12 26 Q30 34 48 26" fill="none" stroke="#08313F" stroke-width="2"/></svg> Catch with Benny</h2>
       <div class="counters">
         <span class="chip" id="sscore">Score: 0</span>
         <span class="chip" id="smiss">Misses: 0/5</span>
@@ -1704,7 +1851,7 @@ function gameGrandma(){
   benny("This one's just for Berty. Happy birthday, Grandma!");
   openStage(`
     <div class="bar">
-      <h2>🎂 Grandma's Day</h2>
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><rect x="12" y="30" width="36" height="20" rx="3" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/><rect x="12" y="30" width="36" height="8" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><rect x="27" y="10" width="6" height="14" fill="#FFC93C" stroke="#08313F" stroke-width="2"/><path d="M30 6 Q34 10 30 12 Q26 10 30 6 Z" fill="#FF9F1C"/></svg> Grandma's Day</h2>
       <div class="counters">
         <span class="chip" id="gmScene">Scene 1 of 4</span>
       </div>
@@ -1896,6 +2043,437 @@ function gameGrandma(){
   }
 
   begin();
+}
+
+/* ============ Martin's Storybook ============ */
+function gameBook(){
+  benny("Martin's storybook! Write a bit, draw a bit, then flip the page.");
+  openStage(`
+    <div class="bar">
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><path d="M30 16 Q18 10 8 14 L8 44 Q18 40 30 46 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><path d="M30 16 Q42 10 52 14 L52 44 Q42 40 30 46 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><line x1="30" y1="16" x2="30" y2="46" stroke="#08313F" stroke-width="2"/></svg> Martin's Storybook</h2>
+      <div class="counters">
+        <span class="chip" id="bookPageChip">Page 1 of 10</span>
+      </div>
+    </div>
+    <div class="tools2" id="pagesRow">
+      <button class="tool" id="pagesMinus" aria-label="fewer pages">➖</button>
+      <span class="chip" id="pagesCountChip">10 pages</span>
+      <button class="tool" id="pagesPlus" aria-label="more pages">➕</button>
+    </div>
+    <textarea id="bookText" class="book-textarea" rows="3" placeholder="Write your words here..."></textarea>
+    <div class="paper" id="bookPaper" style="height:190px;margin-top:10px"><canvas id="bookCanvas"></canvas></div>
+    <div class="palette" id="bookPalette"></div>
+    <div class="tools2" id="bookToolbar">
+      <button class="tool on" data-tool="pencil">✏️ Pencil</button>
+      <button class="tool" data-tool="brush">🖌️ Brush</button>
+      <button class="tool" data-tool="eraser">🧽 Eraser</button>
+    </div>
+    <div class="actions">
+      <button class="btn quiet" id="bookPrev">◀ Prev page</button>
+      <button class="btn" id="bookNext">Next page ▶</button>
+      <button class="btn quiet" id="bookClearPage">🗑️ Clear page</button>
+    </div>
+    <div class="actions">
+      <button class="btn quiet" data-back>← Back to the carnival</button>
+    </div>`);
+
+  let TOTAL_PAGES = 10;
+  const MIN_PAGES = 1, MAX_PAGES = 20;
+  const COLORS = ['#000000','#08313F','#FF3B30','#FF6B5B','#FF9F1C','#FFC93C','#FFF176','#4FB477','#2E8B57','#7FE3C6','#12718F','#4FC3F7','#1E3A8A','#9B5DE5','#C77DFF','#FF8FB1','#FF5D9E','#8B5E34','#808080','#FFFFFF'];
+  const WIDTHS = {pencil:4, brush:16, eraser:26};
+
+  let pageIndex = 0;
+  let color = COLORS[0], tool = 'pencil', drawing = false, lastX = 0, lastY = 0;
+  let pageTexts = new Array(TOTAL_PAGES).fill('');
+  let pageImages = new Array(TOTAL_PAGES).fill(null);
+
+  const textEl = document.getElementById('bookText');
+  const chip = document.getElementById('bookPageChip');
+  const canvas = document.getElementById('bookCanvas');
+  const ctx = canvas.getContext('2d');
+  const ratio = window.devicePixelRatio || 1;
+
+  function fillWhite(){
+    ctx.save();
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.restore();
+  }
+
+  function sizeCanvas(){
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * ratio;
+    canvas.height = rect.height * ratio;
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    fillWhite();
+  }
+  sizeCanvas();
+
+  function loadPage(i){
+    textEl.value = pageTexts[i];
+    fillWhite();
+    if(pageImages[i]){
+      const img = new Image();
+      img.onload = ()=>{ ctx.drawImage(img, 0, 0, canvas.width/ratio, canvas.height/ratio); };
+      img.src = pageImages[i];
+    }
+    chip.textContent = 'Page ' + (i+1) + ' of ' + TOTAL_PAGES;
+  }
+
+  function savePage(i){
+    pageTexts[i] = textEl.value;
+    pageImages[i] = canvas.toDataURL();
+  }
+
+  function goToPage(i){
+    savePage(pageIndex);
+    pageIndex = Math.max(0, Math.min(TOTAL_PAGES - 1, i));
+    loadPage(pageIndex);
+  }
+
+  const pagesCountChip = document.getElementById('pagesCountChip');
+  const pagesMinusBtn = document.getElementById('pagesMinus');
+  const pagesPlusBtn = document.getElementById('pagesPlus');
+
+  function updateStepperState(){
+    pagesCountChip.textContent = TOTAL_PAGES + (TOTAL_PAGES === 1 ? ' page' : ' pages');
+    pagesMinusBtn.disabled = TOTAL_PAGES <= MIN_PAGES;
+    pagesPlusBtn.disabled = TOTAL_PAGES >= MAX_PAGES;
+  }
+
+  function setPageCount(n){
+    n = Math.max(MIN_PAGES, Math.min(MAX_PAGES, n));
+    if(n === TOTAL_PAGES) return;
+    savePage(pageIndex);
+    if(n > TOTAL_PAGES){
+      for(let i = TOTAL_PAGES; i < n; i++){ pageTexts.push(''); pageImages.push(null); }
+    } else {
+      pageTexts.length = n;
+      pageImages.length = n;
+    }
+    TOTAL_PAGES = n;
+    if(pageIndex > TOTAL_PAGES - 1) pageIndex = TOTAL_PAGES - 1;
+    updateStepperState();
+    loadPage(pageIndex);
+  }
+
+  updateStepperState();
+  pagesMinusBtn.addEventListener('click', ()=> setPageCount(TOTAL_PAGES - 1));
+  pagesPlusBtn.addEventListener('click', ()=> setPageCount(TOTAL_PAGES + 1));
+
+  loadPage(0);
+
+  const paletteEl = document.getElementById('bookPalette');
+  paletteEl.innerHTML = COLORS.map((c,i)=>
+    `<button class="swatch${i===0?' on':''}" data-color="${c}" style="background:${c}" aria-label="colour"></button>`
+  ).join('');
+  const swatches = [...document.querySelectorAll('#bookPalette .swatch')];
+  swatches.forEach(s=>s.addEventListener('click',()=>{
+    swatches.forEach(x=>x.classList.remove('on'));
+    s.classList.add('on');
+    color = s.dataset.color;
+  }));
+
+  const toolBtns = [...document.querySelectorAll('#bookToolbar .tool')];
+  toolBtns.forEach(b=>b.addEventListener('click',()=>{
+    toolBtns.forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    tool = b.dataset.tool;
+  }));
+
+  function pos(e){
+    const rect = canvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+  function dot(p){
+    ctx.beginPath();
+    ctx.fillStyle = tool==='eraser' ? '#FFFFFF' : color;
+    ctx.arc(p.x, p.y, WIDTHS[tool]/2, 0, Math.PI*2);
+    ctx.fill();
+  }
+  canvas.addEventListener('pointerdown', e=>{
+    canvas.setPointerCapture(e.pointerId);
+    drawing = true;
+    const p = pos(e);
+    lastX = p.x; lastY = p.y;
+    dot(p);
+  });
+  canvas.addEventListener('pointermove', e=>{
+    if(!drawing) return;
+    const p = pos(e);
+    ctx.beginPath();
+    ctx.strokeStyle = tool==='eraser' ? '#FFFFFF' : color;
+    ctx.lineWidth = WIDTHS[tool];
+    ctx.moveTo(lastX,lastY);
+    ctx.lineTo(p.x,p.y);
+    ctx.stroke();
+    lastX = p.x; lastY = p.y;
+  });
+  ['pointerup','pointercancel','pointerleave'].forEach(evt=>
+    canvas.addEventListener(evt, ()=>{ drawing = false; }));
+
+  document.getElementById('bookPrev').addEventListener('click', ()=>{
+    if(pageIndex === 0){ benny("This is the first page."); return; }
+    goToPage(pageIndex - 1);
+  });
+  document.getElementById('bookNext').addEventListener('click', ()=>{
+    if(pageIndex === TOTAL_PAGES - 1){
+      savePage(pageIndex);
+      benny("That's the last page — what a story!");
+      return;
+    }
+    goToPage(pageIndex + 1);
+  });
+  document.getElementById('bookClearPage').addEventListener('click', ()=>{
+    fillWhite();
+    textEl.value = '';
+    pageTexts[pageIndex] = '';
+    pageImages[pageIndex] = null;
+    benny("Blank page — start fresh!");
+  });
+}
+
+/* ============ Martin's Snowman Builder ============ */
+function gameSnowman(){
+  benny("Martin's snowman kit! Mix and match a hat, a scarf, arms, eyes, a mouth, and even a pet friend.");
+  openStage(`
+    <div class="bar"><h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><circle cx="30" cy="42" r="14" fill="#FFFFFF" stroke="#08313F" stroke-width="3"/><circle cx="30" cy="22" r="10" fill="#FFFFFF" stroke="#08313F" stroke-width="3"/><circle cx="30" cy="42" r="2" fill="#08313F"/><circle cx="26" cy="20" r="1.6" fill="#08313F"/><circle cx="34" cy="20" r="1.6" fill="#08313F"/><path d="M30 22 L38 24 L30 26 Z" fill="#FF9F1C"/></svg> Build a Snowman</h2></div>
+    <div class="snowstage">
+      <svg viewBox="0 0 200 260" width="100%" height="100%" aria-hidden="true">
+        <circle cx="100" cy="210" r="46" fill="#FFFFFF" stroke="#08313F" stroke-width="4"/>
+        <circle cx="100" cy="138" r="34" fill="#FFFFFF" stroke="#08313F" stroke-width="4"/>
+        <circle cx="100" cy="76" r="26" fill="#FFFFFF" stroke="#08313F" stroke-width="4"/>
+
+        <circle cx="100" cy="120" r="4" fill="#08313F"/>
+        <circle cx="100" cy="138" r="4" fill="#08313F"/>
+        <circle cx="100" cy="156" r="4" fill="#08313F"/>
+
+        <path id="scarf" d="M78 98 Q100 112 122 98 L122 108 Q100 122 78 108 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/>
+        <path id="scarfTail" d="M112 106 L120 138 L100 128 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/>
+
+        <g id="arms-twig">
+          <path d="M66 138 L26 112 M66 138 L34 130 M66 138 L30 150" stroke="#8B5E34" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <path d="M134 138 L174 112 M134 138 L166 130 M134 138 L170 150" stroke="#8B5E34" stroke-width="5" stroke-linecap="round" fill="none"/>
+        </g>
+        <g id="arms-wave" style="display:none">
+          <path d="M66 138 Q30 110 26 66" stroke="#8B5E34" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <path d="M134 138 L172 152" stroke="#8B5E34" stroke-width="6" stroke-linecap="round" fill="none"/>
+        </g>
+        <g id="arms-candy" style="display:none">
+          <path d="M66 138 Q40 120 30 96 Q28 84 40 82" stroke="#FF6B5B" stroke-width="7" stroke-linecap="round" fill="none"/>
+          <path d="M66 138 Q40 120 30 96 Q28 84 40 82" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="6 6" stroke-linecap="round" fill="none"/>
+          <path d="M134 138 Q160 120 170 96 Q172 84 160 82" stroke="#FF6B5B" stroke-width="7" stroke-linecap="round" fill="none"/>
+          <path d="M134 138 Q160 120 170 96 Q172 84 160 82" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="6 6" stroke-linecap="round" fill="none"/>
+        </g>
+        <g id="arms-none" style="display:none"></g>
+
+        <g id="pet-dog">
+          <path d="M155 216 Q148 208 152 200" stroke="#8B5E34" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <ellipse cx="170" cy="222" rx="16" ry="12" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/>
+          <circle cx="188" cy="212" r="10" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/>
+          <path d="M182 204 L178 194 L186 200 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/>
+          <path d="M194 204 L200 196 L196 206 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/>
+          <circle cx="191" cy="210" r="1.4" fill="#08313F"/>
+        </g>
+        <g id="pet-cat" style="display:none">
+          <path d="M156 220 Q146 210 152 196" stroke="#3C3C3C" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <ellipse cx="170" cy="222" rx="15" ry="11" fill="#3C3C3C" stroke="#08313F" stroke-width="3"/>
+          <circle cx="188" cy="210" r="9" fill="#3C3C3C" stroke="#08313F" stroke-width="3"/>
+          <path d="M182 202 L180 192 L188 200 Z" fill="#3C3C3C" stroke="#08313F" stroke-width="2"/>
+          <path d="M194 202 L198 192 L192 200 Z" fill="#3C3C3C" stroke="#08313F" stroke-width="2"/>
+          <circle cx="191" cy="209" r="1.2" fill="#FFC93C"/>
+        </g>
+        <g id="pet-bird" style="display:none">
+          <ellipse cx="176" cy="220" rx="12" ry="9" fill="#4FB477" stroke="#08313F" stroke-width="3"/>
+          <circle cx="190" cy="210" r="6" fill="#4FB477" stroke="#08313F" stroke-width="3"/>
+          <path d="M196 210 L202 208 L196 213 Z" fill="#FF9F1C" stroke="#08313F" stroke-width="1.5"/>
+          <circle cx="192" cy="208" r="1.2" fill="#08313F"/>
+        </g>
+        <g id="pet-none" style="display:none"></g>
+
+        <path d="M100 78 L118 84 L100 90 Z" fill="#FF9F1C" stroke="#08313F" stroke-width="1.5"/>
+        <g id="mouth-classic">
+          <circle cx="88" cy="94" r="3" fill="#08313F"/>
+          <circle cx="96" cy="98" r="3" fill="#08313F"/>
+          <circle cx="104" cy="98" r="3" fill="#08313F"/>
+          <circle cx="112" cy="94" r="3" fill="#08313F"/>
+        </g>
+        <g id="mouth-smile" style="display:none">
+          <path d="M86 92 Q100 104 114 92" stroke="#08313F" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+        <g id="mouth-surprised" style="display:none">
+          <ellipse cx="100" cy="96" rx="6" ry="8" fill="#08313F"/>
+        </g>
+        <g id="mouth-grumpy" style="display:none">
+          <path d="M86 100 Q100 90 114 100" stroke="#08313F" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <g id="eyes-classic">
+          <circle cx="90" cy="70" r="4" fill="#08313F"/>
+          <circle cx="110" cy="70" r="4" fill="#08313F"/>
+        </g>
+        <g id="eyes-wink" style="display:none">
+          <path d="M84 70 L94 70" stroke="#08313F" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="110" cy="70" r="4" fill="#08313F"/>
+        </g>
+        <g id="eyes-cool" style="display:none">
+          <rect x="80" y="64" width="18" height="9" rx="3" fill="#08313F"/>
+          <rect x="102" y="64" width="18" height="9" rx="3" fill="#08313F"/>
+          <line x1="98" y1="68" x2="102" y2="68" stroke="#08313F" stroke-width="2"/>
+        </g>
+        <g id="eyes-sparkle" style="display:none">
+          <circle cx="90" cy="70" r="5" fill="#08313F"/>
+          <circle cx="92" cy="68" r="1.5" fill="#FFF6E5"/>
+          <circle cx="110" cy="70" r="5" fill="#08313F"/>
+          <circle cx="112" cy="68" r="1.5" fill="#FFF6E5"/>
+        </g>
+
+        <g id="hat-top">
+          <rect x="80" y="6" width="40" height="36" fill="#08313F"/>
+          <rect x="80" y="32" width="40" height="6" fill="#FF6B5B"/>
+          <rect x="68" y="40" width="64" height="8" rx="2" fill="#08313F"/>
+        </g>
+        <g id="hat-beanie" style="display:none">
+          <path d="M66 50 Q66 8 100 8 Q134 8 134 50 Z" fill="#4FB477" stroke="#08313F" stroke-width="3"/>
+          <rect x="66" y="40" width="68" height="10" fill="#FFC93C" stroke="#08313F" stroke-width="2"/>
+          <circle cx="100" cy="8" r="8" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/>
+        </g>
+        <g id="hat-santa" style="display:none">
+          <path d="M70 50 L100 6 L130 50 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="3" stroke-linejoin="round"/>
+          <rect x="66" y="44" width="68" height="10" rx="4" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/>
+          <circle cx="100" cy="6" r="8" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/>
+        </g>
+        <g id="hat-none" style="display:none"></g>
+      </svg>
+    </div>
+
+    <p class="hint" style="text-align:left;margin:14px 0 6px">Hat</p>
+    <div class="tools2" id="hatBar">
+      <button class="tool on" data-cat="hat" data-val="top">🎩 Top Hat</button>
+      <button class="tool" data-cat="hat" data-val="beanie">🧶 Beanie</button>
+      <button class="tool" data-cat="hat" data-val="santa">🎅 Santa</button>
+      <button class="tool" data-cat="hat" data-val="none">🚫 No Hat</button>
+    </div>
+
+    <p class="hint" style="text-align:left;margin:14px 0 6px">Scarf</p>
+    <div class="palette" id="scarfPalette"></div>
+
+    <p class="hint" style="text-align:left;margin:14px 0 6px">Arms</p>
+    <div class="tools2" id="armsBar">
+      <button class="tool on" data-cat="arms" data-val="twig">🌿 Twigs</button>
+      <button class="tool" data-cat="arms" data-val="wave">👋 Waving</button>
+      <button class="tool" data-cat="arms" data-val="candy">🍬 Candy Cane</button>
+      <button class="tool" data-cat="arms" data-val="none">🚫 No Arms</button>
+    </div>
+
+    <p class="hint" style="text-align:left;margin:14px 0 6px">Eyes</p>
+    <div class="tools2" id="eyesBar">
+      <button class="tool on" data-cat="eyes" data-val="classic">⚫ Classic</button>
+      <button class="tool" data-cat="eyes" data-val="wink">😉 Wink</button>
+      <button class="tool" data-cat="eyes" data-val="cool">😎 Cool</button>
+      <button class="tool" data-cat="eyes" data-val="sparkle">✨ Sparkly</button>
+    </div>
+
+    <p class="hint" style="text-align:left;margin:14px 0 6px">Mouth</p>
+    <div class="tools2" id="mouthBar">
+      <button class="tool on" data-cat="mouth" data-val="classic"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><circle cx="12" cy="24" r="3" fill="#08313F"/><circle cx="20" cy="27" r="3" fill="#08313F"/><circle cx="28" cy="24" r="3" fill="#08313F"/></svg> Classic</button>
+      <button class="tool" data-cat="mouth" data-val="smile"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><path d="M8 20 Q20 34 32 20" stroke="#08313F" stroke-width="4" fill="none" stroke-linecap="round"/></svg> Big Smile</button>
+      <button class="tool" data-cat="mouth" data-val="surprised"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><ellipse cx="20" cy="22" rx="6" ry="8" fill="#08313F"/></svg> Surprised</button>
+      <button class="tool" data-cat="mouth" data-val="grumpy"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><path d="M8 28 Q20 16 32 28" stroke="#08313F" stroke-width="4" fill="none" stroke-linecap="round"/></svg> Grumpy</button>
+    </div>
+
+    <p class="hint" style="text-align:left;margin:14px 0 6px">Pet Friend</p>
+    <div class="tools2" id="petBar">
+      <button class="tool on" data-cat="pet" data-val="dog"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><circle cx="20" cy="22" r="10" fill="#FFF6E5" stroke="#08313F" stroke-width="2.5"/><path d="M12 14 L8 4 L16 10 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><path d="M28 14 L34 6 L30 14 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><circle cx="17" cy="22" r="1.4" fill="#08313F"/><circle cx="23" cy="22" r="1.4" fill="#08313F"/></svg> Dog</button>
+      <button class="tool" data-cat="pet" data-val="cat"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><circle cx="20" cy="22" r="10" fill="#3C3C3C" stroke="#08313F" stroke-width="2.5"/><path d="M12 14 L10 4 L18 12 Z" fill="#3C3C3C" stroke="#08313F" stroke-width="2"/><path d="M28 14 L30 4 L22 12 Z" fill="#3C3C3C" stroke="#08313F" stroke-width="2"/><circle cx="17" cy="22" r="1.4" fill="#FFC93C"/><circle cx="23" cy="22" r="1.4" fill="#FFC93C"/></svg> Cat</button>
+      <button class="tool" data-cat="pet" data-val="bird"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><ellipse cx="18" cy="22" rx="10" ry="8" fill="#4FB477" stroke="#08313F" stroke-width="2.5"/><circle cx="30" cy="16" r="5" fill="#4FB477" stroke="#08313F" stroke-width="2.5"/><path d="M35 16 L40 15 L35 19 Z" fill="#FF9F1C"/></svg> Bird</button>
+      <button class="tool" data-cat="pet" data-val="none"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><circle cx="20" cy="20" r="14" fill="none" stroke="#08313F" stroke-width="4"/><line x1="10" y1="30" x2="30" y2="10" stroke="#FF6B5B" stroke-width="4" stroke-linecap="round"/></svg> None</button>
+    </div>
+
+    <div class="actions">
+      <button class="btn" id="randomizeBtn">🎲 Surprise me</button>
+      <button class="btn quiet" data-back>← Back to the carnival</button>
+    </div>`);
+
+  const HAT_OPTS = ['top','beanie','santa','none'];
+  const ARM_OPTS = ['twig','wave','candy','none'];
+  const EYES_OPTS = ['classic','wink','cool','sparkle'];
+  const MOUTH_OPTS = ['classic','smile','surprised','grumpy'];
+  const PET_OPTS = ['dog','cat','bird','none'];
+  const SCARF_COLORS = ['#FF6B5B','#FFC93C','#4FB477','#12718F','#9B5DE5','#FF8FB1','#08313F','#FFFFFF'];
+
+  function setGroup(prefix, opts, val){
+    opts.forEach(o=>{
+      const g = document.getElementById(prefix+'-'+o);
+      if(g) g.style.display = (o===val) ? '' : 'none';
+    });
+  }
+
+  function wireBar(barId, prefix, opts){
+    const btns = [...document.querySelectorAll('#'+barId+' .tool')];
+    btns.forEach(b=>b.addEventListener('click',()=>{
+      btns.forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      setGroup(prefix, opts, b.dataset.val);
+      tone(494,90,'triangle',0.14);
+    }));
+  }
+  wireBar('hatBar','hat',HAT_OPTS);
+  wireBar('armsBar','arms',ARM_OPTS);
+  wireBar('eyesBar','eyes',EYES_OPTS);
+  wireBar('mouthBar','mouth',MOUTH_OPTS);
+  wireBar('petBar','pet',PET_OPTS);
+
+  const scarfEl = document.getElementById('scarf');
+  const scarfTailEl = document.getElementById('scarfTail');
+  function setScarf(c){
+    if(c==='none'){
+      scarfEl.style.display='none'; scarfTailEl.style.display='none';
+    } else {
+      scarfEl.style.display=''; scarfTailEl.style.display='';
+      scarfEl.setAttribute('fill', c);
+      scarfTailEl.setAttribute('fill', c);
+    }
+  }
+  const paletteEl = document.getElementById('scarfPalette');
+  paletteEl.innerHTML = SCARF_COLORS.map((c,i)=>
+    `<button class="swatch${i===0?' on':''}" data-color="${c}" style="background:${c}" aria-label="scarf colour"></button>`
+  ).join('') + `<button class="swatch" data-color="none" aria-label="no scarf">🚫</button>`;
+  const swatches = [...document.querySelectorAll('#scarfPalette .swatch')];
+  swatches.forEach(s=>s.addEventListener('click',()=>{
+    swatches.forEach(x=>x.classList.remove('on'));
+    s.classList.add('on');
+    setScarf(s.dataset.color);
+    tone(523.25,90,'triangle',0.14);
+  }));
+  setScarf(SCARF_COLORS[0]);
+
+  document.getElementById('randomizeBtn').addEventListener('click', ()=>{
+    const pickHat = HAT_OPTS[Math.floor(Math.random()*HAT_OPTS.length)];
+    const pickArm = ARM_OPTS[Math.floor(Math.random()*ARM_OPTS.length)];
+    const pickEyes = EYES_OPTS[Math.floor(Math.random()*EYES_OPTS.length)];
+    const pickMouth = MOUTH_OPTS[Math.floor(Math.random()*MOUTH_OPTS.length)];
+    const pickPet = PET_OPTS[Math.floor(Math.random()*PET_OPTS.length)];
+    const scarfChoices = [...SCARF_COLORS, 'none'];
+    const pickScarf = scarfChoices[Math.floor(Math.random()*scarfChoices.length)];
+    const hatBtn = document.querySelector(`#hatBar .tool[data-val="${pickHat}"]`);
+    const armBtn = document.querySelector(`#armsBar .tool[data-val="${pickArm}"]`);
+    const eyesBtn = document.querySelector(`#eyesBar .tool[data-val="${pickEyes}"]`);
+    const mouthBtn = document.querySelector(`#mouthBar .tool[data-val="${pickMouth}"]`);
+    const petBtn = document.querySelector(`#petBar .tool[data-val="${pickPet}"]`);
+    const scarfBtn = document.querySelector(`#scarfPalette .swatch[data-color="${pickScarf}"]`);
+    if(hatBtn) hatBtn.click();
+    if(armBtn) armBtn.click();
+    if(eyesBtn) eyesBtn.click();
+    if(mouthBtn) mouthBtn.click();
+    if(petBtn) petBtn.click();
+    if(scarfBtn) scarfBtn.click();
+    chime();
+    benny("Ta-da! Martin whipped up a brand new look.");
+  });
 }
 
 /* Settings panel: music, voice, background, language */
