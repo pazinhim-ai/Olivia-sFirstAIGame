@@ -480,8 +480,8 @@
 
       <p class="settings-label" id="lblMusic">Music</p>
       <div class="tools2" id="musicToggleRow">
-        <button class="tool on" data-music="on" id="musicOnBtn"><svg viewBox="0 0 60 60" width="15" height="15" style="vertical-align:-2px"><circle cx="16" cy="46" r="8" fill="#08313F"/><circle cx="40" cy="40" r="8" fill="#08313F"/><rect x="22" y="14" width="4" height="32" fill="#08313F"/><rect x="46" y="10" width="4" height="30" fill="#08313F"/><path d="M22 14 L50 10 L50 18 L22 22 Z" fill="#08313F"/></svg> On</button>
-        <button class="tool" data-music="off" id="musicOffBtn"><svg viewBox="0 0 60 60" width="15" height="15" style="vertical-align:-2px"><circle cx="16" cy="46" r="8" fill="#08313F"/><circle cx="40" cy="40" r="8" fill="#08313F"/><rect x="22" y="14" width="4" height="32" fill="#08313F"/><rect x="46" y="10" width="4" height="30" fill="#08313F"/><path d="M22 14 L50 10 L50 18 L22 22 Z" fill="#08313F"/><line x1="8" y1="8" x2="52" y2="52" stroke="#FF6B5B" stroke-width="5" stroke-linecap="round"/></svg> Off</button>
+        <button class="tool" data-music="on" id="musicOnBtn"><svg viewBox="0 0 60 60" width="15" height="15" style="vertical-align:-2px"><circle cx="16" cy="46" r="8" fill="#08313F"/><circle cx="40" cy="40" r="8" fill="#08313F"/><rect x="22" y="14" width="4" height="32" fill="#08313F"/><rect x="46" y="10" width="4" height="30" fill="#08313F"/><path d="M22 14 L50 10 L50 18 L22 22 Z" fill="#08313F"/></svg> On</button>
+        <button class="tool on" data-music="off" id="musicOffBtn"><svg viewBox="0 0 60 60" width="15" height="15" style="vertical-align:-2px"><circle cx="16" cy="46" r="8" fill="#08313F"/><circle cx="40" cy="40" r="8" fill="#08313F"/><rect x="22" y="14" width="4" height="32" fill="#08313F"/><rect x="46" y="10" width="4" height="30" fill="#08313F"/><path d="M22 14 L50 10 L50 18 L22 22 Z" fill="#08313F"/><line x1="8" y1="8" x2="52" y2="52" stroke="#FF6B5B" stroke-width="5" stroke-linecap="round"/></svg> Off</button>
       </div>
 
       <p class="settings-label" id="lblVoice">Benny's Voice</p>
@@ -795,7 +795,7 @@ const MELODY = [440, null, 523.25, 587.33, null, 523.25, 440, null,
                 392, null, 440, 523.25, null, 392, 329.63, null];
 const BASS   = [110, 130.81, 98, 110];
 
-let musicOn = true, musicTimer = null, musicStep = 0, onHub = true;
+let musicOn = false, musicTimer = null, musicStep = 0, onHub = true;
 
 function softNote(freq, ms, type, vol){
   const c = ac; if(!c) return;
@@ -2519,6 +2519,7 @@ document.getElementById('settingsClose').addEventListener('click', ()=>{ setting
 function unlockAudio(){
   audioCtx();
   if(onHub && musicOn) startMusic();
+  benny(UI[lang].greeting);
   document.removeEventListener('click', unlockAudio);
   document.removeEventListener('keydown', unlockAudio);
 }
