@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Pond Carnival</title>
+<style>
+  :root{
+    --pond:#0B4F6C;
+    --water:#12718F;
+    --lily:#4FB477;
+    --sun:#FFC93C;
+    --coral:#FF6B5B;
+    --cream:#FFF6E5;
+    --ink:#08313F;
+    --drop:6px 6px 0 var(--ink);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;
+    color:var(--cream);
+    min-height:100vh;
+    padding:18px 14px 150px;
+    transition:background .4s ease;
+  }
+  body[data-bg="pond"]{
+    background:var(--pond);
+    background-image:
+      radial-gradient(circle at 20% 15%, rgba(79,180,119,.25) 0 12%, transparent 12.5%),
+      radial-gradient(circle at 80% 60%, rgba(18,113,143,.5) 0 18%, transparent 18.5%),
+      radial-gradient(circle at 50% 95%, rgba(255,201,60,.15) 0 20%, transparent 20.5%);
+  }
+  body[data-bg="sunset"]{
+    background:#7A3B69;
+    background-image:
+      radial-gradient(circle at 20% 15%, rgba(255,159,28,.35) 0 12%, transparent 12.5%),
+      radial-gradient(circle at 80% 60%, rgba(255,107,91,.5) 0 18%, transparent 18.5%),
+      radial-gradient(circle at 50% 95%, rgba(255,201,60,.3) 0 20%, transparent 20.5%);
+  }
+  body[data-bg="night"]{
+    background:#0B1330;
+    background-image:
+      radial-gradient(circle at 25% 20%, rgba(155,93,229,.3) 0 12%, transparent 12.5%),
+      radial-gradient(circle at 75% 65%, rgba(18,113,143,.45) 0 18%, transparent 18.5%),
+      radial-gradient(circle at 50% 95%, rgba(255,255,255,.08) 0 20%, transparent 20.5%);
+  }
+  body[data-bg="meadow"]{
+    background:#3a9c63;
+    background-image:
+      radial-gradient(circle at 20% 15%, rgba(255,201,60,.35) 0 12%, transparent 12.5%),
+      radial-gradient(circle at 80% 60%, rgba(255,255,255,.3) 0 18%, transparent 18.5%),
+      radial-gradient(circle at 50% 95%, rgba(79,180,119,.3) 0 20%, transparent 20.5%);
+  }
+  .title{
+    font-size:clamp(30px,9vw,54px);
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:-1px;
+    line-height:.92;
+    color:var(--sun);
+    text-shadow:4px 4px 0 var(--ink);
+    text-align:center;
+    max-width:640px;
+    margin:6px auto 4px;
+  }
+  .sub{
+    text-align:center;font-size:15px;color:#BFE6F2;
+    max-width:520px;margin:0 auto 22px;
+  }
+  .tools{display:flex;justify-content:center;margin:0 auto 20px}
+  .musicbtn{
+    font:inherit;font-size:13px;font-weight:bold;cursor:pointer;
+    background:transparent;color:#BFE6F2;
+    border:2px solid #3E7F96;border-radius:99px;
+    padding:6px 16px;
+  }
+  .musicbtn:hover{border-color:var(--sun);color:var(--sun)}
+  .musicbtn:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+
+  .wrap{max-width:640px;margin:0 auto}
+
+  /* ---- hub cards ---- */
+  .grid{display:grid;gap:16px;grid-template-columns:1fr}
+  @media(min-width:520px){.grid{grid-template-columns:1fr 1fr}}
+  .card{
+    background:var(--cream);color:var(--ink);
+    border:4px solid var(--ink);border-radius:22px;
+    padding:16px;text-align:left;cursor:pointer;
+    box-shadow:var(--drop);
+    font:inherit;width:100%;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .card:nth-child(odd){transform:rotate(-1.2deg)}
+  .card:nth-child(even){transform:rotate(1deg)}
+  .card:hover,.card:focus-visible{transform:translate(-3px,-3px) rotate(0deg);box-shadow:9px 9px 0 var(--ink)}
+  .card:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
+  .card .emo{font-size:38px;display:block;line-height:1}
+  .card h3{font-size:20px;margin:8px 0 4px;text-transform:uppercase;letter-spacing:-.3px}
+  .card p{font-size:14px;color:#3C5A63}
+  .card .who{
+    display:inline-block;margin-top:10px;font-size:12px;font-weight:bold;
+    background:var(--lily);color:var(--ink);
+    padding:3px 10px;border-radius:99px;border:2px solid var(--ink);
+  }
+  .card.soon{background:#9FBFCB;cursor:default;box-shadow:4px 4px 0 var(--ink)}
+  .card.soon:hover{transform:rotate(0deg);box-shadow:4px 4px 0 var(--ink)}
+  .card.soon .who{background:var(--sun)}
+
+  /* ---- game screen ---- */
+  .screen{
+    background:var(--cream);color:var(--ink);
+    border:4px solid var(--ink);border-radius:24px;
+    padding:18px;box-shadow:var(--drop);
+  }
+  .bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .bar h2{font-size:20px;text-transform:uppercase;letter-spacing:-.4px}
+  .counters{display:flex;gap:8px}
+  .chip{
+    background:var(--ink);color:var(--sun);font-weight:bold;font-size:14px;
+    padding:5px 12px;border-radius:99px;white-space:nowrap;
+  }
+  .btn{
+    font:inherit;font-weight:bold;font-size:15px;cursor:pointer;
+    background:var(--coral);color:var(--cream);
+    border:3px solid var(--ink);border-radius:99px;
+    padding:10px 20px;box-shadow:3px 3px 0 var(--ink);
+  }
+  .btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+  .btn:focus-visible{outline:4px solid var(--water);outline-offset:3px}
+  .btn.quiet{background:var(--water)}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+
+  .field{
+    position:relative;height:320px;
+    background:var(--water);
+    background-image:radial-gradient(circle at 30% 40%, rgba(79,180,119,.45) 0 22%, transparent 22.5%),
+                     radial-gradient(circle at 75% 75%, rgba(79,180,119,.35) 0 16%, transparent 16.5%);
+    border:3px solid var(--ink);border-radius:16px;overflow:hidden;
+  }
+  .fly{
+    position:absolute;font-size:30px;background:none;border:0;cursor:pointer;
+    padding:6px;line-height:1;
+    animation:pop .18s ease-out;
+  }
+  .fly:focus-visible{outline:3px solid var(--sun);border-radius:50%}
+  @keyframes pop{from{transform:scale(.2)}to{transform:scale(1)}}
+
+  .ingredients{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+  .ing{
+    font-size:44px;padding:22px 0;border:4px solid var(--ink);border-radius:18px;
+    cursor:pointer;background:#DCEEF4;transition:filter .1s;
+  }
+  .ing.on{filter:brightness(1.35) saturate(1.4);transform:scale(1.04)}
+  .ing.bad{background:var(--coral);filter:none;transform:scale(1);animation:shake .45s ease-in-out}
+  @keyframes shake{
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-7px)}
+    40%{transform:translateX(7px)}
+    60%{transform:translateX(-4px)}
+    80%{transform:translateX(4px)}
+  }
+  .mute{
+    font:inherit;font-size:18px;cursor:pointer;line-height:1;
+    background:var(--ink);border:0;border-radius:99px;padding:5px 11px;
+  }
+  .mute:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+  .ing:focus-visible{outline:4px solid var(--coral);outline-offset:2px}
+
+  .basket{position:absolute;bottom:6px;font-size:34px;line-height:1;transform:translateX(-50%);transition:left .05s linear}
+  .snack{position:absolute;font-size:26px;line-height:1;transform:translateX(-50%)}
+
+  .road{
+    position:relative;height:320px;overflow:hidden;
+    background:#3C444B;
+    border:3px solid var(--ink);border-radius:16px;
+  }
+  .lane-line{
+    position:absolute;top:0;bottom:0;width:4px;margin-left:-2px;
+    background-image:repeating-linear-gradient(to bottom, #FFF 0 18px, transparent 18px 36px);
+    opacity:.55;
+  }
+  .car{position:absolute;font-size:32px;line-height:1;transform:translateX(-50%)}
+  .car.player{bottom:8px;transition:left .12s ease}
+  .car.obstacle{top:-40px}
+
+  .settings-overlay{
+    position:fixed;inset:0;z-index:900;
+    background:rgba(8,49,63,.72);
+    display:flex;align-items:center;justify-content:center;
+    padding:20px;
+  }
+  .settings-card{
+    background:var(--cream);color:var(--ink);
+    border:4px solid var(--ink);border-radius:24px;
+    padding:24px 22px;max-width:360px;width:100%;
+    box-shadow:var(--drop);
+    max-height:86vh;overflow-y:auto;
+  }
+  .settings-card h2{font-size:22px;text-transform:uppercase;text-align:center;margin-bottom:6px;letter-spacing:-.4px}
+  .settings-label{font-size:13px;font-weight:bold;color:#3C5A63;margin:14px 0 6px}
+  .settings-card .btn{width:100%;margin-top:18px}
+
+  .hero-card{
+    background:linear-gradient(135deg,var(--sun),#ffdb73);
+    color:var(--ink);
+    border:4px solid var(--ink);border-radius:26px;
+    padding:22px 20px;text-align:center;
+    box-shadow:8px 8px 0 var(--ink);
+    max-width:460px;margin:0 auto 22px;
+  }
+  .hero-card .hero-emo{font-size:44px;display:block;margin-bottom:4px}
+  .hero-card h2{font-size:24px;text-transform:uppercase;letter-spacing:-.4px;margin-bottom:6px}
+  .hero-card p{font-size:14px;color:#3C5A63;margin-bottom:14px}
+
+  .bday-overlay{
+    position:fixed;inset:0;z-index:999;
+    background:radial-gradient(circle at 50% 20%, #1c6b8a, #0B4F6C 72%);
+    display:flex;align-items:center;justify-content:center;
+    transition:opacity .5s ease;
+  }
+  .bday-overlay.hide{opacity:0;pointer-events:none}
+  .bday-overlay canvas{position:absolute;inset:0;width:100%;height:100%}
+  .bday-card{
+    position:relative;z-index:2;text-align:center;
+    background:var(--cream);color:var(--ink);
+    border:4px solid var(--ink);border-radius:26px;
+    padding:34px 26px;box-shadow:var(--drop);
+    max-width:340px;margin:0 20px;
+  }
+  .bday-emoji{font-size:40px;margin-bottom:8px}
+  .bday-card h2{font-size:26px;text-transform:uppercase;letter-spacing:-.5px;color:var(--coral);text-shadow:2px 2px 0 var(--ink)}
+  .bday-card p{margin-top:6px;font-size:16px;font-weight:bold;color:var(--water)}
+  .bday-card .btn{margin-top:18px}
+
+  .dots{display:flex;justify-content:center;gap:8px;margin-bottom:10px}
+  .dots .dot{
+    width:16px;height:16px;border-radius:50%;
+    background:#DCEEF4;border:2px solid var(--ink);
+    display:inline-flex;align-items:center;justify-content:center;font-size:9px;
+  }
+  .dots .dot.on{background:var(--sun)}
+  .dots .dot.done{background:var(--lily)}
+
+  .gm-stage{
+    position:relative;height:320px;overflow:hidden;
+    border:3px solid var(--ink);border-radius:16px;
+    background:var(--water);
+  }
+  .gm-stage.scene-garden{background:linear-gradient(to bottom,#BFE6F2 0%,#BFE6F2 34%,#4FB477 34%,#3a9c63 100%)}
+  .gm-stage.scene-yard{background:linear-gradient(to bottom,#BFE6F2 0%,#BFE6F2 30%,#8FCB86 30%,#6fb56a 100%)}
+  .gm-stage.scene-park{background:linear-gradient(to bottom,#BFE6F2 0%,#BFE6F2 40%,#7BC47F 40%,#5ea564 100%)}
+  .gm-stage.scene-house{background:#E8D8B8}
+  .gm-stage.scene-finale{background:linear-gradient(160deg,#FFC93C,#FF6B5B)}
+
+  .gm-caption{
+    position:absolute;top:8px;left:8px;right:8px;text-align:center;
+    font-size:13px;font-weight:bold;color:var(--ink);
+    background:rgba(255,246,229,.85);border-radius:10px;padding:5px 8px;
+  }
+  .gm-item{
+    position:absolute;font-size:30px;background:none;border:0;cursor:pointer;
+    padding:4px;line-height:1;transition:opacity .25s ease, transform .2s ease;
+    transform:translate(-50%,-50%);
+  }
+  .gm-item.done{transform:translate(-50%,-50%) scale(1.3)}
+
+  .gm-finale{
+    position:relative;z-index:2;height:100%;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;color:var(--ink);
+  }
+  .gm-finale-emoji{font-size:38px;margin-bottom:6px}
+  .gm-finale h3{font-size:22px;text-transform:uppercase;letter-spacing:-.4px;text-shadow:2px 2px 0 rgba(255,255,255,.5)}
+  .gm-finale p{font-size:15px;font-weight:bold;margin-top:4px}
+  .gm-finale .gm-love{color:var(--water)}
+  #gmConfetti{position:absolute;inset:0;width:100%;height:100%}
+
+  .paper{position:relative;height:320px;background:#fff;border:3px solid var(--ink);border-radius:16px;overflow:hidden}
+  .paper canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:none}
+  .palette{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .swatch{width:34px;height:34px;border-radius:50%;border:3px solid var(--ink);cursor:pointer;padding:0}
+  .swatch.on{outline:3px solid var(--sun);outline-offset:2px;transform:scale(1.14)}
+  .swatch:focus-visible{outline:4px solid var(--sun);outline-offset:2px}
+  .tools2{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .tool{
+    font:inherit;font-size:14px;font-weight:bold;cursor:pointer;
+    background:#DCEEF4;color:var(--ink);
+    border:3px solid var(--ink);border-radius:14px;
+    padding:10px 16px;
+  }
+  .tool.on{background:var(--lily)}
+  .tool:focus-visible{outline:4px solid var(--sun);outline-offset:2px}
+
+  .strings{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+  .string{
+    font-size:17px;font-weight:bold;text-align:left;cursor:pointer;
+    display:flex;align-items:center;gap:12px;
+    background:#DCEEF4;color:var(--ink);
+    border:4px solid var(--ink);border-radius:14px;
+    padding:14px 18px;transition:filter .1s;
+  }
+  .string .dot{width:14px;height:14px;border-radius:50%;background:var(--ink);flex-shrink:0}
+  .string.on{filter:brightness(1.3) saturate(1.3);transform:scale(1.02)}
+  .string:focus-visible{outline:4px solid var(--lily);outline-offset:2px}
+
+  .critter{
+    text-align:center;font-size:64px;line-height:1;margin:6px 0 2px;
+    animation:pop .25s ease-out;
+  }
+  .speech{
+    text-align:center;font-size:19px;font-weight:bold;font-style:italic;
+    color:var(--water);margin-bottom:4px;
+  }
+  .hint{text-align:center;font-size:14px;color:#3C5A63;margin-bottom:14px}
+  .answers{display:grid;gap:10px}
+  .answer{
+    font:inherit;font-size:15px;font-weight:bold;text-align:left;cursor:pointer;
+    background:#DCEEF4;color:var(--ink);
+    border:3px solid var(--ink);border-radius:14px;
+    padding:12px 16px;box-shadow:3px 3px 0 var(--ink);
+  }
+  .answer:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .answer:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
+  .answer.right{background:var(--lily)}
+  .answer.wrong{background:var(--coral);color:var(--cream)}
+  .answer:disabled{cursor:default}
+
+  .hands{display:flex;gap:12px;justify-content:center;margin:10px 0}
+  .hand{font-size:40px;padding:14px 18px;border:4px solid var(--ink);border-radius:18px;background:#DCEEF4;cursor:pointer}
+  .duel{display:flex;justify-content:space-around;align-items:center;font-size:56px;margin:14px 0;min-height:74px}
+  .message{text-align:center;font-size:16px;font-weight:bold;min-height:26px;margin-top:6px}
+
+  /* ---- Benny, our guide ---- */
+  .benny{
+    position:fixed;left:0;right:0;bottom:0;
+    display:flex;align-items:flex-end;gap:10px;
+    padding:10px 14px;background:linear-gradient(transparent,rgba(8,49,63,.92) 45%);
+  }
+  .benny svg{width:76px;height:66px;flex-shrink:0;animation:hop 2.6s ease-in-out infinite}
+  @keyframes hop{0%,72%,100%{transform:translateY(0)}80%{transform:translateY(-10px)}88%{transform:translateY(0)}}
+  .bubble{
+    background:var(--cream);color:var(--ink);border:3px solid var(--ink);
+    border-radius:16px;padding:9px 14px;font-size:14px;font-weight:bold;
+    box-shadow:4px 4px 0 rgba(0,0,0,.35);max-width:430px;
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body data-bg="pond">
+
+<div id="birthdayOverlay" class="bday-overlay">
+  <canvas id="bdayConfetti"></canvas>
+  <div class="bday-card">
+    <div class="bday-emoji">🎉🎂🎉</div>
+    <h2>Happy Birthday<br>Grandma!</h2>
+    <p>Love, Olivia</p>
+    <button class="btn" id="bdayGo">Come on in →</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <h1 class="title" id="pageTitle">The Pond<br>Carnival</h1>
+  <p class="sub" id="pageSub">Nine mini-games, one family, one very chatty frog. Pick a card to play.</p>
+
+  <div class="tools">
+    <button class="musicbtn" id="settingsBtn">⚙️ <span id="settingsLabel">Settings</span></button>
+  </div>
+
+  <div id="settingsOverlay" class="settings-overlay" style="display:none">
+    <div class="settings-card">
+      <h2 id="settingsTitle">⚙️ Settings</h2>
+
+      <p class="settings-label" id="lblMusic">Music</p>
+      <div class="tools2" id="musicToggleRow">
+        <button class="tool on" data-music="on" id="musicOnBtn">🎵 On</button>
+        <button class="tool" data-music="off" id="musicOffBtn">🔇 Off</button>
+      </div>
+
+      <p class="settings-label" id="lblVoice">Benny's Voice</p>
+      <div class="tools2" id="voiceToggleRow">
+        <button class="tool on" data-voice="on" id="voiceOnBtn">🗣️ On</button>
+        <button class="tool" data-voice="off" id="voiceOffBtn">🤐 Off</button>
+      </div>
+
+      <p class="settings-label" id="lblBg">Background</p>
+      <div class="tools2" id="bgRow">
+        <button class="tool on" data-bg="pond" id="bgPondBtn">🪷 Pond</button>
+        <button class="tool" data-bg="sunset" id="bgSunsetBtn">🌅 Sunset</button>
+        <button class="tool" data-bg="night" id="bgNightBtn">🌙 Night</button>
+        <button class="tool" data-bg="meadow" id="bgMeadowBtn">🌼 Meadow</button>
+      </div>
+
+      <p class="settings-label" id="lblLang">Language</p>
+      <div class="tools2" id="langRow">
+        <button class="tool on" data-lang="en">🇬🇧 English</button>
+        <button class="tool" data-lang="es">🇪🇸 Español</button>
+        <button class="tool" data-lang="ru">🇷🇺 Русский</button>
+        <button class="tool" data-lang="pt">🇵🇹 Português</button>
+        <button class="tool" data-lang="ja">🇯🇵 日本語</button>
+        <button class="tool" data-lang="fr">🇫🇷 Français</button>
+        <button class="tool" data-lang="ca">Català</button>
+      </div>
+
+      <button class="btn" id="settingsClose">Done</button>
+    </div>
+  </div>
+
+  <div id="hubWrap">
+    <div class="hero-card">
+      <span class="hero-emo">🎂</span>
+      <h2 id="heroTitle">Grandma's Day</h2>
+      <p id="heroText">A whole day made just for Berty — plants, cats, the dog, and Grandpa's messes.</p>
+      <button class="btn" id="heroPlay">Play Berty's Game →</button>
+    </div>
+    <div id="hub" class="grid"></div>
+  </div>
+  <div id="stage" class="screen" style="display:none"></div>
+</div>
+
+<div class="benny">
+  <svg viewBox="0 0 100 88" aria-hidden="true">
+    <ellipse cx="50" cy="60" rx="40" ry="26" fill="#4FB477" stroke="#08313F" stroke-width="4"/>
+    <circle cx="32" cy="30" r="16" fill="#4FB477" stroke="#08313F" stroke-width="4"/>
+    <circle cx="68" cy="30" r="16" fill="#4FB477" stroke="#08313F" stroke-width="4"/>
+    <circle cx="32" cy="30" r="7" fill="#FFF6E5"/><circle cx="68" cy="30" r="7" fill="#FFF6E5"/>
+    <circle id="eyeL" cx="33" cy="31" r="4" fill="#08313F"/>
+    <circle id="eyeR" cx="69" cy="31" r="4" fill="#08313F"/>
+    <ellipse cx="50" cy="66" rx="23" ry="16" fill="#FFC93C"/>
+    <path d="M25 60 Q50 88 75 60" stroke="#08313F" stroke-width="4" fill="none" stroke-linecap="round" id="mouthClosed"/>
+    <ellipse id="mouthOpen" cx="50" cy="70" rx="15" ry="13" fill="#08313F" style="display:none"/>
+  </svg>
+  <div class="bubble" id="says">Hi Olivia! I'm Benny. Pick a mini-game and I'll explain how it works.</div>
+</div>
+
+<script>
+/* ================= Data ================= */
+const says = document.getElementById('says');
+const hub = document.getElementById('hub');
+const hubWrap = document.getElementById('hubWrap');
+const stage = document.getElementById('stage');
+
+let lang = 'en';
+const UI = {
+  en: {
+    title: 'The Pond<br>Carnival',
+    sub: 'Nine mini-games, one family, one very chatty frog. Pick a card to play.',
+    settingsBtn: 'Settings',
+    settingsTitle: '⚙️ Settings',
+    lblMusic: 'Music', lblVoice: "Benny's Voice", lblBg: 'Background', lblLang: 'Language',
+    done: 'Done',
+    heroTitle: "Grandma's Day",
+    heroText: "A whole day made just for Berty — plants, cats, the dog, and Grandpa's messes.",
+    heroBtn: "Play Berty's Game →",
+    greeting: "Hi Olivia! I'm Benny. Pick a mini-game and I'll explain how it works."
+  },
+  es: {
+    title: 'El Carnaval<br>del Estanque',
+    sub: 'Nueve minijuegos, una familia, una rana muy habladora. Elige una carta para jugar.',
+    settingsBtn: 'Ajustes',
+    settingsTitle: '⚙️ Ajustes',
+    lblMusic: 'Música', lblVoice: 'Voz de Benny', lblBg: 'Fondo', lblLang: 'Idioma',
+    done: 'Listo',
+    heroTitle: 'El Día de la Abuela',
+    heroText: 'Un día entero hecho solo para Berty: plantas, gatos, el perro y los líos del abuelo.',
+    heroBtn: 'Jugar el Juego de Berty →',
+    greeting: '¡Hola, Olivia! Soy Benny. Elige un minijuego y te explico cómo funciona.'
+  },
+  ru: {
+    title: 'Карнавал<br>у Пруда',
+    sub: 'Девять мини-игр, одна семья и болтливая лягушка. Выбери карточку, чтобы играть.',
+    settingsBtn: 'Настройки',
+    settingsTitle: '⚙️ Настройки',
+    lblMusic: 'Музыка', lblVoice: 'Голос Бенни', lblBg: 'Фон', lblLang: 'Язык',
+    done: 'Готово',
+    heroTitle: 'День Бабушки',
+    heroText: 'Целый день специально для Берти — растения, кошки, собака и беспорядок дедушки.',
+    heroBtn: 'Играть в игру Берти →',
+    greeting: 'Привет, Оливия! Я Бенни. Выбери мини-игру, и я объясню правила.'
+  },
+  pt: {
+    title: 'O Carnaval<br>da Lagoa',
+    sub: 'Nove minijogos, uma família, um sapo muito tagarela. Escolha uma carta para jogar.',
+    settingsBtn: 'Configurações',
+    settingsTitle: '⚙️ Configurações',
+    lblMusic: 'Música', lblVoice: 'Voz do Benny', lblBg: 'Fundo', lblLang: 'Idioma',
+    done: 'Concluído',
+    heroTitle: 'O Dia da Vovó',
+    heroText: 'Um dia inteiro só para a Berty — plantas, gatos, o cachorro e as bagunças do vovô.',
+    heroBtn: 'Jogar o Jogo da Berty →',
+    greeting: 'Oi, Olivia! Eu sou o Benny. Escolha um minijogo e eu explico como funciona.'
+  },
+  ja: {
+    title: '池の<br>カーニバル',
+    sub: '9つのミニゲーム、一つの家族、おしゃべりなカエル。カードを選んで遊ぼう。',
+    settingsBtn: '設定',
+    settingsTitle: '⚙️ 設定',
+    lblMusic: '音楽', lblVoice: 'ベニーの声', lblBg: '背景', lblLang: '言語',
+    done: '完了',
+    heroTitle: 'おばあちゃんの一日',
+    heroText: 'バーティのためだけの一日 — 植物、猫、犬、おじいちゃんの散らかし。',
+    heroBtn: 'バーティのゲームで遊ぶ →',
+    greeting: 'こんにちは、オリビア！ぼくはベニーだよ。ミニゲームを選んでね、遊び方を教えるよ。'
+  },
+  fr: {
+    title: "Le Carnaval<br>de l'Étang",
+    sub: 'Neuf mini-jeux, une famille, une grenouille très bavarde. Choisis une carte pour jouer.',
+    settingsBtn: 'Paramètres',
+    settingsTitle: '⚙️ Paramètres',
+    lblMusic: 'Musique', lblVoice: 'Voix de Benny', lblBg: 'Arrière-plan', lblLang: 'Langue',
+    done: 'Terminé',
+    heroTitle: 'La Journée de Mamie',
+    heroText: "Une journée entière rien que pour Berty — les plantes, les chats, le chien et le désordre de Papy.",
+    heroBtn: 'Jouer au jeu de Berty →',
+    greeting: "Salut Olivia ! Je suis Benny. Choisis un mini-jeu et je t'expliquerai comment jouer."
+  },
+  ca: {
+    title: "El Carnaval<br>de l'Estany",
+    sub: 'Nou minijocs, una família, una granota molt xerraire. Tria una carta per jugar.',
+    settingsBtn: 'Configuració',
+    settingsTitle: '⚙️ Configuració',
+    lblMusic: 'Música', lblVoice: "Veu d'en Benny", lblBg: 'Fons', lblLang: 'Idioma',
+    done: 'Fet',
+    heroTitle: "El Dia de l'Àvia",
+    heroText: "Un dia sencer només per a la Berty — plantes, gats, el gos i els desordres de l'avi.",
+    heroBtn: 'Jugar al joc de la Berty →',
+    greeting: "Hola, Olivia! Sóc en Benny. Tria un minijoc i t'explicaré com funciona."
+  }
+};
+
+function applyLanguage(){
+  const t = UI[lang];
+  document.getElementById('pageTitle').innerHTML = t.title;
+  document.getElementById('pageSub').textContent = t.sub;
+  document.getElementById('settingsLabel').textContent = t.settingsBtn;
+  document.getElementById('settingsTitle').textContent = t.settingsTitle;
+  document.getElementById('lblMusic').textContent = t.lblMusic;
+  document.getElementById('lblVoice').textContent = t.lblVoice;
+  document.getElementById('lblBg').textContent = t.lblBg;
+  document.getElementById('lblLang').textContent = t.lblLang;
+  document.getElementById('settingsClose').textContent = t.done;
+  document.getElementById('heroTitle').textContent = t.heroTitle;
+  document.getElementById('heroText').textContent = t.heroText;
+  document.getElementById('heroPlay').textContent = t.heroBtn;
+  if(onHub) showHub();
+}
+
+/* ---- Benny's voice + talking mouth ---- */
+let voiceOn = true;
+const synth = window.speechSynthesis || null;
+let bennyVoice = null;
+
+function pickVoice(){
+  if(!synth) return;
+  const voices = synth.getVoices();
+  const english = voices.filter(v=>/en/i.test(v.lang));
+  const pool = english.length ? english : voices;
+  bennyVoice =
+    pool.find(v=>/male/i.test(v.name) && !/female/i.test(v.name)) ||
+    pool.find(v=>/\b(david|daniel|alex|fred|guy|mark|tom|james|george|arthur|oliver|aaron|eddy|rocko)\b/i.test(v.name)) ||
+    pool[0] || null;
+}
+if(synth){
+  pickVoice();
+  synth.onvoiceschanged = pickVoice;
+}
+
+let mouthTimer = null, mouthFallback = null;
+function startMouth(){
+  const mc = document.getElementById('mouthClosed');
+  const mo = document.getElementById('mouthOpen');
+  clearInterval(mouthTimer);
+  let open = false;
+  mouthTimer = setInterval(()=>{
+    open = !open;
+    mc.style.display = open ? 'none' : '';
+    mo.style.display = open ? '' : 'none';
+  }, 140);
+}
+function stopMouth(){
+  clearInterval(mouthTimer); mouthTimer = null;
+  const mc = document.getElementById('mouthClosed');
+  const mo = document.getElementById('mouthOpen');
+  if(mc) mc.style.display = '';
+  if(mo) mo.style.display = 'none';
+}
+
+function speak(text){
+  if(!synth) return false;
+  synth.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  if(bennyVoice) u.voice = bennyVoice;
+  u.pitch = 1.8;
+  u.rate = 1.02;
+  u.onstart = startMouth;
+  u.onend = stopMouth;
+  u.onerror = stopMouth;
+  synth.speak(u);
+  return true;
+}
+
+function benny(t){
+  says.textContent = t;
+  clearTimeout(mouthFallback);
+  const spoke = voiceOn && speak(t);
+  if(!spoke){
+    startMouth();
+    mouthFallback = setTimeout(stopMouth, Math.max(900, Math.min(4500, t.length*55)));
+  }
+}
+
+/* ================= Sound ================= */
+let ac = null, soundOn = true;
+
+function audioCtx(){
+  if(!ac){
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if(!Ctx) return null;
+    ac = new Ctx();
+  }
+  if(ac.state === 'suspended') ac.resume();
+  return ac;
+}
+
+function tone(freq, ms, type, vol){
+  if(!soundOn) return;
+  const c = audioCtx(); if(!c) return;
+  const o = c.createOscillator(), g = c.createGain();
+  o.type = type || 'sine';
+  o.frequency.value = freq;
+  const now = c.currentTime, dur = (ms||300)/1000;
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.exponentialRampToValueAtTime(vol || 0.2, now + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+  o.connect(g); g.connect(c.destination);
+  o.start(now); o.stop(now + dur + 0.03);
+}
+
+function buzzer(){
+  if(!soundOn) return;
+  const c = audioCtx(); if(!c) return;
+  const o = c.createOscillator(), g = c.createGain();
+  o.type = 'sawtooth';
+  const now = c.currentTime;
+  o.frequency.setValueAtTime(240, now);
+  o.frequency.exponentialRampToValueAtTime(65, now + 0.55);
+  g.gain.setValueAtTime(0.16, now);
+  g.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+  o.connect(g); g.connect(c.destination);
+  o.start(now); o.stop(now + 0.62);
+}
+
+function chime(){
+  [523.25, 659.25, 784, 1046.5].forEach((f,i)=> setTimeout(()=>tone(f,220,'triangle',0.16), i*90));
+}
+
+/* ================= Background music ================= */
+/* A slow loop in A minor pentatonic. Melody on top, one bass note every 4 steps. */
+const MELODY = [440, null, 523.25, 587.33, null, 523.25, 440, null,
+                392, null, 440, 523.25, null, 392, 329.63, null];
+const BASS   = [110, 130.81, 98, 110];
+
+let musicOn = true, musicTimer = null, musicStep = 0, onHub = true;
+
+function softNote(freq, ms, type, vol){
+  const c = ac; if(!c) return;
+  const o = c.createOscillator(), g = c.createGain();
+  o.type = type;
+  o.frequency.value = freq;
+  const now = c.currentTime, dur = ms/1000;
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.exponentialRampToValueAtTime(vol, now + 0.08);
+  g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+  o.connect(g); g.connect(c.destination);
+  o.start(now); o.stop(now + dur + 0.05);
+}
+
+function startMusic(){
+  if(musicTimer || !musicOn || !ac) return;   // ac only exists after a real tap
+  musicStep = 0;
+  const step = ()=>{
+    const note = MELODY[musicStep % MELODY.length];
+    if(note) softNote(note, 520, 'triangle', 0.055);
+    if(musicStep % 4 === 0) softNote(BASS[(musicStep/4) % BASS.length], 950, 'sine', 0.06);
+    musicStep++;
+  };
+  step();
+  musicTimer = setInterval(step, 430);
+}
+
+function stopMusic(){
+  clearInterval(musicTimer);
+  musicTimer = null;
+}
+
+const GAMES = [
+  {id:'flies', emo:'🪰',
+   title:{en:'Catch the Flies', es:'Atrapa las Moscas', ru:'Лови Мух', pt:'Pegue as Moscas', ja:'ハエをつかまえよう', fr:'Attrape les Mouches', ca:'Atrapa les Mosques'},
+   who:{en:'Benny the Frog', es:'Benny la Rana', ru:'Бенни Лягушка', pt:'Benny, o Sapo', ja:'カエルのベニー', fr:'Benny la Grenouille', ca:'Benny la Granota'},
+   text:{en:'Tap as many flies as you can in 30 seconds. They do not stick around!',
+         es:'Toca todas las moscas que puedas en 30 segundos. ¡No se quedan quietas!',
+         ru:'Поймай как можно больше мух за 30 секунд. Они долго не задерживаются!',
+         pt:'Toque no máximo de moscas que conseguir em 30 segundos. Elas não ficam paradas!',
+         ja:'30秒でできるだけ多くのハエをタップしよう。すぐ飛んでいっちゃうよ!',
+         fr:'Touche un maximum de mouches en 30 secondes. Elles ne restent pas longtemps !',
+         ca:'Toca totes les mosques que puguis en 30 segons. No es queden quietes!'}},
+  {id:'recipe', emo:'🍰',
+   title:{en:'Elizabeth\'s Recipe', es:'La Receta de Elizabeth', ru:'Рецепт Элизабет', pt:'A Receita da Elizabeth', ja:'エリザベスのレシピ', fr:"La Recette d'Elizabeth", ca:"La Recepta d'Elizabeth"},
+   who:{en:'Mum Elizabeth', es:'Mamá Elizabeth', ru:'Мама Элизабет', pt:'Mamãe Elizabeth', ja:'ママのエリザベス', fr:'Maman Elizabeth', ca:'Mama Elizabeth'},
+   text:{en:'Mum shows you the ingredients in order. Repeat the recipe from memory.',
+         es:'Mamá te muestra los ingredientes en orden. Repite la receta de memoria.',
+         ru:'Мама показывает ингредиенты по порядку. Повтори рецепт по памяти.',
+         pt:'A mamãe mostra os ingredientes em ordem. Repita a receita de memória.',
+         ja:'ママが材料を順番に見せてくれるよ。記憶してレシピを繰り返そう。',
+         fr:"Maman te montre les ingrédients dans l'ordre. Répète la recette de mémoire.",
+         ca:'La mama et mostra els ingredients en ordre. Repeteix la recepta de memòria.'}},
+  {id:'duel', emo:'✊',
+   title:{en:'Duel with Sam', es:'Duelo con Sam', ru:'Дуэль с Сэмом', pt:'Duelo com Sam', ja:'サムとの対決', fr:'Duel avec Sam', ca:'Duel amb en Sam'},
+   who:{en:'Sam, big brother', es:'Sam, el hermano mayor', ru:'Сэм, старший брат', pt:'Sam, o irmão mais velho', ja:'お兄ちゃんのサム', fr:'Sam, le grand frère', ca:'En Sam, el germà gran'},
+   text:{en:'Rock, paper, scissors. First one to 3 points wins the duel.',
+         es:'Piedra, papel o tijera. El primero en llegar a 3 puntos gana el duelo.',
+         ru:'Камень, ножницы, бумага. Кто первым наберёт 3 очка, побеждает в дуэли.',
+         pt:'Pedra, papel ou tesoura. Quem chegar a 3 pontos primeiro vence o duelo.',
+         ja:'じゃんけん対決!先に3ポイント取った方が勝ち。',
+         fr:'Pierre, feuille, ciseaux. Le premier à 3 points gagne le duel.',
+         ca:'Pedra, paper o tisora. El primer a arribar a 3 punts guanya el duel.'}},
+  {id:'jack', emo:'🐦',
+   title:{en:'Animal Translator', es:'Traductor de Animales', ru:'Переводчик Животных', pt:'Tradutor de Animais', ja:'動物通訳', fr:"Traducteur d'Animaux", ca:"Traductor d'Animals"},
+   who:{en:'Jack, the hero', es:'Jack, el protagonista', ru:'Джек, герой', pt:'Jack, o herói', ja:'主人公のジャック', fr:'Jack, le héros', ca:"En Jack, l'heroi"},
+   text:{en:'Jack is the only person who understands animals. Listen to what they say and work out what they need.',
+         es:'Jack es el único que entiende a los animales. Escucha lo que dicen y adivina qué necesitan.',
+         ru:'Джек — единственный, кто понимает животных. Послушай, что они говорят, и пойми, что им нужно.',
+         pt:'Jack é o único que entende os animais. Ouça o que eles dizem e descubra o que precisam.',
+         ja:'ジャックは動物の言葉が分かる唯一の人。何を言っているか聞いて、何が必要か当ててみよう。',
+         fr:"Jack est le seul à comprendre les animaux. Écoute ce qu'ils disent et devine ce dont ils ont besoin.",
+         ca:"En Jack és l'únic que entén els animals. Escolta què diuen i esbrina què necessiten."}},
+  {id:'frank', emo:'🎸',
+   title:{en:'Frank\'s Tune', es:'La Melodía de Frank', ru:'Мелодия Фрэнка', pt:'A Melodia do Frank', ja:'フランクのメロディ', fr:'La Mélodie de Frank', ca:"La Melodia d'en Frank"},
+   who:{en:'Dad Frank', es:'Papá Frank', ru:'Папа Фрэнк', pt:'Papai Frank', ja:'パパのフランク', fr:'Papa Frank', ca:'El papa Frank'},
+   text:{en:'Frank plays a short guitar riff. Listen close, then play it back — no rush.',
+         es:'Frank toca un riff corto de guitarra. Escucha con calma y repítelo — sin prisa.',
+         ru:'Фрэнк играет короткий гитарный рифф. Слушай внимательно и повтори — не спеша.',
+         pt:'Frank toca um riff curto de violão. Escute com atenção e repita — sem pressa.',
+         ja:'フランクが短いギターのフレーズを弾くよ。よく聞いて、ゆっくり繰り返そう。',
+         fr:'Frank joue un court riff de guitare. Écoute bien, puis rejoue-le — sans te presser.',
+         ca:'En Frank toca un riff curt de guitarra. Escolta amb calma i repeteix-lo — sense pressa.'}},
+  {id:'coloring', emo:'🖍️',
+   title:{en:'Jenny\'s Coloring Corner', es:'El Rincón de Colorear de Jenny', ru:'Уголок Раскрасок Дженни', pt:'Cantinho de Colorir da Jenny', ja:'ジェニーの塗り絵コーナー', fr:'Le Coin Coloriage de Jenny', ca:'El Racó de Colorejar de la Jenny'},
+   who:{en:'Jenny', es:'Jenny', ru:'Дженни', pt:'Jenny', ja:'ジェニー', fr:'Jenny', ca:'La Jenny'},
+   text:{en:'Pick a color and a tool — pencil, brush, or eraser — and draw whatever you like.',
+         es:'Elige un color y una herramienta — lápiz, pincel o goma — y dibuja lo que quieras.',
+         ru:'Выбери цвет и инструмент — карандаш, кисть или ластик — и рисуй что хочешь.',
+         pt:'Escolha uma cor e uma ferramenta — lápis, pincel ou borracha — e desenhe o que quiser.',
+         ja:'色と道具(えんぴつ、ブラシ、消しゴム)を選んで、好きなものを描こう。',
+         fr:'Choisis une couleur et un outil — crayon, pinceau ou gomme — et dessine ce que tu veux.',
+         ca:'Tria un color i una eina — llapis, pinzell o goma — i dibuixa el que vulguis.'}},
+  {id:'cars', emo:'🚗',
+   title:{en:'Dodge with Señor', es:'Esquiva con Señor', ru:'Уклонись с Сеньором', pt:'Desvie com o Señor', ja:'セニョールと車よけ', fr:'Esquive avec Señor', ca:'Esquiva amb en Señor'},
+   who:{en:'Señor Spanish Teacher', es:'Señor, el profe de español', ru:'Сеньор, учитель испанского', pt:'Señor, o professor de espanhol', ja:'スペイン語の先生セニョール', fr:"Señor, le prof d'espagnol", ca:"En Señor, el profe d'espanyol"},
+   text:{en:'Stay in your lane and dodge the traffic. Use the arrows or the buttons.',
+         es:'Quédate en tu carril y esquiva el tráfico. Usa las flechas o los botones.',
+         ru:'Оставайся в своей полосе и уклоняйся от машин. Используй стрелки или кнопки.',
+         pt:'Fique na sua faixa e desvie do trânsito. Use as setas ou os botões.',
+         ja:'車線を守って車をよけよう。矢印かボタンを使ってね。',
+         fr:'Reste dans ta voie et évite le trafic. Utilise les flèches ou les boutons.',
+         ca:"Queda't al teu carril i esquiva el trànsit. Fes servir les fletxes o els botons."}},
+  {id:'snacks', emo:'🧺',
+   title:{en:'Catch with Benny', es:'Atrapa con Benny', ru:'Лови с Бенни', pt:'Pegue com o Benny', ja:'ベニーとキャッチ', fr:'Attrape avec Benny', ca:'Atrapa amb en Benny'},
+   who:{en:'Benny the Frog', es:'Benny la Rana', ru:'Бенни Лягушка', pt:'Benny, o Sapo', ja:'カエルのベニー', fr:'Benny la Grenouille', ca:'En Benny la Granota'},
+   text:{en:'Snacks fall from above — slide the basket to catch as many as you can.',
+         es:'Los bocadillos caen desde arriba — mueve la cesta para atrapar todos los que puedas.',
+         ru:'Еда падает сверху — двигай корзину и лови как можно больше.',
+         pt:'Os lanches caem lá de cima — mova a cesta e pegue o máximo que puder.',
+         ja:'おやつが上から落ちてくるよ — かごを動かしてできるだけ多くキャッチしよう。',
+         fr:"Des friandises tombent d'en haut — déplace le panier pour en attraper le plus possible.",
+         ca:'El menjar cau des de dalt — mou la cistella per atrapar-ne tants com puguis.'}}
+];
+
+function showHub(){
+  onHub = true;
+  startMusic();
+  stage.style.display='none';
+  hubWrap.style.display='block';
+  hub.innerHTML='';
+  GAMES.forEach(g=>{
+    const b = document.createElement('button');
+    b.className = 'card' + (g.soon?' soon':'');
+    b.innerHTML = `<span class="emo">${g.emo}</span><h3>${g.title[lang]}</h3><p>${g.text[lang]}</p><span class="who">${g.who[lang]}</span>`;
+    if(g.soon){
+      b.addEventListener('click',()=>benny("This one doesn't exist yet. Tell Claude what it should be!"));
+    } else {
+      b.addEventListener('click',()=>start(g.id));
+    }
+    hub.appendChild(b);
+  });
+}
+
+function openStage(html){
+  onHub = false;
+  stopMusic();
+  hubWrap.style.display='none';
+  stage.style.display='block';
+  stage.innerHTML = html;
+  stage.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',()=>{stopAll();showHub();benny("Pick another mini-game whenever you like.");}));
+}
+
+let timer = null, loop = null;
+function stopAll(){ clearInterval(timer); clearInterval(loop); timer=null; loop=null; }
+
+function start(id){
+  stopAll();
+  if(id==='flies') gameFlies();
+  if(id==='recipe') gameRecipe();
+  if(id==='duel') gameDuel();
+  if(id==='jack') gameJack();
+  if(id==='frank') gameFrank();
+  if(id==='coloring') gameColoring();
+  if(id==='cars') gameCars();
+  if(id==='snacks') gameSnacks();
+  if(id==='grandma') gameGrandma();
+}
+
+/* ============ 1. Catch the Flies ============ */
+function gameFlies(){
+  benny("Aim carefully! Each fly only sticks around for a second and a half.");
+  openStage(`
+    <div class="bar">
+      <h2>🪰 Catch the Flies</h2>
+      <div class="counters">
+        <span class="chip" id="score">Score: 0</span>
+        <span class="chip" id="clock">30 s</span>
+      </div>
+    </div>
+    <div class="field" id="field"></div>
+    <div class="actions">
+      <button class="btn" id="again">Play again</button>
+      <button class="btn quiet" data-back>← Back to the carnival</button>
+    </div>`);
+
+  const field = document.getElementById('field');
+  const elScore = document.getElementById('score');
+  const elClock = document.getElementById('clock');
+  let score = 0, left = 30;
+
+  function begin(){
+    stopAll();
+    field.innerHTML=''; score=0; left=30;
+    elScore.textContent='Score: 0'; elClock.textContent='30 s';
+
+    loop = setInterval(()=>{
+      const f = document.createElement('button');
+      f.className='fly'; f.textContent='🪰';
+      f.setAttribute('aria-label','fly');
+      f.style.left = (5 + Math.random()*82) + '%';
+      f.style.top  = (5 + Math.random()*80) + '%';
+      f.addEventListener('click',()=>{
+        score++; elScore.textContent='Score: '+score; f.remove();
+        if(score===10) benny("Ten flies! You are quick.");
+      });
+      field.appendChild(f);
+      setTimeout(()=>f.remove(),1500);
+    },520);
+
+    timer = setInterval(()=>{
+      left--; elClock.textContent = left+' s';
+      if(left<=0){
+        stopAll(); field.innerHTML='';
+        const end = document.createElement('p');
+        end.style.cssText='color:#FFF6E5;text-align:center;padding-top:130px;font-size:22px;font-weight:bold';
+        end.textContent = 'Time! You caught '+score+' fl'+(score===1?'y':'ies');
+        field.appendChild(end);
+        benny(score>=15 ? "Amazing! My belly is full." : "Not bad! Hit Play again and beat your score.");
+      }
+    },1000);
+  }
+  document.getElementById('again').addEventListener('click',begin);
+  begin();
+}
+
+/* ============ 2. Elizabeth's Recipe ============ */
+function gameRecipe(){
+  benny("Watch the order of the ingredients, then repeat it back.");
+  openStage(`
+    <div class="bar">
+      <h2>🍰 Elizabeth's Recipe</h2>
+      <div class="counters">
+        <span class="chip" id="level">Level 1</span>
+        <button class="mute" id="mute" aria-label="Turn sound off">🔊</button>
+      </div>
+    </div>
+    <div class="ingredients">
+      <button class="ing" data-i="0">🍓</button>
+      <button class="ing" data-i="1">🍌</button>
+      <button class="ing" data-i="2">🍫</button>
+      <button class="ing" data-i="3">🥛</button>
+    </div>
+    <p class="message" id="msg">Press "Show me" to begin.</p>
+    <div class="actions">
+      <button class="btn" id="go">Show me</button>
+      <button class="btn quiet" data-back>← Back to the carnival</button>
+    </div>`);
+
+  const buttons = [...document.querySelectorAll('.ing')];
+  const msg = document.getElementById('msg');
+  const elLevel = document.getElementById('level');
+  let seq = [], pos = 0, yourTurn = false;
+
+  const NOTES = [392, 523.25, 659.25, 784];
+
+  const muteBtn = document.getElementById('mute');
+  muteBtn.textContent = soundOn ? '🔊' : '🔇';
+  muteBtn.addEventListener('click',()=>{
+    soundOn = !soundOn;
+    muteBtn.textContent = soundOn ? '🔊' : '🔇';
+    muteBtn.setAttribute('aria-label', soundOn ? 'Turn sound off' : 'Turn sound on');
+    if(soundOn) tone(523.25,150,'sine',0.15);
+  });
+
+  function flash(i,ms=420){
+    buttons[i].classList.add('on');
+    tone(NOTES[i], ms - 40, 'sine', 0.2);
+    setTimeout(()=>buttons[i].classList.remove('on'),ms);
+  }
+
+  function show(){
+    yourTurn=false; pos=0;
+    seq.push(Math.floor(Math.random()*4));
+    elLevel.textContent = 'Level ' + seq.length;
+    msg.textContent = 'Watch closely...';
+    seq.forEach((v,k)=> setTimeout(()=>flash(v), 700*k + 400));
+    setTimeout(()=>{ yourTurn=true; msg.textContent='Your turn — repeat the recipe!'; }, 700*seq.length + 500);
+  }
+
+  buttons.forEach(b=>b.addEventListener('click',()=>{
+    if(!yourTurn) return;
+    const i = +b.dataset.i;
+    flash(i,200);
+    if(i === seq[pos]){
+      pos++;
+      if(pos === seq.length){
+        yourTurn=false;
+        chime();
+        msg.textContent='Perfect! Next ingredient coming up...';
+        benny(seq.length>=5 ? "What a memory! Elizabeth is impressed." : "Nicely done, keep going.");
+        setTimeout(show,1100);
+      }
+    } else {
+      yourTurn=false;
+      buzzer();
+      buttons.forEach(b=>{ b.classList.remove('on'); b.classList.add('bad'); });
+      setTimeout(()=>buttons.forEach(b=>b.classList.remove('bad')), 1100);
+      msg.textContent = 'Oops! You made it through ' + (seq.length-1) + ' level(s).';
+      benny("No worries, baking takes practice. Try again!");
+      seq=[]; elLevel.textContent='Level 1';
+      document.getElementById('go').textContent='Start over';
+    }
+  }));
+
+  document.getElementById('go').addEventListener('click',()=>{ seq=[]; show(); });
+}
+
+/* ============ 3. Duel with Sam ============ */
+function gameDuel(){
+  benny("Sam thinks he is unbeatable. First to 3 points!");
+  openStage(`
+    <div class="bar">
+      <h2>✊ Duel with Sam</h2>
+      <div class="counters">
+        <span class="chip" id="pts">You 0 – 0 Sam</span>
+      </div>
+    </div>
+    <div class="duel"><span id="mine">❔</span><span style="font-size:26px">VS</span><span id="his">❔</span></div>
+    <div class="hands">
+      <button class="hand" data-c="0">✊</button>
+      <button class="hand" data-c="1">✋</button>
+      <button class="hand" data-c="2">✌️</button>
+    </div>
+    <p class="message" id="res">Pick your hand.</p>
+    <div class="actions">
+      <button class="btn" id="reset">New duel</button>
+      <button class="btn quiet" data-back>← Back to the carnival</button>
+    </div>`);
+
+  const SYM=['✊','✋','✌️'], NAME=['rock','paper','scissors'];
+  const elMine=document.getElementById('mine'), elHis=document.getElementById('his');
+  const elPts=document.getElementById('pts'), elRes=document.getElementById('res');
+  let me=0, sam=0, over=false;
+
+  function reset(){ me=0;sam=0;over=false;elPts.textContent='You 0 – 0 Sam';
+    elMine.textContent='❔';elHis.textContent='❔';elRes.textContent='Pick your hand.'; }
+
+  document.querySelectorAll('.hand').forEach(b=>b.addEventListener('click',()=>{
+    if(over) return;
+    const a=+b.dataset.c, s=Math.floor(Math.random()*3);
+    elMine.textContent=SYM[a]; elHis.textContent=SYM[s];
+    if(a===s){ elRes.textContent='A tie! You both picked '+NAME[a]+'.'; }
+    else if((a===0&&s===2)||(a===1&&s===0)||(a===2&&s===1)){ me++; elRes.textContent='You win! '+NAME[a]+' beats '+NAME[s]+'.'; }
+    else { sam++; elRes.textContent='Sam wins that one — '+NAME[s]+' beats '+NAME[a]+'.'; }
+    elPts.textContent = 'You '+me+' – '+sam+' Sam';
+    if(me===3){ over=true; elRes.textContent='You take the duel 🏆'; benny("You beat Sam! He'll sulk for three days."); }
+    if(sam===3){ over=true; elRes.textContent='Sam takes the duel.'; benny("Sam got you this time. Hit New duel."); }
+  }));
+  document.getElementById('reset').addEventListener('click',reset);
+}
+
+/* ============ 4. Jack: Animal Translator ============ */
+const CRITTERS = [
+  {emo:'🐦', sound:'Cheep! Cheep-cheep-CHEEP!', hint:'She keeps hopping back to the empty feeder.',
+   options:['"The feeder is empty again."','"I would like to learn the guitar."','"Sam stepped on my nest."'], right:0},
+  {emo:'🐕', sound:'Woof. Woof woof. Wooooof.', hint:'He is standing by the door with his lead in his mouth.',
+   options:['"I have hidden your homework."','"Take me out, it stopped raining."','"I am actually a wolf."'], right:1},
+  {emo:'🐈', sound:'Mrrrp. Mrow. Mrrrrrp.', hint:'She is sitting exactly where the sun hits the carpet.',
+   options:['"Do not move that curtain, I am busy."','"I want to go swimming."','"Where is my library card?"'], right:0},
+  {emo:'🐸', sound:'Ribbit. Ribbit ribbit!', hint:'It is Benny, and he is pointing at the pond.',
+   options:['"The water level dropped."','"I would like a hat."','"Frank is singing again."'], right:0},
+  {emo:'🐝', sound:'Bzz. Bzzz-bzz. BZZ.', hint:'She is doing a strange little dance in the air.',
+   options:['"I am lost."','"There are good flowers behind the shed."','"I stole a biscuit."'], right:1},
+  {emo:'🐢', sound:'...', hint:'He has not said anything for four minutes.',
+   options:['"Hurry up!"','"I am thinking. Come back later."','"I won the race."'], right:1},
+  {emo:'🦆', sound:'Quack! QUACK! Quack-quack.', hint:'She is herding six tiny ducklings toward the road.',
+   options:['"Help me get them across safely."','"I am opening a bakery."','"Your shoes are untied."'], right:0},
+  {emo:'🐁', sound:'Squeak. Squeak squeak.', hint:'He is peering out from under the kitchen cupboard.',
+   options:['"Elizabeth dropped crumbs again."','"I am the king of the garden."','"Benny owes me money."'], right:0}
+];
+
+function gameJack(){
+  benny("Nobody else in the family hears any of this. Just Jack. And me, obviously.");
+  openStage(`
+    <div class="bar">
+      <h2>🐦 Animal Translator</h2>
+      <div class="counters">
+        <span class="chip" id="jscore">Correct: 0</span>
+        <span class="chip" id="jround">1 of 5</span>
+      </div>
+    </div>
+    <div class="critter" id="critter">🐦</div>
+    <p class="speech" id="speech"></p>
+    <p class="hint" id="hint"></p>
+    <div class="answers" id="answers"></div>
+    <p class="message" id="jmsg"></p>
+    <div class="actions">
+      <button class="btn" id="jagain">New round</button>
+      <button class="btn quiet" data-back>← Back to the carnival</button>
+    </div>`);
+
+  const elCritter = document.getElementById('critter');
+  const elSpeech = document.getElementById('speech');
+  const elHint = document.getElementById('hint');
+  const elAnswers = document.getElementById('answers');
+  const elScore = document.getElementById('jscore');
+  const elRound = document.getElementById('jround');
+  const elMsg = document.getElementById('jmsg');
+
+  let deck = [], index = 0, correct = 0;
+  const TOTAL = 5;
+
+  function shuffle(a){ return a.slice().sort(()=>Math.random()-0.5); }
+
+  function newGame(){
+    deck = shuffle(CRITTERS).slice(0,TOTAL);
+    index = 0; correct = 0;
+    elScore.textContent = 'Correct: 0';
+    elMsg.textContent = '';
+    showCritter();
+  }
+
+  function showCritter(){
+    const c = deck[index];
+    elRound.textContent = (index+1) + ' of ' + TOTAL;
+    elCritter.textContent = c.emo;
+    elCritter.style.animation = 'none';
+    void elCritter.offsetWidth;
+    elCritter.style.animation = '';
+    elSpeech.textContent = c.sound;
+    elHint.textContent = c.hint;
+    elMsg.textContent = '';
+    elAnswers.innerHTML = '';
+
+    c.options.forEach((text,i)=>{
+      const b = document.createElement('button');
+      b.className = 'answer';
+      b.textContent = text;
+      b.addEventListener('click',()=>choose(b,i,c));
+      elAnswers.appendChild(b);
+    });
+  }
+
+  function choose(button,i,c){
+    const all = [...elAnswers.querySelectorAll('.answer')];
+    all.forEach(b=>b.disabled = true);
+    all[c.right].classList.add('right');
+
+    if(i === c.right){
+      correct++;
+      elScore.textContent = 'Correct: ' + correct;
+      elMsg.textContent = 'Jack understood perfectly.';
+      benny("See? Easy. For him.");
+    } else {
+      button.classList.add('wrong');
+      elMsg.textContent = 'Not quite — the green one is what she meant.';
+      benny("Close! Animals are not always clear, to be fair.");
+    }
+
+    index++;
+    setTimeout(()=>{
+      if(index < TOTAL){ showCritter(); }
+      else {
+        elCritter.textContent = correct === TOTAL ? '🏆' : '🐾';
+        elSpeech.textContent = 'You understood ' + correct + ' out of ' + TOTAL + '.';
+        elHint.textContent = '';
+        elAnswers.innerHTML = '';
+        elMsg.textContent = '';
+        benny(correct === TOTAL ? "Perfect score. You speak animal as well as Jack does." : "Good work. Hit New round to meet different animals.");
+      }
+    }, 1700);
+  }
+
+  document.getElementById('jagain').addEventListener('click',newGame);
+  newGame();
+}
+
+/* ============ 5. Frank's Tune ============ */
+function gameFrank(){
+  benny("Frank's pretty relaxed about this — take your time.");
+  openStage(`
+    <div class="bar">
+      <h2>🎸 Frank's Tune</h2>
+      <div class="counters">
+        <span class="chip" id="flevel">Verse 1</span>
+        <button class="mute" id="fmute" aria-label="Turn sound off">🔊</button>
+      </div>
+    </div>
+    <div class="strings" id="strings"></div>
+    <p class="message" id="fmsg">Press "Play it for me" to begin.</p>
+    <div class="actions">
+      <button class="btn" id="fgo">Play it for me</button>
+      <button class="btn quiet" data-back>← Back to the carnival</button>
+    </div>`);
+
+  const NOTES = [220.00, 261.63, 293.66, 329.63, 392.00, 440.00];
+  const LABELS = ['A','C','D','E','G','A'];
+
+  const stringsEl = document.getElementById('strings');
+  stringsEl.innerHTML = LABELS.map((l,i)=>`<button class="string" data-i="${i}"><span class="dot"></span>${l}</button>`).join('');
+  const buttons = [...document.querySelectorAll('.string')];
+
+  const msg = document.getElementById('fmsg');
+  const elLevel = document.getElementById('flevel');
+  let seq = [], pos = 0, yourTurn = false, speed = 620;
+
+  const muteBtn = document.getElementById('fmute');
+  muteBtn.textContent = soundOn ? '🔊' : '🔇';
+  muteBtn.addEventListener('click',()=>{
+    soundOn = !soundOn;
+    muteBtn.textContent = soundOn ? '🔊' : '🔇';
+    muteBtn.setAttribute('aria-label', soundOn ? 'Turn sound off' : 'Turn sound on');
+    if(soundOn) tone(293.66,150,'triangle',0.15);
+  });
+
+  function flash(i,ms){
+    const dur = ms || 520;
+    buttons[i].classList.add('on');
+    tone(NOTES[i], dur - 60, 'triangle', 0.18);
+    setTimeout(()=>buttons[i].classList.remove('on'), dur);
+  }
+
+  function play(){
+    yourTurn = false; pos = 0;
+    elLevel.textContent = 'Verse ' + seq.length;
+    msg.textContent = 'Listen close...';
+    seq.forEach((v,k)=> setTimeout(()=>flash(v, speed*0.8), speed*k + 400));
+    setTimeout(()=>{ yourTurn = true; msg.textContent = 'Your turn — play it back.'; }, speed*seq.length + 500);
+  }
+
+  function nextVerse(){
+    seq.push(Math.floor(Math.random()*6));
+    speed = 620;
+    play();
+  }
+
+  buttons.forEach(b=>b.addEventListener('click',()=>{
+    if(!yourTurn) return;
+    const i = +b.dataset.i;
+    flash(i, 260);
+    if(i === seq[pos]){
+      pos++;
+      if(pos === seq.length){
+        yourTurn = false;
+        chime();
+        msg.textContent = 'Nice and steady. Next verse...';
+        benny(seq.length>=5 ? "You've got real rhythm, you know." : "That's it, you've got the feel for it.");
+        setTimeout(nextVerse, 1200);
+      }
+    } else {
+      yourTurn = false;
+      msg.textContent = "No rush — let's try that bit again, a little slower.";
+      benny("Everyone fumbles a note sometimes. Just listen and try again.");
+      speed += 140;
+      setTimeout(play, 900);
+    }
+  }));
+
+  document.getElementById('fgo').addEventListener('click',()=>{ seq=[]; nextVerse(); });
+}
+
+/* ============ 6. Jenny's Coloring Corner ============ */
+function gameColoring(){
+  benny("Jenny set up her coloring corner. Pick a color, pick a tool, and go for it.");
+  openStage(`
+    <div class="bar">
+      <h2>🖍️ Jenny's Coloring Corner</h2>
+      <div class="counters">
+        <span class="chip" id="ctool">Pencil</span>
+      </div>
+    </div>
+    <div class="paper"><canvas id="canvas"></canvas></div>
+    <div class="palette" id="palette"></div>
+    <div class="tools2" id="toolbar">
+      <button class="tool on" data-tool="pencil">✏️ Pencil</button>
+      <button class="tool" data-tool="brush">🖌️ Brush</button>
+      <button class="tool" data-tool="eraser">🧽 Eraser</button>
+    </div>
+    <div class="actions">
+      <button class="btn" id="clearBtn">🗑️ Clear page</button>
+      <button class="btn quiet" data-back>← Back to the carnival</button>
+    </div>`);
+
+  const COLORS = ['#08313F','#FF6B5B','#FFC93C','#4FB477','#12718F','#9B5DE5','#FF8FB1','#8B5E34','#FF9F1C','#FFFFFF'];
+  const WIDTHS = {pencil:4, brush:16, eraser:26};
+  const NAMES  = {pencil:'Pencil', brush:'Brush', eraser:'Eraser'};
+
+  let color = COLORS[0], tool = 'pencil', drawing = false, lastX = 0, lastY = 0;
+
+  const paletteEl = document.getElementById('palette');
+  paletteEl.innerHTML = COLORS.map((c,i)=>
+    `<button class="swatch${i===0?' on':''}" data-color="${c}" style="background:${c}" aria-label="colour"></button>`
+  ).join('');
+
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const ratio = window.devicePixelRatio || 1;
+
+  function fillWhite(){
+    const rect = canvas.getBoundingClientRect();
+    ctx.save();
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.restore();
+  }
+
+  function sizeCanvas(){
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * ratio;
+    canvas.height = rect.height * ratio;
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    fillWhite();
+  }
+  sizeCanvas();
+
+  function pos(e){
+    const rect = canvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  function dot(p){
+    ctx.beginPath();
+    ctx.fillStyle = tool==='eraser' ? '#FFFFFF' : color;
+    ctx.arc(p.x, p.y, WIDTHS[tool]/2, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  canvas.addEventListener('pointerdown', e=>{
+    canvas.setPointerCapture(e.pointerId);
+    drawing = true;
+    const p = pos(e);
+    lastX = p.x; lastY = p.y;
+    dot(p);
+  });
+  canvas.addEventListener('pointermove', e=>{
+    if(!drawing) return;
+    const p = pos(e);
+    ctx.beginPath();
+    ctx.strokeStyle = tool==='eraser' ? '#FFFFFF' : color;
+    ctx.lineWidth = WIDTHS[tool];
+    ctx.moveTo(lastX,lastY);
+    ctx.lineTo(p.x,p.y);
+    ctx.stroke();
+    lastX = p.x; lastY = p.y;
+  });
+  ['pointerup','pointercancel','pointerleave'].forEach(evt=>
+    canvas.addEventListener(evt, ()=>{ drawing = false; }));
+
+  const swatches = [...document.querySelectorAll('.swatch')];
+  swatches.forEach(s=>s.addEventListener('click',()=>{
+    swatches.forEach(x=>x.classList.remove('on'));
+    s.classList.add('on');
+    color = s.dataset.color;
+  }));
+
+  const chip = document.getElementById('ctool');
+  const toolBtns = [...document.querySelectorAll('.tool')];
+  toolBtns.forEach(b=>b.addEventListener('click',()=>{
+    toolBtns.forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    tool = b.dataset.tool;
+    chip.textContent = NAMES[tool];
+  }));
+
+  document.getElementById('clearBtn').addEventListener('click',()=>{
+    fillWhite();
+    benny("Fresh page!");
+  });
+}
+
+/* ============ 7. Dodge with Señor ============ */
+function gameCars(){
+  benny("Señor is timing you. ¡Cuidado! — that means \"careful!\" Dodge every car you can.");
+  openStage(`
+    <div class="bar">
+      <h2>🚗 Dodge with Señor</h2>
+      <div class="counters">
+        <span class="chip" id="cscore">Score: 0</span>
+        <span class="chip" id="cbest">Best: 0</span>
+      </div>
+    </div>
+    <div class="road" id="road">
+      <div class="lane-line" style="left:33.333%"></div>
+      <div class="lane-line" style="left:66.666%"></div>
+      <div class="car player" id="playerCar" style="left:50%">🚙</div>
+    </div>
+    <div class="hands">
+      <button class="hand" id="leftBtn" aria-label="move left">⬅️</button>
+      <button class="hand" id="rightBtn" aria-label="move right">➡️</button>
+    </div>
+    <p class="message" id="cmsg">Tap ⬅️ ➡️, or use your arrow keys.</p>
+    <div class="actions">
+      <button class="btn" id="cagain">Play again</button>
+      <button class="btn quiet" data-back>← Back to the carnival</button>
+    </div>`);
+
+  const road = document.getElementById('road');
+  const playerEl = document.getElementById('playerCar');
+  const elScore = document.getElementById('cscore');
+  const elBest = document.getElementById('cbest');
+  const msg = document.getElementById('cmsg');
+  const LANES = [16.6, 50, 83.3];
+  const CAR_EMOJI = ['🚗','🚕','🚓','🚌'];
+  const roadHeight = 320;
+
+  let lane = 1, obstacles = [], score = 0, best = 0;
+  let spawnTimer = 0, spawnEvery = 70, speed = 4, alive = false;
+
+  function setPlayerLane(l){
+    lane = Math.max(0, Math.min(2, l));
+    playerEl.style.left = LANES[lane] + '%';
+  }
+  setPlayerLane(1);
+
+  function spawn(){
+    const l = Math.floor(Math.random()*3);
+    const el = document.createElement('div');
+    el.className = 'car obstacle';
+    el.style.left = LANES[l] + '%';
+    el.textContent = CAR_EMOJI[Math.floor(Math.random()*CAR_EMOJI.length)];
+    road.appendChild(el);
+    obstacles.push({ el, lane: l, top: -40 });
+  }
+
+  function gameOver(){
+    stopAll(); alive = false;
+    if(score > best){ best = score; elBest.textContent = 'Best: ' + best; }
+    msg.textContent = 'Crash! You dodged ' + score + ' car' + (score===1?'':'s') + '. Starting over...';
+    benny(score>=20 ? "¡Increíble! That means amazing — quick reflexes. Here we go again." : "¡Casi! That means almost. One more try, right away.");
+    setTimeout(()=>{ if(document.body.contains(road)) begin(); }, 1400);
+  }
+
+  function tick(){
+    spawnTimer++;
+    if(spawnTimer >= spawnEvery){ spawnTimer = 0; spawn(); }
+    for(let i=obstacles.length-1;i>=0;i--){
+      const o = obstacles[i];
+      o.top += speed;
+      o.el.style.top = o.top + 'px';
+      if(o.top > roadHeight){
+        obstacles.splice(i,1);
+        o.el.remove();
+        score++;
+        elScore.textContent = 'Score: ' + score;
+        if(score % 10 === 0){
+          speed += 0.6;
+          if(spawnEvery > 28) spawnEvery -= 4;
+        }
+      } else if(o.lane === lane && o.top >= roadHeight-70 && o.top <= roadHeight-15){
+        gameOver();
+        return;
+      }
+    }
+  }
+
+  function begin(){
+    stopAll();
+    obstacles.forEach(o=>o.el.remove());
+    obstacles = []; score = 0; spawnTimer = 0; spawnEvery = 70; speed = 4; alive = true;
+    elScore.textContent = 'Score: 0';
+    msg.textContent = 'Go!';
+    setPlayerLane(1);
+    timer = setInterval(tick, 30);
+  }
+
+  document.getElementById('leftBtn').addEventListener('click', ()=>{ if(alive) setPlayerLane(lane-1); });
+  document.getElementById('rightBtn').addEventListener('click', ()=>{ if(alive) setPlayerLane(lane+1); });
+
+  function keyHandler(e){
+    if(!alive) return;
+    if(e.key === 'ArrowLeft') setPlayerLane(lane-1);
+    if(e.key === 'ArrowRight') setPlayerLane(lane+1);
+  }
+  document.addEventListener('keydown', keyHandler);
+  const backBtn = document.querySelector('[data-back]');
+  if(backBtn) backBtn.addEventListener('click', ()=>{ document.removeEventListener('keydown', keyHandler); }, {once:true});
+
+  document.getElementById('cagain').addEventListener('click', begin);
+  begin();
+}
+
+/* ============ 8. Catch with Benny ============ */
+function gameSnacks(){
+  benny("Careful — not everything falling is food. Catch the snacks, leave the trash!");
+  openStage(`
+    <div class="bar">
+      <h2>🧺 Catch with Benny</h2>
+      <div class="counters">
+        <span class="chip" id="sscore">Score: 0</span>
+        <span class="chip" id="smiss">Misses: 0/5</span>
+      </div>
+    </div>
+    <div class="field" id="snackField">
+      <div class="basket" id="basket" style="left:50%">🧺</div>
+    </div>
+    <div class="hands">
+      <button class="hand" id="sLeft" aria-label="move left">⬅️</button>
+      <button class="hand" id="sRight" aria-label="move right">➡️</button>
+    </div>
+    <p class="message" id="smsg">Hold ⬅️ ➡️ — catch the snacks, dodge the trash!</p>
+    <div class="actions">
+      <button class="btn" id="sagain">Play again</button>
+      <button class="btn quiet" data-back>← Back to the carnival</button>
+    </div>`);
+
+  const field = document.getElementById('snackField');
+  const basket = document.getElementById('basket');
+  const elScore = document.getElementById('sscore');
+  const elMiss = document.getElementById('smiss');
+  const msg = document.getElementById('smsg');
+  const FOODS = ['🍎','🍌','🍩','🍕','🍪','🍇','🧀','🍓'];
+  const TRASH = ['🪨','🧦','🥾','🦴','🗑️'];
+  const fieldHeight = 320;
+  const MAX_MISS = 5;
+
+  let basketX = 50, score = 0, misses = 0, alive = false, warnedTrash = false;
+  let leftHeld = false, rightHeld = false;
+  let items = [], spawnTimer = 0, spawnEvery = 55, speed = 3.2;
+
+  function setBasket(x){
+    basketX = Math.max(8, Math.min(92, x));
+    basket.style.left = basketX + '%';
+  }
+  setBasket(50);
+
+  function spawn(){
+    const x = 10 + Math.random()*80;
+    const isTrash = Math.random() < 0.28;
+    const el = document.createElement('div');
+    el.className = 'snack';
+    el.style.left = x + '%';
+    el.style.top = '-30px';
+    el.textContent = isTrash
+      ? TRASH[Math.floor(Math.random()*TRASH.length)]
+      : FOODS[Math.floor(Math.random()*FOODS.length)];
+    field.appendChild(el);
+    items.push({ el, x, y: -30, isTrash });
+  }
+
+  function endGame(){
+    stopAll(); alive = false;
+    msg.textContent = 'Game over — Benny caught ' + score + ' snack' + (score===1?'':'s') + '.';
+    benny(score>=15 ? "What a feast! My belly's happy." : "Good round! Hit Play again whenever you like.");
+  }
+
+  function tick(){
+    if(leftHeld) setBasket(basketX - 1.6);
+    if(rightHeld) setBasket(basketX + 1.6);
+
+    spawnTimer++;
+    if(spawnTimer >= spawnEvery){ spawnTimer = 0; spawn(); }
+
+    for(let i=items.length-1;i>=0;i--){
+      const it = items[i];
+      it.y += speed;
+      it.el.style.top = it.y + 'px';
+      const catchZoneTop = fieldHeight - 60;
+      if(it.y >= catchZoneTop && it.y < fieldHeight){
+        if(Math.abs(it.x - basketX) < 11){
+          items.splice(i,1); it.el.remove();
+          if(it.isTrash){
+            misses++;
+            elMiss.textContent = 'Misses: ' + misses + '/' + MAX_MISS;
+            buzzer();
+            if(!warnedTrash){ warnedTrash = true; benny("Yuck, that was trash! Watch what you're catching."); }
+            if(misses >= MAX_MISS){ endGame(); return; }
+          } else {
+            score++; elScore.textContent = 'Score: ' + score;
+            tone(660,120,'triangle',0.18);
+            if(score % 8 === 0){ speed += 0.4; if(spawnEvery > 26) spawnEvery -= 3; }
+          }
+        }
+      } else if(it.y >= fieldHeight){
+        items.splice(i,1); it.el.remove();
+        if(!it.isTrash){
+          misses++;
+          elMiss.textContent = 'Misses: ' + misses + '/' + MAX_MISS;
+          if(misses >= MAX_MISS){ endGame(); return; }
+        }
+      }
+    }
+  }
+
+  function begin(){
+    stopAll();
+    items.forEach(it=>it.el.remove());
+    items = []; score = 0; misses = 0; spawnTimer = 0; spawnEvery = 55; speed = 3.2; alive = true; warnedTrash = false;
+    elScore.textContent = 'Score: 0';
+    elMiss.textContent = 'Misses: 0/' + MAX_MISS;
+    msg.textContent = 'Go!';
+    setBasket(50);
+    timer = setInterval(tick, 30);
+  }
+
+  const leftBtn = document.getElementById('sLeft');
+  const rightBtn = document.getElementById('sRight');
+  leftBtn.addEventListener('pointerdown', ()=>{ leftHeld = true; });
+  rightBtn.addEventListener('pointerdown', ()=>{ rightHeld = true; });
+  ['pointerup','pointerleave','pointercancel'].forEach(evt=>{
+    leftBtn.addEventListener(evt, ()=>{ leftHeld = false; });
+    rightBtn.addEventListener(evt, ()=>{ rightHeld = false; });
+  });
+
+  function keyDown(e){
+    if(!alive) return;
+    if(e.key === 'ArrowLeft') leftHeld = true;
+    if(e.key === 'ArrowRight') rightHeld = true;
+  }
+  function keyUp(e){
+    if(e.key === 'ArrowLeft') leftHeld = false;
+    if(e.key === 'ArrowRight') rightHeld = false;
+  }
+  document.addEventListener('keydown', keyDown);
+  document.addEventListener('keyup', keyUp);
+  const backBtn = document.querySelector('[data-back]');
+  if(backBtn) backBtn.addEventListener('click', ()=>{
+    document.removeEventListener('keydown', keyDown);
+    document.removeEventListener('keyup', keyUp);
+  }, {once:true});
+
+  document.getElementById('sagain').addEventListener('click', begin);
+  begin();
+}
+
+/* ============ Confetti engine (reused by the birthday overlay and the finale) ============ */
+function runConfetti(canvas, durationMs){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const COLORS = ['#FF6B5B','#FFC93C','#4FB477','#12718F','#9B5DE5','#FF8FB1','#FFF6E5'];
+  const N = Math.max(60, Math.floor((W*H)/9000));
+  const particles = [];
+  for(let i=0;i<N;i++){
+    particles.push({
+      x: Math.random()*W,
+      y: -20 - Math.random()*H*0.6,
+      vx: (Math.random()-0.5)*1.8,
+      vy: 2 + Math.random()*2.6,
+      size: 5 + Math.random()*6,
+      color: COLORS[Math.floor(Math.random()*COLORS.length)],
+      rot: Math.random()*Math.PI*2,
+      vr: (Math.random()-0.5)*0.25,
+      shape: Math.random()<0.5 ? 'rect' : 'circle'
+    });
+  }
+  let raf = null, running = true;
+  const startT = performance.now();
+  function frame(now){
+    if(!running) return;
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      if(p.y > H + 20){ p.y = -20; p.x = Math.random()*W; }
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      if(p.shape === 'rect'){ ctx.fillRect(-p.size/2, -p.size/3, p.size, p.size*0.66); }
+      else { ctx.beginPath(); ctx.arc(0,0,p.size/2,0,Math.PI*2); ctx.fill(); }
+      ctx.restore();
+    });
+    if(now - startT < durationMs){ raf = requestAnimationFrame(frame); }
+    else { ctx.clearRect(0,0,W,H); }
+  }
+  raf = requestAnimationFrame(frame);
+  return function stop(){ running = false; cancelAnimationFrame(raf); ctx.clearRect(0,0,W,H); };
+}
+
+function initBirthday(){
+  const overlay = document.getElementById('birthdayOverlay');
+  const canvas = document.getElementById('bdayConfetti');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const stop = runConfetti(canvas, 6000);
+  function dismiss(){
+    overlay.classList.add('hide');
+    stop();
+    setTimeout(()=>overlay.remove(), 550);
+  }
+  document.getElementById('bdayGo').addEventListener('click', dismiss);
+  setTimeout(dismiss, 6000);
+}
+
+/* ============ Grandma's Day — a birthday game for Berty ============ */
+function gameGrandma(){
+  benny("This one's just for Berty. Happy birthday, Grandma!");
+  openStage(`
+    <div class="bar">
+      <h2>🎂 Grandma's Day</h2>
+      <div class="counters">
+        <span class="chip" id="gmScene">Scene 1 of 4</span>
+      </div>
+    </div>
+    <div class="dots" id="gmDots"></div>
+    <div class="gm-stage" id="gmStage"></div>
+    <p class="message" id="gmMsg"></p>
+    <div class="actions">
+      <button class="btn quiet" data-back>← Back to the carnival</button>
+    </div>`);
+
+  const SCENES = [
+    { title:'Water the Plants', bgClass:'scene-garden', instruction:'Tap each pot to water it.',
+      count:6, emoji:'🪴', doneEmoji:'🌻', toneHz:440, complete:'Every plant is happy and watered!' },
+    { title:'Feed the Cats', bgClass:'scene-yard', instruction:'Tap each cat to feed it.',
+      count:5, emoji:'🐱', doneEmoji:'😻', toneHz:600, complete:'All the cats are purring!' },
+    { title:'Walk the Irish Setter', bgClass:'scene-park', instruction:'Tap to catch up with her.',
+      count:6, emoji:'🐕', doneEmoji:'🦮', toneHz:520, complete:'A very good walk for a very good dog!' },
+    { title:"Tidy Up After Grandpa", bgClass:'scene-house', instruction:'Grandpa strikes again — tap to clean up!',
+      count:7, emoji:'🧦', doneEmoji:'✨', toneHz:380, complete:"Tidied up. Grandpa owes her one!" }
+  ];
+
+  const stageEl = document.getElementById('gmStage');
+  const dotsEl = document.getElementById('gmDots');
+  const sceneChip = document.getElementById('gmScene');
+  const msg = document.getElementById('gmMsg');
+
+  dotsEl.innerHTML = SCENES.map((_,i)=>`<span class="dot" data-i="${i}"></span>`).join('') + `<span class="dot">🎉</span>`;
+
+  let sceneIndex = 0, tapped = 0;
+
+  function setDots(){
+    [...dotsEl.children].forEach((d,i)=>{
+      d.classList.toggle('on', i === sceneIndex);
+      d.classList.toggle('done', i < sceneIndex);
+    });
+  }
+
+  function layoutScene(scene){
+    stageEl.className = 'gm-stage ' + scene.bgClass;
+    stageEl.innerHTML = `<div class="gm-caption">${scene.instruction}</div>`;
+    sceneChip.textContent = 'Scene ' + (sceneIndex+1) + ' of ' + SCENES.length;
+    msg.textContent = '';
+    tapped = 0;
+    for(let i=0;i<scene.count;i++){
+      const el = document.createElement('button');
+      el.className = 'gm-item';
+      el.textContent = scene.emoji;
+      el.style.left = (10 + Math.random()*80) + '%';
+      el.style.top = (26 + Math.random()*60) + '%';
+      el.addEventListener('click', ()=> tapItem(el, scene));
+      stageEl.appendChild(el);
+    }
+    setDots();
+  }
+
+  function tapItem(el, scene){
+    if(el.classList.contains('done')) return;
+    el.classList.add('done');
+    el.textContent = scene.doneEmoji;
+    tone(scene.toneHz, 130, 'triangle', 0.16);
+    setTimeout(()=>{ el.style.opacity = '0'; }, 260);
+    tapped++;
+    if(tapped >= scene.count){
+      msg.textContent = scene.complete;
+      benny(scene.complete);
+      setTimeout(nextScene, 1300);
+    }
+  }
+
+  function nextScene(){
+    sceneIndex++;
+    if(sceneIndex < SCENES.length){ layoutScene(SCENES[sceneIndex]); }
+    else { finale(); }
+  }
+
+  function finale(){
+    sceneChip.textContent = 'The Grand Finale';
+    stageEl.className = 'gm-stage scene-finale';
+    stageEl.innerHTML = `
+      <canvas id="gmConfetti"></canvas>
+      <div class="gm-finale">
+        <div class="gm-finale-emoji">🎉👵🎉</div>
+        <h3>Happy Birthday, Grandma!</h3>
+        <p>You win every single time.</p>
+        <p class="gm-love">Love, Olivia</p>
+      </div>`;
+    setDots();
+    [...dotsEl.children].forEach(d=>d.classList.add('done'));
+    const cv = document.getElementById('gmConfetti');
+    const rect = stageEl.getBoundingClientRect();
+    cv.width = rect.width; cv.height = rect.height;
+    runConfetti(cv, 5000);
+    chime();
+    msg.textContent = '';
+    const actions = document.querySelector('.actions');
+    if(actions && !document.getElementById('gmReplay')){
+      const b = document.createElement('button');
+      b.className = 'btn'; b.id = 'gmReplay'; b.textContent = 'Play again';
+      b.addEventListener('click', begin);
+      actions.prepend(b);
+    }
+    benny("Ha! There she goes. Happy birthday, Grandma.");
+  }
+
+  function begin(){
+    stopAll();
+    sceneIndex = 0;
+    const oldReplay = document.getElementById('gmReplay');
+    if(oldReplay) oldReplay.remove();
+    layoutScene(SCENES[0]);
+  }
+
+  begin();
+}
+
+/* Settings panel: music, voice, background, language */
+function setMusic(on){
+  musicOn = on;
+  document.getElementById('musicOnBtn').classList.toggle('on', on);
+  document.getElementById('musicOffBtn').classList.toggle('on', !on);
+  if(musicOn && onHub) startMusic(); else stopMusic();
+}
+function setVoice(on){
+  voiceOn = on;
+  document.getElementById('voiceOnBtn').classList.toggle('on', on);
+  document.getElementById('voiceOffBtn').classList.toggle('on', !on);
+  if(!voiceOn && synth) synth.cancel();
+  if(!voiceOn) stopMouth();
+}
+function setBackground(theme){
+  document.body.setAttribute('data-bg', theme);
+  ['pond','sunset','night','meadow'].forEach(t=>{
+    document.getElementById('bg'+t.charAt(0).toUpperCase()+t.slice(1)+'Btn').classList.toggle('on', t===theme);
+  });
+}
+function setLanguage(l){
+  lang = l;
+  document.querySelectorAll('#langRow .tool').forEach(b=>b.classList.toggle('on', b.dataset.lang === l));
+  applyLanguage();
+  benny(UI[lang].greeting);
+}
+
+document.getElementById('musicOnBtn').addEventListener('click', ()=>setMusic(true));
+document.getElementById('musicOffBtn').addEventListener('click', ()=>setMusic(false));
+document.getElementById('voiceOnBtn').addEventListener('click', ()=>setVoice(true));
+document.getElementById('voiceOffBtn').addEventListener('click', ()=>setVoice(false));
+document.querySelectorAll('#bgRow .tool').forEach(b=>b.addEventListener('click', ()=>setBackground(b.dataset.bg)));
+document.querySelectorAll('#langRow .tool').forEach(b=>b.addEventListener('click', ()=>setLanguage(b.dataset.lang)));
+
+const settingsOverlay = document.getElementById('settingsOverlay');
+document.getElementById('settingsBtn').addEventListener('click', ()=>{ settingsOverlay.style.display = 'flex'; });
+document.getElementById('settingsClose').addEventListener('click', ()=>{ settingsOverlay.style.display = 'none'; });
+
+/* Browsers block sound until the page is tapped once. This is that tap. */
+function unlockAudio(){
+  audioCtx();
+  if(onHub && musicOn) startMusic();
+  document.removeEventListener('click', unlockAudio);
+  document.removeEventListener('keydown', unlockAudio);
+}
+document.addEventListener('click', unlockAudio);
+document.addEventListener('keydown', unlockAudio);
+
+/* Benny blinks */
+setInterval(()=>{
+  const l=document.getElementById('eyeL'), r=document.getElementById('eyeR');
+  l.setAttribute('r','1'); r.setAttribute('r','1');
+  setTimeout(()=>{l.setAttribute('r','4'); r.setAttribute('r','4');},140);
+}, 4200);
+
+document.getElementById('heroPlay').addEventListener('click', ()=> start('grandma'));
+
+applyLanguage();
+showHub();
+initBirthday();
+</script>
+</body>
+</html>
