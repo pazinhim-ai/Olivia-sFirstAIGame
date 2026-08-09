@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Pond Carnival</title>
+<title>Forest Frog Games</title>
 <style>
   :root{
     --pond:#0B4F6C;
@@ -323,6 +323,20 @@
   .gm-finale .gm-love{color:var(--water)}
   #gmConfetti{position:absolute;inset:0;width:100%;height:100%}
 
+  .story-page{
+    background:var(--cream);color:var(--ink);
+    border:4px solid var(--ink);border-radius:20px;
+    padding:16px;text-align:center;box-shadow:var(--drop);
+  }
+  .story-page-img{
+    display:block;width:100%;max-height:220px;object-fit:contain;
+    border:3px solid var(--ink);border-radius:12px;background:#fff;margin:12px auto;
+  }
+  .story-page-text{
+    font-size:17px;font-weight:bold;color:var(--ink);
+    min-height:24px;line-height:1.4;
+  }
+
   .book-textarea{
     display:block;width:100%;min-height:76px;resize:vertical;
     font:inherit;font-size:15px;line-height:26px;
@@ -344,6 +358,7 @@
   .paper canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:none}
   .palette{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
   .swatch{width:34px;height:34px;border-radius:50%;border:3px solid var(--ink);cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font-size:14px;background:#DCEEF4}
+  .swatch svg{width:24px;height:24px}
   .swatch.on{outline:3px solid var(--sun);outline-offset:2px;transform:scale(1.14)}
   .swatch:focus-visible{outline:4px solid var(--sun);outline-offset:2px}
   .tools2{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
@@ -391,11 +406,13 @@
     font-size:11px;font-weight:bold;color:#3C5A63;
   }
   .piano-white:active{background:#DCEEF4}
+  .piano-white.key-hint{background:var(--sun);box-shadow:inset 0 0 0 4px var(--coral)}
   .piano-black{
     position:absolute;top:10px;width:8%;height:58%;background:#08313F;
     border:2px solid #08313F;border-radius:0 0 4px 4px;cursor:pointer;z-index:2;
   }
   .piano-black:active{background:#3C5A63}
+  .piano-black.key-hint{background:var(--coral);border-color:var(--coral)}
 
   .drum-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .drum-pad{
@@ -404,6 +421,38 @@
   }
   .drum-pad:active{transform:scale(0.96);background:var(--sun)}
   .drum-pad:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+  .ttt-board{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+    max-width:280px;margin:14px auto;
+  }
+  .ttt-cell{
+    aspect-ratio:1;background:#DCEEF4;border:3px solid var(--ink);border-radius:12px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    padding:8px;
+  }
+  .ttt-cell svg{width:70%;height:70%}
+  .ttt-cell.win{background:var(--lily)}
+  .ttt-cell:disabled{cursor:default}
+  .ttt-cell:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+  .fps-row{display:flex;align-items:center;gap:10px;margin-top:10px}
+
+  .bb-court{
+    position:relative;height:320px;overflow:hidden;
+    background:linear-gradient(to bottom, #BFE6F2 0%, #BFE6F2 30%, #D99A5B 30%, #C6803F 100%);
+    border:3px solid var(--ink);border-radius:16px;
+  }
+  .bb-hoop{position:absolute;transform:translate(-50%,0)}
+  .bb-hoop svg{width:70px;height:60px;display:block}
+  .bb-ball{position:absolute;width:34px;height:34px;transform:translate(-50%,-50%)}
+  .bb-ball svg{width:100%;height:100%;display:block}
+  .bb-power-track{
+    position:relative;height:26px;margin-top:12px;
+    background:#DCEEF4;border:3px solid var(--ink);border-radius:99px;overflow:hidden;
+  }
+  .bb-power-zone{position:absolute;top:0;bottom:0;background:var(--lily)}
+  .bb-power-marker{position:absolute;top:-3px;bottom:-3px;width:6px;background:var(--coral);border-radius:3px}
 
   .critter{
     text-align:center;font-size:64px;line-height:1;margin:6px 0 2px;
@@ -467,7 +516,7 @@
 </div>
 
 <div class="wrap">
-  <h1 class="title" id="pageTitle">The Pond<br>Carnival</h1>
+  <h1 class="title" id="pageTitle">Forest<br>Frog Games</h1>
   <p class="sub" id="pageSub">Nine mini-games, one family, one very chatty frog. Pick a card to play.</p>
 
   <div class="tools">
@@ -534,7 +583,7 @@
     <circle cx="32" cy="30" r="7" fill="#FFF6E5"/><circle cx="68" cy="30" r="7" fill="#FFF6E5"/>
     <circle id="eyeL" cx="33" cy="31" r="4" fill="#08313F"/>
     <circle id="eyeR" cx="69" cy="31" r="4" fill="#08313F"/>
-    <ellipse cx="50" cy="66" rx="23" ry="16" fill="#FFC93C"/>
+    <ellipse cx="50" cy="66" rx="28" ry="20" fill="#FFC93C"/>
     <path d="M25 60 Q50 88 75 60" stroke="#08313F" stroke-width="4" fill="none" stroke-linecap="round" id="mouthClosed"/>
     <ellipse id="mouthOpen" cx="50" cy="70" rx="15" ry="13" fill="#08313F" style="display:none"/>
   </svg>
@@ -551,7 +600,7 @@ const stage = document.getElementById('stage');
 let lang = 'en';
 const UI = {
   en: {
-    title: 'The Pond<br>Carnival',
+    title: 'Forest<br>Frog Games',
     sub: 'Nine mini-games, one family, one very chatty frog. Pick a card to play.',
     settingsBtn: 'Settings',
     settingsTitle: 'Settings',
@@ -563,7 +612,7 @@ const UI = {
     greeting: "Hi Grandma! I'm Benny. Pick a mini-game and I'll explain how it works."
   },
   es: {
-    title: 'El Carnaval<br>del Estanque',
+    title: 'Juegos de<br>la Rana del Bosque',
     sub: 'Nueve minijuegos, una familia, una rana muy habladora. Elige una carta para jugar.',
     settingsBtn: 'Ajustes',
     settingsTitle: 'Ajustes',
@@ -575,7 +624,7 @@ const UI = {
     greeting: '¡Hola, Abuela! Soy Benny. Elige un minijuego y te explico cómo funciona.'
   },
   ru: {
-    title: 'Карнавал<br>у Пруда',
+    title: 'Игры Лесной<br>Лягушки',
     sub: 'Девять мини-игр, одна семья и болтливая лягушка. Выбери карточку, чтобы играть.',
     settingsBtn: 'Настройки',
     settingsTitle: 'Настройки',
@@ -587,7 +636,7 @@ const UI = {
     greeting: 'Привет, Бабушка! Я Бенни. Выбери мини-игру, и я объясню правила.'
   },
   pt: {
-    title: 'O Carnaval<br>da Lagoa',
+    title: 'Jogos do<br>Sapo da Floresta',
     sub: 'Nove minijogos, uma família, um sapo muito tagarela. Escolha uma carta para jogar.',
     settingsBtn: 'Configurações',
     settingsTitle: 'Configurações',
@@ -599,7 +648,7 @@ const UI = {
     greeting: 'Oi, Vovó! Eu sou o Benny. Escolha um minijogo e eu explico como funciona.'
   },
   ja: {
-    title: '池の<br>カーニバル',
+    title: '森のカエルの<br>ゲーム',
     sub: '9つのミニゲーム、一つの家族、おしゃべりなカエル。カードを選んで遊ぼう。',
     settingsBtn: '設定',
     settingsTitle: '設定',
@@ -611,7 +660,7 @@ const UI = {
     greeting: 'こんにちは、おばあちゃん！ぼくはベニーだよ。ミニゲームを選んでね、遊び方を教えるよ。'
   },
   fr: {
-    title: "Le Carnaval<br>de l'Étang",
+    title: 'Les Jeux de la<br>Grenouille des Bois',
     sub: 'Neuf mini-jeux, une famille, une grenouille très bavarde. Choisis une carte pour jouer.',
     settingsBtn: 'Paramètres',
     settingsTitle: 'Paramètres',
@@ -623,7 +672,7 @@ const UI = {
     greeting: "Salut Mamie ! Je suis Benny. Choisis un mini-jeu et je t'expliquerai comment jouer."
   },
   ca: {
-    title: "El Carnaval<br>de l'Estany",
+    title: 'Jocs de la<br>Granota del Bosc',
     sub: 'Nou minijocs, una família, una granota molt xerraire. Tria una carta per jugar.',
     settingsBtn: 'Configuració',
     settingsTitle: 'Configuració',
@@ -869,16 +918,16 @@ const GAMES = [
          ja:'ジャックは動物の言葉が分かる唯一の人。何を言っているか聞いて、何が必要か当ててみよう。',
          fr:"Jack est le seul à comprendre les animaux. Écoute ce qu'ils disent et devine ce dont ils ont besoin.",
          ca:"En Jack és l'únic que entén els animals. Escolta què diuen i esbrina què necessiten."}},
-  {id:'frank', emo:'<svg viewBox="0 0 60 60"><rect x="26" y="6" width="4" height="26" fill="#8B5E34" stroke="#08313F" stroke-width="1.5"/><circle cx="20" cy="34" r="11" fill="#FFC93C" stroke="#08313F" stroke-width="3"/><circle cx="34" cy="42" r="15" fill="#FF9F1C" stroke="#08313F" stroke-width="3"/><circle cx="34" cy="42" r="4" fill="#08313F"/></svg>',
-   title:{en:"Frank's Music Corner", es:'El Rincón Musical de Frank', ru:'Музыкальный Уголок Фрэнка', pt:'O Cantinho Musical do Frank', ja:'フランクの音楽コーナー', fr:'Le Coin Musique de Frank', ca:'El Racó Musical d\'en Frank'},
-   who:{en:'Dad Frank', es:'Papá Frank', ru:'Папа Фрэнк', pt:'Papai Frank', ja:'パパのフランク', fr:'Papa Frank', ca:'El papa Frank'},
-   text:{en:'Pick an instrument — guitar, violin, piano, or drums — and play around, no rules.',
-         es:'Elige un instrumento — guitarra, violín, piano o batería — y toca lo que quieras, sin reglas.',
-         ru:'Выбери инструмент — гитару, скрипку, пианино или барабаны — и играй как хочешь, без правил.',
-         pt:'Escolha um instrumento — violão, violino, piano ou bateria — e toque à vontade, sem regras.',
-         ja:'楽器を選ぼう — ギター、バイオリン、ピアノ、ドラム — 自由に演奏してみよう。',
-         fr:'Choisis un instrument — guitare, violon, piano ou batterie — et joue librement, sans règles.',
-         ca:'Tria un instrument — guitarra, violí, piano o bateria — i toca com vulguis, sense regles.'}},
+  {id:'frank', emo:'<svg viewBox="0 0 60 60"><circle cx="16" cy="46" r="8" fill="#D62828"/><circle cx="40" cy="40" r="8" fill="#D62828"/><rect x="22" y="14" width="4" height="32" fill="#D62828"/><rect x="46" y="10" width="4" height="30" fill="#D62828"/><path d="M22 14 L50 10 L50 18 L22 22 Z" fill="#D62828"/></svg>',
+   title:{en:"Berty's Music Corner", es:'El Rincón Musical de Berty', ru:'Музыкальный Уголок Берти', pt:'O Cantinho Musical da Berty', ja:'バーティの音楽コーナー', fr:'Le Coin Musique de Berty', ca:'El Racó Musical de la Berty'},
+   who:{en:'Berty', es:'Berty', ru:'Берти', pt:'Berty', ja:'バーティ', fr:'Berty', ca:'La Berty'},
+   text:{en:'Pick an instrument — piano, guitar, violin, or drums — then learn a real song by ear.',
+         es:'Elige un instrumento — piano, guitarra, violín o batería — y aprende una canción de oído.',
+         ru:'Выбери инструмент — пианино, гитару, скрипку или барабаны — и разучи настоящую песню на слух.',
+         pt:'Escolha um instrumento — piano, violão, violino ou bateria — e aprenda uma música de ouvido.',
+         ja:'楽器を選ぼう — ピアノ、ギター、バイオリン、ドラム — そして耳で覚えて曲を弾いてみよう。',
+         fr:"Choisis un instrument — piano, guitare, violon ou batterie — puis apprends une vraie chanson à l'oreille.",
+         ca:'Tria un instrument — piano, guitarra, violí o bateria — i aprèn una cançó real a cau d\'orella.'}},
   {id:'coloring', emo:'<svg viewBox="0 0 60 60"><path d="M22 12 L38 12 L38 40 L30 52 L22 40 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="3"/><path d="M22 12 L38 12 L36 20 L24 20 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><path d="M30 40 L34 40 L30 52 L26 40 Z" fill="#08313F"/></svg>',
    title:{en:'Jenny\'s Coloring Corner', es:'El Rincón de Colorear de Jenny', ru:'Уголок Раскрасок Дженни', pt:'Cantinho de Colorir da Jenny', ja:'ジェニーの塗り絵コーナー', fr:'Le Coin Coloriage de Jenny', ca:'El Racó de Colorejar de la Jenny'},
    who:{en:'Jenny', es:'Jenny', ru:'Дженни', pt:'Jenny', ja:'ジェニー', fr:'Jenny', ca:'La Jenny'},
@@ -928,7 +977,47 @@ const GAMES = [
          pt:'Escolha um chapéu, um cachecol, braços, olhos, uma boca, e até um bichinho de estimação — combine como quiser.',
          ja:'帽子、マフラー、うで、目、口、そしてペットも選んで、自分だけの雪だるまを作ろう。',
          fr:'Choisis un chapeau, une écharpe, des bras, des yeux, une bouche, et même un animal de compagnie — assemble-les comme tu veux.',
-         ca:'Tria un barret, una bufanda, braços, ulls, una boca, i fins i tot una mascota — combina el que vulguis.'}}
+         ca:'Tria un barret, una bufanda, braços, ulls, una boca, i fins i tot una mascota — combina el que vulguis.'}},
+  {id:'tictactoe', emo:'<svg viewBox="0 0 60 60"><line x1="20" y1="6" x2="20" y2="54" stroke="#08313F" stroke-width="4"/><line x1="40" y1="6" x2="40" y2="54" stroke="#08313F" stroke-width="4"/><line x1="6" y1="20" x2="54" y2="20" stroke="#08313F" stroke-width="4"/><line x1="6" y1="40" x2="54" y2="40" stroke="#08313F" stroke-width="4"/><line x1="10" y1="10" x2="16" y2="16" stroke="#FF6B5B" stroke-width="3" stroke-linecap="round"/><line x1="16" y1="10" x2="10" y2="16" stroke="#FF6B5B" stroke-width="3" stroke-linecap="round"/><circle cx="47" cy="47" r="5" fill="none" stroke="#12718F" stroke-width="3"/></svg>',
+   title:{en:'Tic-Tac-Toe with Jack', es:'Tres en Raya con Jack', ru:'Крестики-Нолики с Джеком', pt:'Jogo da Velha com Jack', ja:'ジャックと〇×ゲーム', fr:'Morpion avec Jack', ca:'Tres en Ratlla amb en Jack'},
+   who:{en:'Jack, the hero', es:'Jack, el protagonista', ru:'Джек, герой', pt:'Jack, o herói', ja:'主人公のジャック', fr:'Jack, le héros', ca:"En Jack, l'heroi"},
+   text:{en:"Classic X's and O's. First to 3 wins takes the match.",
+         es:'El clásico de X y O. El primero en llegar a 3 gana la partida.',
+         ru:'Классические крестики и нолики. Кто первым наберёт 3 победы, побеждает.',
+         pt:'O clássico jogo da velha. O primeiro a vencer 3 rodadas ganha a partida.',
+         ja:'定番の〇×ゲーム。先に3勝した方が勝ち。',
+         fr:'Le classique du morpion. Le premier à 3 victoires remporte la partie.',
+         ca:'El clàssic de X i O. El primer a arribar a 3 victòries guanya la partida.'}},
+  {id:'animator', emo:'<svg viewBox="0 0 60 60"><rect x="8" y="14" width="44" height="32" rx="3" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><rect x="8" y="14" width="8" height="32" fill="#08313F"/><rect x="44" y="14" width="8" height="32" fill="#08313F"/><circle cx="12" cy="20" r="1.6" fill="#FFF6E5"/><circle cx="12" cy="30" r="1.6" fill="#FFF6E5"/><circle cx="12" cy="40" r="1.6" fill="#FFF6E5"/><circle cx="48" cy="20" r="1.6" fill="#FFF6E5"/><circle cx="48" cy="30" r="1.6" fill="#FFF6E5"/><circle cx="48" cy="40" r="1.6" fill="#FFF6E5"/><path d="M22 22 L34 30 L22 38 Z" fill="#FF6B5B"/></svg>',
+   title:{en:"Elizabeth's Flipbook", es:'El Flipbook de Elizabeth', ru:'Мультфильм Элизабет', pt:'O Flipbook da Elizabeth', ja:'エリザベスのパラパラ漫画', fr:"Le Folioscope d'Elizabeth", ca:"El Flipbook d'Elizabeth"},
+   who:{en:'Mum Elizabeth', es:'Mamá Elizabeth', ru:'Мама Элизабет', pt:'Mamãe Elizabeth', ja:'ママのエリザベス', fr:'Maman Elizabeth', ca:'Mama Elizabeth'},
+   text:{en:'Draw a few frames, set the speed, and watch your drawing come alive.',
+         es:'Dibuja unos fotogramas, ajusta la velocidad, y mira tu dibujo cobrar vida.',
+         ru:'Нарисуй несколько кадров, настрой скорость и посмотри, как твой рисунок оживает.',
+         pt:'Desenhe alguns quadros, ajuste a velocidade, e veja seu desenho ganhar vida.',
+         ja:'コマを何枚か描いて、速さを決めて、絵が動き出すのを見てみよう。',
+         fr:'Dessine quelques images, règle la vitesse, et regarde ton dessin prendre vie.',
+         ca:'Dibuixa uns quants fotogrames, ajusta la velocitat, i mira com el teu dibuix cobra vida.'}},
+  {id:'basketball', emo:'<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="20" fill="#FF9F1C" stroke="#08313F" stroke-width="3"/><path d="M30 10 V50 M10 30 H50 M14 16 Q30 30 14 44 M46 16 Q30 30 46 44" stroke="#08313F" stroke-width="2" fill="none"/></svg>',
+   title:{en:'Basketball with Coach', es:'Baloncesto con el Coach', ru:'Баскетбол с Тренером', pt:'Basquete com o Treinador', ja:'コーチとバスケ', fr:'Basket avec Coach', ca:'Bàsquet amb el Coach'},
+   who:{en:'Coach, the Gym Teacher', es:'Coach, el profe de gimnasia', ru:'Тренер по физкультуре', pt:'Coach, o professor de educação física', ja:'体育の先生コーチ', fr:'Coach, le prof de sport', ca:"El Coach, el profe d'educació física"},
+   text:{en:'30 levels of hoops. Time your shot power and sink the ball!',
+         es:'30 niveles de canastas. Calcula la potencia del tiro y encesta la pelota.',
+         ru:'30 уровней бросков. Рассчитай силу броска и попади в кольцо!',
+         pt:'30 níveis de cestas. Calcule a força do arremesso e acerte a bola!',
+         ja:'30レベルのシュート挑戦。パワーを合わせてボールをゴールに入れよう!',
+         fr:'30 niveaux de paniers. Calcule la puissance de ton tir et marque !',
+         ca:'30 nivells de cistelles. Calcula la potència del tir i encistella la pilota!'}},
+  {id:'math', emo:'<svg viewBox="0 0 60 60"><rect x="8" y="10" width="44" height="30" rx="3" fill="#2E8B57" stroke="#08313F" stroke-width="3"/><line x1="16" y1="25" x2="26" y2="25" stroke="#FFF6E5" stroke-width="3"/><line x1="21" y1="20" x2="21" y2="30" stroke="#FFF6E5" stroke-width="3"/><line x1="34" y1="22" x2="44" y2="22" stroke="#FFF6E5" stroke-width="3"/><line x1="34" y1="28" x2="44" y2="28" stroke="#FFF6E5" stroke-width="3"/><rect x="8" y="44" width="44" height="6" fill="#8B5E34" stroke="#08313F" stroke-width="2"/></svg>',
+   title:{en:'Math with Bob', es:'Matemáticas con Bob', ru:'Математика с Бобом', pt:'Matemática com o Bob', ja:'ボブと算数', fr:'Maths avec Bob', ca:'Matemàtiques amb en Bob'},
+   who:{en:'Bob, the Math Teacher', es:'Bob, el profe de matemáticas', ru:'Боб, учитель математики', pt:'Bob, o professor de matemática', ja:'算数の先生ボブ', fr:'Bob, le prof de maths', ca:'En Bob, el profe de matemàtiques'},
+   text:{en:'Silly word problems and terrible puns. Answer 8 questions and see how you do!',
+         es:'Problemas tontos y chistes malísimos. Responde 8 preguntas y a ver cómo te va.',
+         ru:'Смешные задачки и ужасные шутки. Ответь на 8 вопросов и узнай результат!',
+         pt:'Problemas bobos e trocadilhos horríveis. Responda 8 perguntas e veja como você se sai!',
+         ja:'おかしな文章題とひどいダジャレ。8問答えて腕試し!',
+         fr:"Des problèmes rigolos et des jeux de mots nuls. Réponds à 8 questions et vois comment tu t'en sors !",
+         ca:"Problemes ximples i acudits dolentíssims. Respon 8 preguntes i veuràs com te'n surts!"}}
 ];
 
 function showHub(){
@@ -975,6 +1064,10 @@ function start(id){
   if(id==='grandma') gameGrandma();
   if(id==='book') gameBook();
   if(id==='snowman') gameSnowman();
+  if(id==='tictactoe') gameTicTacToe();
+  if(id==='animator') gameAnimator();
+  if(id==='basketball') gameBasketball();
+  if(id==='math') gameMath();
 }
 
 /* ============ 1. Catch the Flies ============ */
@@ -991,7 +1084,7 @@ function gameFlies(){
     <div class="field" id="field"></div>
     <div class="actions">
       <button class="btn" id="again">Play again</button>
-      <button class="btn quiet" data-back>← Back to the carnival</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
     </div>`);
 
   const field = document.getElementById('field');
@@ -1054,7 +1147,7 @@ function gameRecipe(){
     <p class="message" id="msg">Press "Show me" to begin.</p>
     <div class="actions">
       <button class="btn" id="go">Show me</button>
-      <button class="btn quiet" data-back>← Back to the carnival</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
     </div>`);
 
   const buttons = [...document.querySelectorAll('.ing')];
@@ -1135,7 +1228,7 @@ function gameDuel(){
     <p class="message" id="res">Pick your hand.</p>
     <div class="actions">
       <button class="btn" id="reset">New duel</button>
-      <button class="btn quiet" data-back>← Back to the carnival</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
     </div>`);
 
   const SYM=['✊','✋','✌️'], NAME=['rock','paper','scissors'];
@@ -1197,7 +1290,7 @@ function gameJack(){
     <p class="message" id="jmsg"></p>
     <div class="actions">
       <button class="btn" id="jagain">New round</button>
-      <button class="btn quiet" data-back>← Back to the carnival</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
     </div>`);
 
   const elCritter = document.getElementById('critter');
@@ -1276,95 +1369,145 @@ function gameJack(){
   newGame();
 }
 
-/* ============ 5. Frank's Tune ============ */
+/* ============ 5. Berty's Music Corner ============ */
+/* Karplus-Strong plucked string — sounds like a real plucked guitar string,
+   built from a decaying noise-fed delay loop rather than a plain tone. */
+function playPluck(freq, duration, vol){
+  const c = audioCtx(); if(!c) return;
+  const sr = c.sampleRate;
+  const totalSamples = Math.max(1, Math.floor(sr * duration));
+  const N = Math.max(2, Math.round(sr / freq));
+  const ring = new Float32Array(N);
+  for(let i=0;i<N;i++) ring[i] = Math.random()*2 - 1;
+  const buffer = c.createBuffer(1, totalSamples, sr);
+  const data = buffer.getChannelData(0);
+  let idx = 0;
+  const decay = 0.994;
+  for(let i=0;i<totalSamples;i++){
+    const a = ring[idx];
+    const b = ring[(idx+1) % N];
+    data[i] = a;
+    ring[idx] = decay * 0.5 * (a + b);
+    idx = (idx + 1) % N;
+  }
+  const fadeSamples = Math.min(800, totalSamples);
+  for(let i=0;i<fadeSamples;i++){
+    const k = i / fadeSamples;
+    data[totalSamples - fadeSamples + i] *= (1 - k);
+  }
+  const src = c.createBufferSource();
+  src.buffer = buffer;
+  const gain = c.createGain();
+  gain.gain.value = vol;
+  src.connect(gain); gain.connect(c.destination);
+  src.start();
+}
+
 function gameFrank(){
-  benny("Frank's music corner — pick an instrument and play whatever you like.");
+  benny("Berty's music corner — pick an instrument, then learn a song!");
   openStage(`
     <div class="bar">
-      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><rect x="26" y="6" width="4" height="26" fill="#8B5E34" stroke="#08313F" stroke-width="1.5"/><circle cx="20" cy="34" r="11" fill="#FFC93C" stroke="#08313F" stroke-width="3"/><circle cx="34" cy="42" r="15" fill="#FF9F1C" stroke="#08313F" stroke-width="3"/><circle cx="34" cy="42" r="4" fill="#08313F"/></svg> Frank's Music Corner</h2>
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><circle cx="16" cy="46" r="8" fill="#D62828"/><circle cx="40" cy="40" r="8" fill="#D62828"/><rect x="22" y="14" width="4" height="32" fill="#D62828"/><rect x="46" y="10" width="4" height="30" fill="#D62828"/><path d="M22 14 L50 10 L50 18 L22 22 Z" fill="#D62828"/></svg> Berty's Music Corner</h2>
     </div>
-    <div class="tools2" id="instrumentTabs">
-      <button class="tool on" data-inst="guitar"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><rect x="18" y="4" width="3" height="16" fill="#8B5E34"/><circle cx="13" cy="22" r="7" fill="#FFC93C" stroke="#08313F" stroke-width="2"/><circle cx="23" cy="28" r="10" fill="#FF9F1C" stroke="#08313F" stroke-width="2"/><circle cx="23" cy="28" r="3" fill="#08313F"/></svg> Guitar</button>
+    <p class="hint" style="text-align:left;margin:2px 0 6px">Instrument</p>
+    <div class="tools2" id="instrumentBar">
+      <button class="tool on" data-inst="piano"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><rect x="4" y="8" width="32" height="24" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><rect x="10" y="8" width="4" height="14" fill="#08313F"/><rect x="18" y="8" width="4" height="14" fill="#08313F"/><rect x="26" y="8" width="4" height="14" fill="#08313F"/></svg> Piano</button>
+      <button class="tool" data-inst="guitar"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><rect x="17" y="2" width="3" height="14" fill="#8B5E34"/><path d="M16 16 Q8 15 6 22 Q4 28 10 32 Q17 36 23 31 Q30 34 34 27 Q37 21 31 17 Q26 14 22 18 Q19 15 16 16 Z" fill="#D62828" stroke="#08313F" stroke-width="2" stroke-linejoin="round"/><rect x="15" y="21" width="10" height="3" rx="1" fill="#08313F"/></svg> Guitar</button>
       <button class="tool" data-inst="violin"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><rect x="18" y="2" width="3" height="14" fill="#5A3A22"/><path d="M14 16 Q10 22 14 28 Q18 34 22 28 Q26 22 22 16 Q18 12 14 16 Z" fill="#8B5E34" stroke="#08313F" stroke-width="2"/></svg> Violin</button>
-      <button class="tool" data-inst="piano"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><rect x="4" y="8" width="32" height="24" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><rect x="10" y="8" width="4" height="14" fill="#08313F"/><rect x="18" y="8" width="4" height="14" fill="#08313F"/><rect x="26" y="8" width="4" height="14" fill="#08313F"/></svg> Piano</button>
       <button class="tool" data-inst="drums"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><ellipse cx="20" cy="14" rx="14" ry="6" fill="#FF6B5B" stroke="#08313F" stroke-width="2"/><rect x="6" y="14" width="28" height="14" fill="#FF6B5B" stroke="#08313F" stroke-width="2"/><ellipse cx="20" cy="28" rx="14" ry="6" fill="#FF6B5B" stroke="#08313F" stroke-width="2"/></svg> Drums</button>
     </div>
-    <div id="instrumentStage"></div>
+
+    <p class="hint" style="text-align:left;margin:14px 0 6px">Learn a Song</p>
+    <div class="tools2" id="songBar"></div>
+    <div class="actions" style="margin-top:8px">
+      <button class="btn quiet" id="playSongBtn">▶ Play it for me</button>
+      <button class="btn" id="practiceSongBtn">🎯 Practice</button>
+    </div>
+    <p class="message" id="songMsg"></p>
+    <div class="piano-wrap" id="pianoKeys"></div>
+
     <div class="actions">
-      <button class="btn quiet" data-back>← Back to the carnival</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
     </div>`);
 
-  const stageArea = document.getElementById('instrumentStage');
+  const WHITE = [
+    {name:'C', freq:261.63}, {name:'D', freq:293.66}, {name:'E', freq:329.63},
+    {name:'F', freq:349.23}, {name:'G', freq:392.00}, {name:'A', freq:440.00}, {name:'B', freq:493.88}
+  ];
+  const BLACK = [
+    {freq:277.18, pos:1}, {freq:311.13, pos:2}, {freq:369.99, pos:4}, {freq:415.30, pos:5}, {freq:466.16, pos:6}
+  ];
+  const NOTE_FREQ = {};
+  WHITE.forEach(w=>{ NOTE_FREQ[w.name] = w.freq; });
 
-  const STRING_SETS = {
-    guitar: { open:[220.00,261.63,293.66,329.63,392.00,440.00], labels:['A','C','D','E','G','A'], color:'#8B5E34' },
-    violin: { open:[196.00,293.66,440.00,659.25], labels:['G','D','A','E'], color:'#5A3A22' }
+  const SONGS = {
+    twinkle:  { name:'Twinkle Twinkle', notes:['C','C','G','G','A','A','G','F','F','E','E','D','D','C'] },
+    mary:     { name:"Mary's Lamb", notes:['E','D','C','D','E','E','E','D','D','D','E','G','G'] },
+    hotcross: { name:'Hot Cross Buns', notes:['E','D','C','E','D','C','C','C','C','C','D','D','D','D','E','D','C'] },
+    ode:      { name:'Ode to Joy', notes:['E','E','F','G','G','F','E','D','C','C','D','E','E','D','D'] },
+    birthday: { name:'Happy Birthday', notes:HAPPY_BIRTHDAY_NOTES_PIANO }
   };
-  const FRET_COUNT = 6;
 
-  /* Karplus-Strong plucked string — sounds like a real plucked guitar string,
-     built from a decaying noise-fed delay loop rather than a plain tone. */
-  function playPluck(freq, duration, vol){
-    const c = audioCtx(); if(!c) return;
-    const sr = c.sampleRate;
-    const totalSamples = Math.max(1, Math.floor(sr * duration));
-    const N = Math.max(2, Math.round(sr / freq));
-    const ring = new Float32Array(N);
-    for(let i=0;i<N;i++) ring[i] = Math.random()*2 - 1;
-    const buffer = c.createBuffer(1, totalSamples, sr);
-    const data = buffer.getChannelData(0);
-    let idx = 0;
-    const decay = 0.994;
-    for(let i=0;i<totalSamples;i++){
-      const a = ring[idx];
-      const b = ring[(idx+1) % N];
-      data[i] = a;
-      ring[idx] = decay * 0.5 * (a + b);
-      idx = (idx + 1) % N;
-    }
-    const fadeSamples = Math.min(800, totalSamples);
-    for(let i=0;i<fadeSamples;i++){
-      const k = i / fadeSamples;
-      data[totalSamples - fadeSamples + i] *= (1 - k);
-    }
-    const src = c.createBufferSource();
-    src.buffer = buffer;
-    const gain = c.createGain();
-    gain.gain.value = vol;
-    src.connect(gain); gain.connect(c.destination);
-    src.start();
-  }
+  let currentInstrument = 'piano';
 
   /* Bowed string — layered harmonics with a soft attack and gentle vibrato,
      closer to a real violin than a single oscillator. */
   function playBowed(freq, duration, vol){
     const c = audioCtx(); if(!c) return;
     const now = c.currentTime;
+
+    const bodyFilter = c.createBiquadFilter();
+    bodyFilter.type = 'peaking';
+    bodyFilter.frequency.value = 500;
+    bodyFilter.Q.value = 0.8;
+    bodyFilter.gain.value = 5;
+    bodyFilter.connect(c.destination);
+
+    const brightFilter = c.createBiquadFilter();
+    brightFilter.type = 'peaking';
+    brightFilter.frequency.value = 3000;
+    brightFilter.Q.value = 1;
+    brightFilter.gain.value = 4;
+    brightFilter.connect(bodyFilter);
+
     const master = c.createGain();
     master.gain.setValueAtTime(0.0001, now);
-    master.gain.exponentialRampToValueAtTime(vol, now + 0.09);
-    master.gain.setValueAtTime(vol, now + duration * 0.6);
+    master.gain.exponentialRampToValueAtTime(vol, now + 0.1);
+    master.gain.setValueAtTime(vol, now + duration * 0.55);
     master.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-    master.connect(c.destination);
+    master.connect(brightFilter);
 
     const vibrato = c.createOscillator();
-    vibrato.frequency.value = 5.5;
+    vibrato.frequency.value = 5.3;
     const vibratoGain = c.createGain();
-    vibratoGain.gain.value = freq * 0.008;
+    vibratoGain.gain.value = freq * 0.006;
     vibrato.connect(vibratoGain);
     vibrato.start(now);
     vibrato.stop(now + duration + 0.05);
 
+    const ampVibrato = c.createOscillator();
+    ampVibrato.frequency.value = 5.3;
+    const ampVibratoGain = c.createGain();
+    ampVibratoGain.gain.value = vol * 0.08;
+    ampVibrato.connect(ampVibratoGain);
+    ampVibratoGain.connect(master.gain);
+    ampVibrato.start(now);
+    ampVibrato.stop(now + duration + 0.05);
+
     const harmonics = [
-      { mult:1, gain:0.5, type:'sawtooth' },
-      { mult:2, gain:0.22, type:'sine' },
-      { mult:3, gain:0.12, type:'sine' },
-      { mult:4, gain:0.06, type:'sine' }
+      { mult:1, gain:0.5,  type:'sawtooth', detune:0 },
+      { mult:2, gain:0.24, type:'sawtooth', detune:3 },
+      { mult:3, gain:0.14, type:'sine',     detune:-4 },
+      { mult:4, gain:0.09, type:'sine',     detune:5 },
+      { mult:5, gain:0.05, type:'sine',     detune:-3 }
     ];
     harmonics.forEach(h=>{
       const o = c.createOscillator();
       o.type = h.type;
-      o.frequency.value = freq * h.mult;
+      const target = freq * h.mult;
+      o.frequency.setValueAtTime(target * 0.97, now);
+      o.frequency.linearRampToValueAtTime(target, now + 0.06);
+      o.detune.value = h.detune;
       const g = c.createGain();
       g.gain.value = h.gain;
       vibratoGain.connect(o.frequency);
@@ -1373,127 +1516,148 @@ function gameFrank(){
       o.start(now);
       o.stop(now + duration + 0.05);
     });
+
+    const noiseDur = duration + 0.05;
+    const bufferSize = Math.floor(c.sampleRate * noiseDur);
+    const buffer = c.createBuffer(1, bufferSize, c.sampleRate);
+    const data = buffer.getChannelData(0);
+    for(let i=0;i<bufferSize;i++){ data[i] = Math.random()*2 - 1; }
+    const noiseSrc = c.createBufferSource();
+    noiseSrc.buffer = buffer;
+    const noiseFilter = c.createBiquadFilter();
+    noiseFilter.type = 'bandpass';
+    noiseFilter.frequency.value = freq * 2;
+    noiseFilter.Q.value = 0.7;
+    const noiseGain = c.createGain();
+    noiseGain.gain.setValueAtTime(0.0001, now);
+    noiseGain.gain.linearRampToValueAtTime(vol * 0.12, now + 0.08);
+    noiseGain.gain.setValueAtTime(vol * 0.12, now + duration * 0.6);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    noiseSrc.connect(noiseFilter); noiseFilter.connect(noiseGain); noiseGain.connect(master);
+    noiseSrc.start(now);
   }
 
-  function renderStrings(key){
-    const set = STRING_SETS[key];
-    let rowsHtml = '';
-    set.open.forEach((openFreq, si)=>{
-      let cellsHtml = '';
-      for(let f=0; f<FRET_COUNT; f++){
-        const label = f===0 ? set.labels[si] : '';
-        cellsHtml += `<button class="fret-cell${f===0?' open':''}" data-string="${si}" data-fret="${f}">${label}</button>`;
-      }
-      rowsHtml += `<div class="fret-row">${cellsHtml}</div>`;
-    });
-    stageArea.innerHTML = `<div class="fretboard" style="background:${set.color}">${rowsHtml}</div>`;
-    const cells = [...stageArea.querySelectorAll('.fret-cell')];
-    cells.forEach(c=>c.addEventListener('click', ()=>{
-      const si = +c.dataset.string, f = +c.dataset.fret;
-      const freq = set.open[si] * Math.pow(2, f/12);
-      if(key === 'guitar') playPluck(freq, 1.3, 0.5);
-      else playBowed(freq, 1.0, 0.16);
-      c.style.transform = 'scale(0.9)';
-      setTimeout(()=>{ c.style.transform=''; }, 120);
-    }));
-  }
-
-  function renderPiano(){
-    const WHITE = [
-      {name:'C', freq:261.63}, {name:'D', freq:293.66}, {name:'E', freq:329.63},
-      {name:'F', freq:349.23}, {name:'G', freq:392.00}, {name:'A', freq:440.00}, {name:'B', freq:493.88}
-    ];
-    const BLACK = [
-      {freq:277.18, pos:1}, {freq:311.13, pos:2}, {freq:369.99, pos:4}, {freq:415.30, pos:5}, {freq:466.16, pos:6}
-    ];
-    const whiteHtml = WHITE.map(k=>`<button class="piano-white" data-freq="${k.freq}">${k.name}</button>`).join('');
-    const blackHtml = BLACK.map(k=>`<button class="piano-black" data-freq="${k.freq}" style="left:${(k.pos*(100/7)) - 4}%"></button>`).join('');
-    stageArea.innerHTML = `<div class="piano-wrap">${whiteHtml}${blackHtml}</div>`;
-    const keys = [...stageArea.querySelectorAll('.piano-white, .piano-black')];
-    keys.forEach(k=>k.addEventListener('click', ()=>{
-      tone(+k.dataset.freq, 420, 'sine', 0.2);
-    }));
-  }
-
-  function playNoise(duration, filterFreq, filterType, vol){
+  /* Tuned drum hit — a quick pitched thump plus a short noise transient,
+     so drums can still carry an actual melody instead of random pad taps. */
+  function playDrumHit(freq, vol){
     const c = audioCtx(); if(!c) return;
-    const bufferSize = Math.floor(c.sampleRate * duration);
+    const now = c.currentTime;
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = 'triangle';
+    o.frequency.setValueAtTime(freq * 1.8, now);
+    o.frequency.exponentialRampToValueAtTime(freq, now + 0.05);
+    g.gain.setValueAtTime(vol, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+    o.connect(g); g.connect(c.destination);
+    o.start(now); o.stop(now + 0.4);
+
+    const bufferSize = Math.floor(c.sampleRate * 0.05);
     const buffer = c.createBuffer(1, bufferSize, c.sampleRate);
     const data = buffer.getChannelData(0);
     for(let i=0;i<bufferSize;i++){ data[i] = Math.random()*2 - 1; }
     const noise = c.createBufferSource();
     noise.buffer = buffer;
     const filter = c.createBiquadFilter();
-    filter.type = filterType || 'highpass';
-    filter.frequency.value = filterFreq || 1000;
-    const gain = c.createGain();
-    gain.gain.setValueAtTime(vol || 0.3, c.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + duration);
-    noise.connect(filter); filter.connect(gain); gain.connect(c.destination);
-    noise.start();
-  }
-  function playKick(){
-    const c = audioCtx(); if(!c) return;
-    const o = c.createOscillator(), g = c.createGain();
-    o.type = 'sine';
-    const now = c.currentTime;
-    o.frequency.setValueAtTime(140, now);
-    o.frequency.exponentialRampToValueAtTime(45, now + 0.22);
-    g.gain.setValueAtTime(0.5, now);
-    g.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-    o.connect(g); g.connect(c.destination);
-    o.start(now); o.stop(now + 0.3);
-  }
-  function playTom(){
-    const c = audioCtx(); if(!c) return;
-    const o = c.createOscillator(), g = c.createGain();
-    o.type = 'sine';
-    const now = c.currentTime;
-    o.frequency.setValueAtTime(220, now);
-    o.frequency.exponentialRampToValueAtTime(110, now + 0.18);
-    g.gain.setValueAtTime(0.4, now);
-    g.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-    o.connect(g); g.connect(c.destination);
-    o.start(now); o.stop(now + 0.24);
+    filter.type = 'bandpass';
+    filter.frequency.value = freq * 2.5;
+    filter.Q.value = 1;
+    const ng = c.createGain();
+    ng.gain.setValueAtTime(vol * 0.5, now);
+    ng.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+    noise.connect(filter); filter.connect(ng); ng.connect(c.destination);
+    noise.start(now);
   }
 
-  function renderDrums(){
-    stageArea.innerHTML = `
-      <div class="drum-grid">
-        <button class="drum-pad" data-pad="kick">Kick</button>
-        <button class="drum-pad" data-pad="snare">Snare</button>
-        <button class="drum-pad" data-pad="hihat">Hi-Hat</button>
-        <button class="drum-pad" data-pad="tom">Tom</button>
-        <button class="drum-pad" data-pad="cymbal" style="grid-column:span 2">Cymbal</button>
-      </div>`;
-    const pads = [...stageArea.querySelectorAll('.drum-pad')];
-    pads.forEach(p=>p.addEventListener('click', ()=>{
-      const type = p.dataset.pad;
-      if(type === 'kick') playKick();
-      else if(type === 'snare') playNoise(0.18, 1800, 'bandpass', 0.35);
-      else if(type === 'hihat') playNoise(0.07, 6000, 'highpass', 0.22);
-      else if(type === 'tom') playTom();
-      else if(type === 'cymbal') playNoise(0.5, 5000, 'highpass', 0.22);
-      p.style.transform = 'scale(0.94)';
-      setTimeout(()=>{ p.style.transform = ''; }, 100);
-    }));
+  function playInstrumentNote(freq){
+    if(currentInstrument === 'guitar') playPluck(freq, 1.1, 0.5);
+    else if(currentInstrument === 'violin') playBowed(freq, 0.9, 0.16);
+    else if(currentInstrument === 'drums') playDrumHit(freq, 0.5);
+    else tone(freq, 460, 'sine', 0.42);
   }
 
-  function renderInstrument(key){
-    if(key === 'guitar') renderStrings('guitar');
-    else if(key === 'violin') renderStrings('violin');
-    else if(key === 'piano') renderPiano();
-    else if(key === 'drums') renderDrums();
-  }
-
-  const tabBtns = [...document.querySelectorAll('#instrumentTabs .tool')];
-  tabBtns.forEach(b=>b.addEventListener('click', ()=>{
-    tabBtns.forEach(x=>x.classList.remove('on'));
+  const instBtns = [...document.querySelectorAll('#instrumentBar .tool')];
+  instBtns.forEach(b=>b.addEventListener('click', ()=>{
+    instBtns.forEach(x=>x.classList.remove('on'));
     b.classList.add('on');
-    renderInstrument(b.dataset.inst);
+    currentInstrument = b.dataset.inst;
   }));
 
-  renderInstrument('guitar');
+  const whiteHtml = WHITE.map(k=>`<button class="piano-white" data-note="${k.name}" data-freq="${k.freq}">${k.name}</button>`).join('');
+  const blackHtml = BLACK.map(k=>`<button class="piano-black" data-freq="${k.freq}" style="left:${(k.pos*(100/7)) - 4}%"></button>`).join('');
+  document.getElementById('pianoKeys').innerHTML = whiteHtml + blackHtml;
+
+  const songBarEl = document.getElementById('songBar');
+  songBarEl.innerHTML = Object.entries(SONGS).map(([key,s],i)=>`<button class="tool${i===0?' on':''}" data-song="${key}">${s.name}</button>`).join('');
+
+  const keys = [...document.querySelectorAll('.piano-white, .piano-black')];
+  const songMsg = document.getElementById('songMsg');
+  let currentSongKey = Object.keys(SONGS)[0];
+  let practiceActive = false;
+  let practiceIndex = 0;
+
+  function clearHighlights(){
+    keys.forEach(k=>k.classList.remove('key-hint'));
+  }
+  function highlightNote(name){
+    clearHighlights();
+    const target = keys.find(k=>k.dataset.note === name);
+    if(target) target.classList.add('key-hint');
+  }
+
+  keys.forEach(k=>k.addEventListener('click', ()=>{
+    playInstrumentNote(+k.dataset.freq);
+    if(practiceActive) checkPractice(k);
+  }));
+
+  function checkPractice(keyEl){
+    const song = SONGS[currentSongKey];
+    const expected = song.notes[practiceIndex];
+    if(keyEl.dataset.note === expected){
+      practiceIndex++;
+      if(practiceIndex >= song.notes.length){
+        practiceActive = false;
+        clearHighlights();
+        chime();
+        songMsg.textContent = 'You played it! Nicely done.';
+        benny('You played ' + song.name + '! Nicely done.');
+      } else {
+        highlightNote(song.notes[practiceIndex]);
+      }
+    }
+  }
+
+  const songBtns = [...songBarEl.querySelectorAll('.tool')];
+  songBtns.forEach(b=>b.addEventListener('click', ()=>{
+    songBtns.forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    currentSongKey = b.dataset.song;
+    practiceActive = false;
+    practiceIndex = 0;
+    songMsg.textContent = '';
+    clearHighlights();
+  }));
+
+  document.getElementById('playSongBtn').addEventListener('click', ()=>{
+    practiceActive = false;
+    const song = SONGS[currentSongKey];
+    songMsg.textContent = 'Listen...';
+    song.notes.forEach((n, i)=>{
+      setTimeout(()=>{
+        highlightNote(n);
+        playInstrumentNote(NOTE_FREQ[n]);
+        if(i === song.notes.length - 1){
+          setTimeout(()=>{ clearHighlights(); songMsg.textContent = ''; }, 500);
+        }
+      }, i * 430);
+    });
+  });
+
+  document.getElementById('practiceSongBtn').addEventListener('click', ()=>{
+    practiceActive = true;
+    practiceIndex = 0;
+    songMsg.textContent = 'Tap the glowing key!';
+    highlightNote(SONGS[currentSongKey].notes[0]);
+  });
 }
 
 /* ============ 6. Jenny's Coloring Corner ============ */
@@ -1515,7 +1679,7 @@ function gameColoring(){
     </div>
     <div class="actions">
       <button class="btn" id="clearBtn">🗑️ Clear page</button>
-      <button class="btn quiet" data-back>← Back to the carnival</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
     </div>`);
 
   const COLORS = ['#000000','#08313F','#FF3B30','#FF6B5B','#FF9F1C','#FFC93C','#FFF176','#4FB477','#2E8B57','#7FE3C6','#12718F','#4FC3F7','#1E3A8A','#9B5DE5','#C77DFF','#FF8FB1','#FF5D9E','#8B5E34','#808080','#FFFFFF'];
@@ -1631,7 +1795,7 @@ function gameCars(){
     <p class="message" id="cmsg">Tap ⬅️ ➡️, or use your arrow keys.</p>
     <div class="actions">
       <button class="btn" id="cagain">Play again</button>
-      <button class="btn quiet" data-back>← Back to the carnival</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
     </div>`);
 
   const road = document.getElementById('road');
@@ -1740,7 +1904,7 @@ function gameSnacks(){
     <p class="message" id="smsg">Hold ⬅️ ➡️ — catch the snacks, dodge the trash!</p>
     <div class="actions">
       <button class="btn" id="sagain">Play again</button>
-      <button class="btn quiet" data-back>← Back to the carnival</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
     </div>`);
 
   const field = document.getElementById('snackField');
@@ -1910,14 +2074,14 @@ function initBirthday(){
   const canvas = document.getElementById('bdayConfetti');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  const stop = runConfetti(canvas, 6000);
+  const stop = runConfetti(canvas, 9000);
   function dismiss(){
     overlay.classList.add('hide');
     stop();
     setTimeout(()=>overlay.remove(), 550);
   }
   document.getElementById('bdayGo').addEventListener('click', dismiss);
-  setTimeout(dismiss, 6000);
+  setTimeout(dismiss, 12000);
 }
 
 /* ============ Grandma's Day — a birthday game for Berty ============ */
@@ -1934,7 +2098,7 @@ function gameGrandma(){
     <div class="gm-stage" id="gmStage"></div>
     <p class="message" id="gmMsg"></p>
     <div class="actions">
-      <button class="btn quiet" data-back>← Back to the carnival</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
     </div>`);
 
   const SCENES = [
@@ -2121,7 +2285,7 @@ function gameGrandma(){
 
 /* ============ Martin's Storybook ============ */
 function gameBook(){
-  benny("Martin's storybook! Write a bit, draw a bit, then flip the page.");
+  benny("Martin's storybook! Write a bit, draw or stick a bit, then flip the page.");
   openStage(`
     <div class="bar">
       <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><path d="M30 16 Q18 10 8 14 L8 44 Q18 40 30 46 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><path d="M30 16 Q42 10 52 14 L52 44 Q42 40 30 46 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><line x1="30" y1="16" x2="30" y2="46" stroke="#08313F" stroke-width="2"/></svg> Martin's Storybook</h2>
@@ -2129,26 +2293,48 @@ function gameBook(){
         <span class="chip" id="bookPageChip">Page 1 of 10</span>
       </div>
     </div>
-    <div class="tools2" id="pagesRow">
-      <button class="tool" id="pagesMinus" aria-label="fewer pages">➖</button>
-      <span class="chip" id="pagesCountChip">10 pages</span>
-      <button class="tool" id="pagesPlus" aria-label="more pages">➕</button>
+
+    <div id="bookEditor">
+      <div class="tools2" id="pagesRow">
+        <button class="tool" id="pagesMinus" aria-label="fewer pages">−</button>
+        <span class="chip" id="pagesCountChip">10 pages</span>
+        <button class="tool" id="pagesPlus" aria-label="more pages">+</button>
+      </div>
+      <textarea id="bookText" class="book-textarea" rows="3" placeholder="Write your words here..."></textarea>
+      <div class="paper" id="bookPaper" style="height:190px;margin-top:10px"><canvas id="bookCanvas"></canvas></div>
+      <div class="palette" id="bookPalette"></div>
+      <div class="palette" id="stickerPalette" style="display:none"></div>
+      <div class="tools2" id="bookToolbar">
+        <button class="tool on" data-tool="pencil"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><path d="M8 32 L26 14 L32 20 L14 38 L8 38 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="2"/><path d="M26 14 L30 10 L36 16 L32 20 Z" fill="#FFC93C" stroke="#08313F" stroke-width="2"/></svg> Pencil</button>
+        <button class="tool" data-tool="brush"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><path d="M10 30 L20 20 L26 26 L16 36 Z" fill="#4FB477" stroke="#08313F" stroke-width="2"/><path d="M20 20 L30 6 L34 10 L26 26 Z" fill="#8B5E34" stroke="#08313F" stroke-width="2"/></svg> Brush</button>
+        <button class="tool" data-tool="eraser"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><rect x="8" y="18" width="24" height="12" rx="3" fill="#FF8FB1" stroke="#08313F" stroke-width="2" transform="rotate(-20 20 24)"/></svg> Eraser</button>
+        <button class="tool" data-tool="sticker"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><path d="M20 6 L24 15 L34 15 L26 21 L29 31 L20 25 L11 31 L14 21 L6 15 L16 15 Z" fill="#FFC93C" stroke="#08313F" stroke-width="2" stroke-linejoin="round"/></svg> Stickers</button>
+      </div>
+      <p class="message" id="stickerHint" style="display:none">Pick a sticker, then tap the page to place it!</p>
+      <div class="actions">
+        <button class="btn quiet" id="bookPrev">◀ Prev page</button>
+        <button class="btn" id="bookNext">Next page ▶</button>
+        <button class="btn quiet" id="bookClearPage">Clear page</button>
+      </div>
+      <div class="actions">
+        <button class="btn" id="bookViewBtn">📖 See my storybook!</button>
+        <button class="btn quiet" data-back>← Back to the games</button>
+      </div>
     </div>
-    <textarea id="bookText" class="book-textarea" rows="3" placeholder="Write your words here..."></textarea>
-    <div class="paper" id="bookPaper" style="height:190px;margin-top:10px"><canvas id="bookCanvas"></canvas></div>
-    <div class="palette" id="bookPalette"></div>
-    <div class="tools2" id="bookToolbar">
-      <button class="tool on" data-tool="pencil">✏️ Pencil</button>
-      <button class="tool" data-tool="brush">🖌️ Brush</button>
-      <button class="tool" data-tool="eraser">🧽 Eraser</button>
-    </div>
-    <div class="actions">
-      <button class="btn quiet" id="bookPrev">◀ Prev page</button>
-      <button class="btn" id="bookNext">Next page ▶</button>
-      <button class="btn quiet" id="bookClearPage">🗑️ Clear page</button>
-    </div>
-    <div class="actions">
-      <button class="btn quiet" data-back>← Back to the carnival</button>
+
+    <div id="bookViewer" style="display:none">
+      <div class="story-page">
+        <span class="chip" id="viewerPageChip">Page 1 of 10</span>
+        <img id="viewerImg" class="story-page-img" alt="page drawing">
+        <p id="viewerText" class="story-page-text"></p>
+      </div>
+      <div class="actions">
+        <button class="btn quiet" id="viewerPrev">◀ Prev</button>
+        <button class="btn quiet" id="viewerNext">Next ▶</button>
+      </div>
+      <div class="actions">
+        <button class="btn" id="viewerClose">← Back to editing</button>
+      </div>
     </div>`);
 
   let TOTAL_PAGES = 10;
@@ -2156,8 +2342,22 @@ function gameBook(){
   const COLORS = ['#000000','#08313F','#FF3B30','#FF6B5B','#FF9F1C','#FFC93C','#FFF176','#4FB477','#2E8B57','#7FE3C6','#12718F','#4FC3F7','#1E3A8A','#9B5DE5','#C77DFF','#FF8FB1','#FF5D9E','#8B5E34','#808080','#FFFFFF'];
   const WIDTHS = {pencil:4, brush:16, eraser:26};
 
+  const STICKERS = {
+    benny:      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="22" r="14" fill="#4FB477" stroke="#08313F" stroke-width="2"/><circle cx="13" cy="14" r="6" fill="#4FB477" stroke="#08313F" stroke-width="2"/><circle cx="27" cy="14" r="6" fill="#4FB477" stroke="#08313F" stroke-width="2"/><circle cx="13" cy="14" r="2.5" fill="#FFF6E5"/><circle cx="27" cy="14" r="2.5" fill="#FFF6E5"/><circle cx="13" cy="14" r="1.2" fill="#08313F"/><circle cx="27" cy="14" r="1.2" fill="#08313F"/><path d="M12 26 Q20 34 28 26" stroke="#08313F" stroke-width="2" fill="none"/></svg>',
+    snowman:    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="28" r="9" fill="#FFFFFF" stroke="#08313F" stroke-width="2"/><circle cx="20" cy="14" r="6.5" fill="#FFFFFF" stroke="#08313F" stroke-width="2"/><circle cx="20" cy="28" r="1.3" fill="#08313F"/><circle cx="17" cy="12.5" r="1" fill="#08313F"/><circle cx="23" cy="12.5" r="1" fill="#08313F"/><path d="M20 14 L25 15.5 L20 17 Z" fill="#FF9F1C"/></svg>',
+    car:        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path d="M6 24 L9 15 Q10.5 12.5 14 12.5 L26 12.5 Q29.5 12.5 31 15 L34 24 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="2"/><rect x="6" y="23" width="28" height="5" rx="1.5" fill="#FF6B5B" stroke="#08313F" stroke-width="2"/><circle cx="12" cy="29" r="3.5" fill="#08313F"/><circle cx="28" cy="29" r="3.5" fill="#08313F"/><rect x="13" y="15" width="14" height="5" fill="#BFE6F2" stroke="#08313F" stroke-width="1.5"/></svg>',
+    cupcake:    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path d="M10 20 L30 20 L27 35 L13 35 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><path d="M7 20 Q20 5 33 20 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="2"/><circle cx="20" cy="8" r="2.6" fill="#FFC93C" stroke="#08313F" stroke-width="1.5"/></svg>',
+    basketball: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#FF9F1C" stroke="#08313F" stroke-width="2"/><path d="M20 6 V34 M6 20 H34 M10 10 Q20 20 10 30 M30 10 Q20 20 30 30" stroke="#08313F" stroke-width="1.5" fill="none"/></svg>',
+    book:       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path d="M20 12 Q12 8 6 10 L6 28 Q12 26 20 30 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><path d="M20 12 Q28 8 34 10 L34 28 Q28 26 20 30 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><line x1="20" y1="12" x2="20" y2="30" stroke="#08313F" stroke-width="1.5"/></svg>',
+    heart:      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path d="M20 33 C4 20 4 6 15 6 C19 6 20 10 20 10 C20 10 21 6 25 6 C36 6 36 20 20 33 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="2" stroke-linejoin="round"/></svg>',
+    star:       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path d="M20 4 L24 15 L36 15 L26 22 L30 34 L20 27 L10 34 L14 22 L4 15 L16 15 Z" fill="#FFC93C" stroke="#08313F" stroke-width="2" stroke-linejoin="round"/></svg>',
+    sun:        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><g stroke="#FF9F1C" stroke-width="3" stroke-linecap="round"><line x1="20" y1="2" x2="20" y2="8"/><line x1="20" y1="32" x2="20" y2="38"/><line x1="2" y1="20" x2="8" y2="20"/><line x1="32" y1="20" x2="38" y2="20"/><line x1="7" y1="7" x2="11" y2="11"/><line x1="29" y1="29" x2="33" y2="33"/><line x1="33" y1="7" x2="29" y2="11"/><line x1="11" y1="29" x2="7" y2="33"/></g><circle cx="20" cy="20" r="9" fill="#FFC93C" stroke="#08313F" stroke-width="2"/></svg>',
+    flower:     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="12" cy="14" r="6" fill="#FF8FB1" stroke="#08313F" stroke-width="1.5"/><circle cx="28" cy="14" r="6" fill="#FF8FB1" stroke="#08313F" stroke-width="1.5"/><circle cx="12" cy="26" r="6" fill="#FF8FB1" stroke="#08313F" stroke-width="1.5"/><circle cx="28" cy="26" r="6" fill="#FF8FB1" stroke="#08313F" stroke-width="1.5"/><circle cx="20" cy="20" r="6" fill="#FFC93C" stroke="#08313F" stroke-width="1.5"/></svg>'
+  };
+
   let pageIndex = 0;
   let color = COLORS[0], tool = 'pencil', drawing = false, lastX = 0, lastY = 0;
+  let currentSticker = 'benny';
   let pageTexts = new Array(TOTAL_PAGES).fill('');
   let pageImages = new Array(TOTAL_PAGES).fill(null);
 
@@ -2166,6 +2366,7 @@ function gameBook(){
   const canvas = document.getElementById('bookCanvas');
   const ctx = canvas.getContext('2d');
   const ratio = window.devicePixelRatio || 1;
+  const stickerHint = document.getElementById('stickerHint');
 
   function fillWhite(){
     ctx.save();
@@ -2251,11 +2452,26 @@ function gameBook(){
     color = s.dataset.color;
   }));
 
+  const stickerPaletteEl = document.getElementById('stickerPalette');
+  stickerPaletteEl.innerHTML = Object.entries(STICKERS).map(([key,svg],i)=>
+    `<button class="swatch${i===0?' on':''}" data-sticker="${key}" style="background:#DCEEF4">${svg}</button>`
+  ).join('');
+  const stickerBtns = [...document.querySelectorAll('#stickerPalette .swatch')];
+  stickerBtns.forEach(s=>s.addEventListener('click',()=>{
+    stickerBtns.forEach(x=>x.classList.remove('on'));
+    s.classList.add('on');
+    currentSticker = s.dataset.sticker;
+  }));
+
   const toolBtns = [...document.querySelectorAll('#bookToolbar .tool')];
   toolBtns.forEach(b=>b.addEventListener('click',()=>{
     toolBtns.forEach(x=>x.classList.remove('on'));
     b.classList.add('on');
     tool = b.dataset.tool;
+    const isSticker = tool === 'sticker';
+    stickerPaletteEl.style.display = isSticker ? 'flex' : 'none';
+    paletteEl.style.display = isSticker ? 'none' : 'flex';
+    stickerHint.style.display = isSticker ? 'block' : 'none';
   }));
 
   function pos(e){
@@ -2268,15 +2484,27 @@ function gameBook(){
     ctx.arc(p.x, p.y, WIDTHS[tool]/2, 0, Math.PI*2);
     ctx.fill();
   }
+  function placeSticker(p){
+    const svg = STICKERS[currentSticker];
+    const url = 'data:image/svg+xml;base64,' + btoa(svg);
+    const img = new Image();
+    const size = 44;
+    img.onload = ()=>{ ctx.drawImage(img, p.x - size/2, p.y - size/2, size, size); };
+    img.src = url;
+  }
   canvas.addEventListener('pointerdown', e=>{
     canvas.setPointerCapture(e.pointerId);
-    drawing = true;
     const p = pos(e);
+    if(tool === 'sticker'){
+      placeSticker(p);
+      return;
+    }
+    drawing = true;
     lastX = p.x; lastY = p.y;
     dot(p);
   });
   canvas.addEventListener('pointermove', e=>{
-    if(!drawing) return;
+    if(tool === 'sticker' || !drawing) return;
     const p = pos(e);
     ctx.beginPath();
     ctx.strokeStyle = tool==='eraser' ? '#FFFFFF' : color;
@@ -2307,6 +2535,46 @@ function gameBook(){
     pageTexts[pageIndex] = '';
     pageImages[pageIndex] = null;
     benny("Blank page — start fresh!");
+  });
+
+  /* ---- Book viewer: flip through the finished storybook ---- */
+  const bookEditor = document.getElementById('bookEditor');
+  const bookViewer = document.getElementById('bookViewer');
+  const viewerImg = document.getElementById('viewerImg');
+  const viewerText = document.getElementById('viewerText');
+  const viewerChip = document.getElementById('viewerPageChip');
+  let viewerIndex = 0;
+
+  function showViewerPage(){
+    viewerChip.textContent = 'Page ' + (viewerIndex+1) + ' of ' + TOTAL_PAGES;
+    if(pageImages[viewerIndex]){
+      viewerImg.src = pageImages[viewerIndex];
+      viewerImg.style.visibility = 'visible';
+    } else {
+      viewerImg.style.visibility = 'hidden';
+    }
+    viewerText.textContent = pageTexts[viewerIndex] || '';
+  }
+
+  document.getElementById('bookViewBtn').addEventListener('click', ()=>{
+    savePage(pageIndex);
+    viewerIndex = pageIndex;
+    bookEditor.style.display = 'none';
+    bookViewer.style.display = 'block';
+    showViewerPage();
+    benny("Here's your storybook — flip through it!");
+  });
+  document.getElementById('viewerPrev').addEventListener('click', ()=>{
+    viewerIndex = Math.max(0, viewerIndex - 1);
+    showViewerPage();
+  });
+  document.getElementById('viewerNext').addEventListener('click', ()=>{
+    viewerIndex = Math.min(TOTAL_PAGES - 1, viewerIndex + 1);
+    showViewerPage();
+  });
+  document.getElementById('viewerClose').addEventListener('click', ()=>{
+    bookViewer.style.display = 'none';
+    bookEditor.style.display = 'block';
   });
 }
 
@@ -2366,6 +2634,30 @@ function gameSnowman(){
           <path d="M196 210 L202 208 L196 213 Z" fill="#FF9F1C" stroke="#08313F" stroke-width="1.5"/>
           <circle cx="192" cy="208" r="1.2" fill="#08313F"/>
         </g>
+        <g id="pet-rabbit" style="display:none">
+          <ellipse cx="170" cy="222" rx="14" ry="11" fill="#FFFFFF" stroke="#08313F" stroke-width="3"/>
+          <circle cx="185" cy="212" r="8" fill="#FFFFFF" stroke="#08313F" stroke-width="3"/>
+          <path d="M180 206 L178 190 L185 205 Z" fill="#FFFFFF" stroke="#08313F" stroke-width="2"/>
+          <path d="M190 206 L195 190 L192 206 Z" fill="#FFFFFF" stroke="#08313F" stroke-width="2"/>
+          <circle cx="188" cy="210" r="1.3" fill="#08313F"/>
+          <circle cx="158" cy="224" r="3" fill="#FFFFFF" stroke="#08313F" stroke-width="2"/>
+        </g>
+        <g id="pet-penguin" style="display:none">
+          <ellipse cx="176" cy="218" rx="12" ry="16" fill="#08313F"/>
+          <ellipse cx="176" cy="222" rx="7" ry="11" fill="#FFFFFF"/>
+          <circle cx="176" cy="204" r="8" fill="#08313F"/>
+          <path d="M182 204 L192 206 L182 209 Z" fill="#FF9F1C"/>
+          <circle cx="179" cy="202" r="1.2" fill="#FFFFFF"/>
+        </g>
+        <g id="pet-fox" style="display:none">
+          <ellipse cx="170" cy="222" rx="15" ry="11" fill="#FF9F1C" stroke="#08313F" stroke-width="3"/>
+          <circle cx="188" cy="210" r="9" fill="#FF9F1C" stroke="#08313F" stroke-width="3"/>
+          <path d="M182 202 L179 190 L189 200 Z" fill="#FF9F1C" stroke="#08313F" stroke-width="2"/>
+          <path d="M194 202 L200 190 L192 200 Z" fill="#FF9F1C" stroke="#08313F" stroke-width="2"/>
+          <path d="M190 213 L197 213 L193 218 Z" fill="#FFFFFF"/>
+          <circle cx="191" cy="209" r="1.2" fill="#08313F"/>
+          <path d="M155 218 Q144 208 152 196 Q159 201 158 212 Z" fill="#FF9F1C" stroke="#08313F" stroke-width="2"/>
+        </g>
         <g id="pet-none" style="display:none"></g>
 
         <path d="M100 78 L118 84 L100 90 Z" fill="#FF9F1C" stroke="#08313F" stroke-width="1.5"/>
@@ -2420,16 +2712,34 @@ function gameSnowman(){
           <rect x="66" y="44" width="68" height="10" rx="4" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/>
           <circle cx="100" cy="6" r="8" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/>
         </g>
+        <g id="hat-wizard" style="display:none">
+          <path d="M70 50 L100 2 L130 50 Z" fill="#9B5DE5" stroke="#08313F" stroke-width="3" stroke-linejoin="round"/>
+          <rect x="66" y="44" width="68" height="8" rx="2" fill="#9B5DE5" stroke="#08313F" stroke-width="3"/>
+          <path d="M92 26 l3 7 l7 1 l-5 5 l1 7 l-6-3.5 l-6 3.5 l1-7 l-5-5 l7-1 Z" fill="#FFC93C"/>
+        </g>
+        <g id="hat-crown" style="display:none">
+          <path d="M68 48 L76 20 L92 36 L100 16 L108 36 L124 20 L132 48 Z" fill="#FFC93C" stroke="#08313F" stroke-width="3" stroke-linejoin="round"/>
+          <circle cx="76" cy="18" r="4" fill="#FF6B5B"/>
+          <circle cx="100" cy="14" r="4" fill="#FF6B5B"/>
+          <circle cx="124" cy="18" r="4" fill="#FF6B5B"/>
+        </g>
+        <g id="hat-cap" style="display:none">
+          <path d="M66 48 Q66 16 100 16 Q134 16 134 48 Z" fill="#12718F" stroke="#08313F" stroke-width="3"/>
+          <path d="M124 38 Q158 38 160 48 Q142 51 120 46 Z" fill="#12718F" stroke="#08313F" stroke-width="3"/>
+        </g>
         <g id="hat-none" style="display:none"></g>
       </svg>
     </div>
 
     <p class="hint" style="text-align:left;margin:14px 0 6px">Hat</p>
     <div class="tools2" id="hatBar">
-      <button class="tool on" data-cat="hat" data-val="top">🎩 Top Hat</button>
-      <button class="tool" data-cat="hat" data-val="beanie">🧶 Beanie</button>
-      <button class="tool" data-cat="hat" data-val="santa">🎅 Santa</button>
-      <button class="tool" data-cat="hat" data-val="none">🚫 No Hat</button>
+      <button class="tool on" data-cat="hat" data-val="top"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><rect x="10" y="20" width="20" height="4" rx="1" fill="#08313F"/><rect x="14" y="6" width="12" height="16" fill="#08313F"/><rect x="14" y="16" width="12" height="3" fill="#FF6B5B"/></svg> Top Hat</button>
+      <button class="tool" data-cat="hat" data-val="beanie"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><path d="M10 24 Q10 6 20 6 Q30 6 30 24 Z" fill="#4FB477" stroke="#08313F" stroke-width="2"/><rect x="10" y="18" width="20" height="6" fill="#FFC93C" stroke="#08313F" stroke-width="1.5"/><circle cx="20" cy="6" r="3" fill="#FFF6E5" stroke="#08313F" stroke-width="1.5"/></svg> Beanie</button>
+      <button class="tool" data-cat="hat" data-val="santa"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><path d="M8 24 L20 4 L32 24 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="2" stroke-linejoin="round"/><rect x="6" y="20" width="28" height="6" rx="2" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><circle cx="20" cy="4" r="3" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/></svg> Santa</button>
+      <button class="tool" data-cat="hat" data-val="wizard"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><path d="M8 24 L20 2 L32 24 Z" fill="#9B5DE5" stroke="#08313F" stroke-width="2" stroke-linejoin="round"/><rect x="6" y="20" width="28" height="5" rx="1" fill="#9B5DE5" stroke="#08313F" stroke-width="2"/><path d="M18 12 l1 3 l3 0.5 l-2.2 2 l0.5 3 l-2.8-1.5 l-2.8 1.5 l0.5-3 l-2.2-2 l3-0.5 Z" fill="#FFC93C"/></svg> Wizard</button>
+      <button class="tool" data-cat="hat" data-val="crown"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><path d="M6 26 L10 10 L18 18 L20 6 L22 18 L30 10 L34 26 Z" fill="#FFC93C" stroke="#08313F" stroke-width="2" stroke-linejoin="round"/></svg> Crown</button>
+      <button class="tool" data-cat="hat" data-val="cap"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><path d="M8 22 Q8 8 20 8 Q32 8 32 22 Z" fill="#12718F" stroke="#08313F" stroke-width="2"/><path d="M28 18 Q40 18 40 24 Q34 25 26 22 Z" fill="#12718F" stroke="#08313F" stroke-width="2"/></svg> Cap</button>
+      <button class="tool" data-cat="hat" data-val="none"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><circle cx="20" cy="20" r="14" fill="none" stroke="#08313F" stroke-width="4"/><line x1="10" y1="30" x2="30" y2="10" stroke="#FF6B5B" stroke-width="4" stroke-linecap="round"/></svg> No Hat</button>
     </div>
 
     <p class="hint" style="text-align:left;margin:14px 0 6px">Scarf</p>
@@ -2464,19 +2774,22 @@ function gameSnowman(){
       <button class="tool on" data-cat="pet" data-val="dog"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><circle cx="20" cy="22" r="10" fill="#FFF6E5" stroke="#08313F" stroke-width="2.5"/><path d="M12 14 L8 4 L16 10 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><path d="M28 14 L34 6 L30 14 Z" fill="#FFF6E5" stroke="#08313F" stroke-width="2"/><circle cx="17" cy="22" r="1.4" fill="#08313F"/><circle cx="23" cy="22" r="1.4" fill="#08313F"/></svg> Dog</button>
       <button class="tool" data-cat="pet" data-val="cat"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><circle cx="20" cy="22" r="10" fill="#3C3C3C" stroke="#08313F" stroke-width="2.5"/><path d="M12 14 L10 4 L18 12 Z" fill="#3C3C3C" stroke="#08313F" stroke-width="2"/><path d="M28 14 L30 4 L22 12 Z" fill="#3C3C3C" stroke="#08313F" stroke-width="2"/><circle cx="17" cy="22" r="1.4" fill="#FFC93C"/><circle cx="23" cy="22" r="1.4" fill="#FFC93C"/></svg> Cat</button>
       <button class="tool" data-cat="pet" data-val="bird"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><ellipse cx="18" cy="22" rx="10" ry="8" fill="#4FB477" stroke="#08313F" stroke-width="2.5"/><circle cx="30" cy="16" r="5" fill="#4FB477" stroke="#08313F" stroke-width="2.5"/><path d="M35 16 L40 15 L35 19 Z" fill="#FF9F1C"/></svg> Bird</button>
+      <button class="tool" data-cat="pet" data-val="rabbit"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><ellipse cx="18" cy="24" rx="9" ry="7" fill="#FFFFFF" stroke="#08313F" stroke-width="2.5"/><circle cx="28" cy="18" r="6" fill="#FFFFFF" stroke="#08313F" stroke-width="2.5"/><path d="M25 12 L23 2 L28 12 Z" fill="#FFFFFF" stroke="#08313F" stroke-width="1.5"/><path d="M31 12 L35 2 L33 12 Z" fill="#FFFFFF" stroke="#08313F" stroke-width="1.5"/><circle cx="30" cy="17" r="1" fill="#08313F"/></svg> Rabbit</button>
+      <button class="tool" data-cat="pet" data-val="penguin"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><ellipse cx="20" cy="22" rx="8" ry="11" fill="#08313F"/><ellipse cx="20" cy="24" rx="4.5" ry="7" fill="#FFFFFF"/><circle cx="20" cy="10" r="5.5" fill="#08313F"/><path d="M25 10 L32 12 L25 14 Z" fill="#FF9F1C"/></svg> Penguin</button>
+      <button class="tool" data-cat="pet" data-val="fox"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><ellipse cx="18" cy="24" rx="9" ry="7" fill="#FF9F1C" stroke="#08313F" stroke-width="2"/><circle cx="28" cy="16" r="6" fill="#FF9F1C" stroke="#08313F" stroke-width="2"/><path d="M25 10 L23 2 L29 8 Z" fill="#FF9F1C" stroke="#08313F" stroke-width="1.5"/><path d="M31 10 L35 2 L31 8 Z" fill="#FF9F1C" stroke="#08313F" stroke-width="1.5"/><circle cx="30" cy="15" r="1" fill="#08313F"/></svg> Fox</button>
       <button class="tool" data-cat="pet" data-val="none"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><circle cx="20" cy="20" r="14" fill="none" stroke="#08313F" stroke-width="4"/><line x1="10" y1="30" x2="30" y2="10" stroke="#FF6B5B" stroke-width="4" stroke-linecap="round"/></svg> None</button>
     </div>
 
     <div class="actions">
       <button class="btn" id="randomizeBtn">🎲 Surprise me</button>
-      <button class="btn quiet" data-back>← Back to the carnival</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
     </div>`);
 
-  const HAT_OPTS = ['top','beanie','santa','none'];
+  const HAT_OPTS = ['top','beanie','santa','wizard','crown','cap','none'];
   const ARM_OPTS = ['twig','wave','candy','none'];
   const EYES_OPTS = ['classic','wink','cool','sparkle'];
   const MOUTH_OPTS = ['classic','smile','surprised','grumpy'];
-  const PET_OPTS = ['dog','cat','bird','none'];
+  const PET_OPTS = ['dog','cat','bird','rabbit','penguin','fox','none'];
   const SCARF_COLORS = ['#FF6B5B','#FFC93C','#4FB477','#12718F','#9B5DE5','#FF8FB1','#08313F','#FFFFFF'];
 
   function setGroup(prefix, opts, val){
@@ -2550,6 +2863,673 @@ function gameSnowman(){
   });
 }
 
+/* ============ Tic-Tac-Toe with Jack ============ */
+function gameTicTacToe(){
+  benny("Jack challenges you to tic-tac-toe. You're X, he's O.");
+  openStage(`
+    <div class="bar">
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><line x1="20" y1="6" x2="20" y2="54" stroke="#08313F" stroke-width="4"/><line x1="40" y1="6" x2="40" y2="54" stroke="#08313F" stroke-width="4"/><line x1="6" y1="20" x2="54" y2="20" stroke="#08313F" stroke-width="4"/><line x1="6" y1="40" x2="54" y2="40" stroke="#08313F" stroke-width="4"/><line x1="10" y1="10" x2="16" y2="16" stroke="#FF6B5B" stroke-width="3" stroke-linecap="round"/><line x1="16" y1="10" x2="10" y2="16" stroke="#FF6B5B" stroke-width="3" stroke-linecap="round"/><circle cx="47" cy="47" r="5" fill="none" stroke="#12718F" stroke-width="3"/></svg> Tic-Tac-Toe with Jack</h2>
+      <div class="counters">
+        <span class="chip" id="tttScore">You 0 – 0 Jack</span>
+      </div>
+    </div>
+    <div class="ttt-board" id="tttBoard"></div>
+    <p class="message" id="tttMsg">Your turn — tap a square.</p>
+    <div class="actions">
+      <button class="btn" id="tttReset">New round</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
+    </div>`);
+
+  const boardEl = document.getElementById('tttBoard');
+  const msg = document.getElementById('tttMsg');
+  const scoreChip = document.getElementById('tttScore');
+  const X_SVG = '<svg viewBox="0 0 40 40"><line x1="8" y1="8" x2="32" y2="32" stroke="#FF6B5B" stroke-width="6" stroke-linecap="round"/><line x1="32" y1="8" x2="8" y2="32" stroke="#FF6B5B" stroke-width="6" stroke-linecap="round"/></svg>';
+  const O_SVG = '<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="none" stroke="#12718F" stroke-width="6"/></svg>';
+  const WINS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+  let board = Array(9).fill(null);
+  let youScore = 0, jackScore = 0, over = false;
+
+  function renderBoard(){
+    boardEl.innerHTML = '';
+    board.forEach((v,i)=>{
+      const cell = document.createElement('button');
+      cell.className = 'ttt-cell';
+      cell.dataset.i = i;
+      if(v === 'X') cell.innerHTML = X_SVG;
+      if(v === 'O') cell.innerHTML = O_SVG;
+      if(v || over) cell.disabled = true;
+      cell.addEventListener('click', ()=> playerMove(i));
+      boardEl.appendChild(cell);
+    });
+  }
+
+  function checkWinner(b){
+    for(const line of WINS){
+      const [a,b1,c] = line;
+      if(b[a] && b[a] === b[b1] && b[a] === b[c]) return { winner:b[a], line };
+    }
+    if(b.every(v=>v)) return { winner:'tie' };
+    return null;
+  }
+
+  function highlightWin(line){
+    line.forEach(i=>{ boardEl.children[i].classList.add('win'); });
+  }
+
+  function playerMove(i){
+    if(over || board[i]) return;
+    board[i] = 'X';
+    renderBoard();
+    tone(523.25, 100, 'triangle', 0.15);
+    const result = checkWinner(board);
+    if(result){ endRound(result); return; }
+    msg.textContent = "Jack's turn...";
+    setTimeout(jackMove, 500);
+  }
+
+  function pickJackMove(){
+    for(const line of WINS){
+      const vals = line.map(i=>board[i]);
+      if(vals.filter(v=>v==='O').length===2 && vals.includes(null)) return line[vals.indexOf(null)];
+    }
+    for(const line of WINS){
+      const vals = line.map(i=>board[i]);
+      if(vals.filter(v=>v==='X').length===2 && vals.includes(null)) return line[vals.indexOf(null)];
+    }
+    if(!board[4]) return 4;
+    const corners = [0,2,6,8].filter(i=>!board[i]);
+    if(corners.length) return corners[Math.floor(Math.random()*corners.length)];
+    const open = board.map((v,i)=>v?null:i).filter(v=>v!==null);
+    return open[Math.floor(Math.random()*open.length)];
+  }
+
+  function jackMove(){
+    if(over) return;
+    const i = pickJackMove();
+    board[i] = 'O';
+    renderBoard();
+    tone(392, 100, 'triangle', 0.15);
+    const result = checkWinner(board);
+    if(result){ endRound(result); return; }
+    msg.textContent = 'Your turn — tap a square.';
+  }
+
+  function endRound(result){
+    over = true;
+    if(result.winner === 'tie'){
+      msg.textContent = "It's a tie!";
+      benny("A tie! Nobody budges.");
+    } else if(result.winner === 'X'){
+      youScore++; scoreChip.textContent = 'You ' + youScore + ' – ' + jackScore + ' Jack';
+      highlightWin(result.line);
+      msg.textContent = 'You win this round!';
+      chime();
+      benny(youScore >= 3 ? "You beat Jack! He's impressed." : "Nice one! Round to you.");
+    } else {
+      jackScore++; scoreChip.textContent = 'You ' + youScore + ' – ' + jackScore + ' Jack';
+      highlightWin(result.line);
+      msg.textContent = 'Jack wins this round.';
+      benny(jackScore >= 3 ? "Jack takes the match! Good game." : "Jack got that one. Try again!");
+    }
+    renderBoard();
+  }
+
+  function newRound(){
+    board = Array(9).fill(null);
+    over = false;
+    msg.textContent = 'Your turn — tap a square.';
+    renderBoard();
+  }
+
+  document.getElementById('tttReset').addEventListener('click', ()=>{
+    if(youScore >= 3 || jackScore >= 3){
+      youScore = 0; jackScore = 0;
+      scoreChip.textContent = 'You 0 – 0 Jack';
+    }
+    newRound();
+  });
+
+  newRound();
+}
+
+/* ============ Elizabeth's Flipbook ============ */
+function gameAnimator(){
+  benny("Elizabeth's flipbook! Draw a few frames, then watch them come to life.");
+  openStage(`
+    <div class="bar">
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><rect x="8" y="14" width="44" height="32" rx="3" fill="#FFF6E5" stroke="#08313F" stroke-width="3"/><rect x="8" y="14" width="8" height="32" fill="#08313F"/><rect x="44" y="14" width="8" height="32" fill="#08313F"/><circle cx="12" cy="20" r="1.6" fill="#FFF6E5"/><circle cx="12" cy="30" r="1.6" fill="#FFF6E5"/><circle cx="12" cy="40" r="1.6" fill="#FFF6E5"/><circle cx="48" cy="20" r="1.6" fill="#FFF6E5"/><circle cx="48" cy="30" r="1.6" fill="#FFF6E5"/><circle cx="48" cy="40" r="1.6" fill="#FFF6E5"/><path d="M22 22 L34 30 L22 38 Z" fill="#FF6B5B"/></svg> Elizabeth's Flipbook</h2>
+      <div class="counters">
+        <span class="chip" id="animFrameChip">Frame 1 of 1</span>
+      </div>
+    </div>
+    <div class="paper" id="animPaper" style="height:200px"><canvas id="animCanvas"></canvas></div>
+    <div class="palette" id="animPalette"></div>
+    <div class="tools2" id="animToolbar">
+      <button class="tool on" data-tool="pencil"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><path d="M8 32 L26 14 L32 20 L14 38 L8 38 Z" fill="#FF6B5B" stroke="#08313F" stroke-width="2"/><path d="M26 14 L30 10 L36 16 L32 20 Z" fill="#FFC93C" stroke="#08313F" stroke-width="2"/></svg> Pencil</button>
+      <button class="tool" data-tool="brush"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><path d="M10 30 L20 20 L26 26 L16 36 Z" fill="#4FB477" stroke="#08313F" stroke-width="2"/><path d="M20 20 L30 6 L34 10 L26 26 Z" fill="#8B5E34" stroke="#08313F" stroke-width="2"/></svg> Brush</button>
+      <button class="tool" data-tool="eraser"><svg viewBox="0 0 40 40" width="16" height="16" style="vertical-align:-3px"><rect x="8" y="18" width="24" height="12" rx="3" fill="#FF8FB1" stroke="#08313F" stroke-width="2" transform="rotate(-20 20 24)"/></svg> Eraser</button>
+    </div>
+    <div class="actions">
+      <button class="btn quiet" id="animPrev">◀ Prev</button>
+      <button class="btn quiet" id="animNext">Next ▶</button>
+      <button class="btn quiet" id="animAddFrame">+ Add Frame</button>
+      <button class="btn quiet" id="animDeleteFrame">Delete Frame</button>
+    </div>
+    <div class="fps-row">
+      <button class="tool" id="fpsMinus" aria-label="slower">−</button>
+      <span class="chip" id="fpsChip">8 fps</span>
+      <button class="tool" id="fpsPlus" aria-label="faster">+</button>
+    </div>
+    <p class="message" id="animMsg"></p>
+    <div class="actions">
+      <button class="btn" id="animPlay">▶ Play</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
+    </div>`);
+
+  const COLORS = ['#000000','#08313F','#FF3B30','#FF6B5B','#FF9F1C','#FFC93C','#FFF176','#4FB477','#2E8B57','#7FE3C6','#12718F','#4FC3F7','#1E3A8A','#9B5DE5','#C77DFF','#FF8FB1','#FF5D9E','#8B5E34','#808080','#FFFFFF'];
+  const WIDTHS = {pencil:4, brush:16, eraser:26};
+  const MIN_FPS = 1, MAX_FPS = 35;
+
+  let frames = [null];
+  let frameIndex = 0;
+  let color = COLORS[0], tool = 'pencil', drawing = false, lastX = 0, lastY = 0;
+  let fps = 8;
+  let isPlaying = false, playTimer = null, playIndex = 0, playImgs = [];
+
+  const chip = document.getElementById('animFrameChip');
+  const fpsChip = document.getElementById('fpsChip');
+  const msg = document.getElementById('animMsg');
+  const canvas = document.getElementById('animCanvas');
+  const ctx = canvas.getContext('2d');
+  const ratio = window.devicePixelRatio || 1;
+  const playBtn = document.getElementById('animPlay');
+
+  function fillWhite(){
+    ctx.save();
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.restore();
+  }
+  function sizeCanvas(){
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * ratio;
+    canvas.height = rect.height * ratio;
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    fillWhite();
+  }
+  sizeCanvas();
+
+  function loadFrame(i){
+    fillWhite();
+    if(frames[i]){
+      const img = new Image();
+      img.onload = ()=>{ ctx.drawImage(img, 0, 0, canvas.width/ratio, canvas.height/ratio); };
+      img.src = frames[i];
+    }
+    chip.textContent = 'Frame ' + (i+1) + ' of ' + frames.length;
+  }
+  function saveFrame(i){ frames[i] = canvas.toDataURL(); }
+
+  function goToFrame(i){
+    if(isPlaying) return;
+    saveFrame(frameIndex);
+    frameIndex = Math.max(0, Math.min(frames.length - 1, i));
+    loadFrame(frameIndex);
+  }
+
+  function addFrame(){
+    if(isPlaying) return;
+    saveFrame(frameIndex);
+    frames.splice(frameIndex + 1, 0, null);
+    frameIndex++;
+    loadFrame(frameIndex);
+    benny('New frame added!');
+  }
+
+  function deleteFrame(){
+    if(isPlaying) return;
+    if(frames.length <= 1){
+      frames = [null];
+      frameIndex = 0;
+      loadFrame(0);
+      benny('That was the last frame — cleared it instead.');
+      return;
+    }
+    frames.splice(frameIndex, 1);
+    if(frameIndex >= frames.length) frameIndex = frames.length - 1;
+    loadFrame(frameIndex);
+  }
+
+  loadFrame(0);
+
+  const paletteEl = document.getElementById('animPalette');
+  paletteEl.innerHTML = COLORS.map((c,i)=>
+    `<button class="swatch${i===0?' on':''}" data-color="${c}" style="background:${c}" aria-label="colour"></button>`
+  ).join('');
+  const swatches = [...document.querySelectorAll('#animPalette .swatch')];
+  swatches.forEach(s=>s.addEventListener('click',()=>{
+    swatches.forEach(x=>x.classList.remove('on'));
+    s.classList.add('on');
+    color = s.dataset.color;
+  }));
+
+  const toolBtns = [...document.querySelectorAll('#animToolbar .tool')];
+  toolBtns.forEach(b=>b.addEventListener('click',()=>{
+    toolBtns.forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    tool = b.dataset.tool;
+  }));
+
+  function pos(e){
+    const rect = canvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+  function dot(p){
+    ctx.beginPath();
+    ctx.fillStyle = tool==='eraser' ? '#FFFFFF' : color;
+    ctx.arc(p.x, p.y, WIDTHS[tool]/2, 0, Math.PI*2);
+    ctx.fill();
+  }
+  canvas.addEventListener('pointerdown', e=>{
+    if(isPlaying) return;
+    canvas.setPointerCapture(e.pointerId);
+    drawing = true;
+    const p = pos(e);
+    lastX = p.x; lastY = p.y;
+    dot(p);
+  });
+  canvas.addEventListener('pointermove', e=>{
+    if(isPlaying || !drawing) return;
+    const p = pos(e);
+    ctx.beginPath();
+    ctx.strokeStyle = tool==='eraser' ? '#FFFFFF' : color;
+    ctx.lineWidth = WIDTHS[tool];
+    ctx.moveTo(lastX,lastY);
+    ctx.lineTo(p.x,p.y);
+    ctx.stroke();
+    lastX = p.x; lastY = p.y;
+  });
+  ['pointerup','pointercancel','pointerleave'].forEach(evt=>
+    canvas.addEventListener(evt, ()=>{ drawing = false; }));
+
+  document.getElementById('animPrev').addEventListener('click', ()=> goToFrame(frameIndex - 1));
+  document.getElementById('animNext').addEventListener('click', ()=> goToFrame(frameIndex + 1));
+  document.getElementById('animAddFrame').addEventListener('click', addFrame);
+  document.getElementById('animDeleteFrame').addEventListener('click', deleteFrame);
+
+  function setFps(n){
+    fps = Math.max(MIN_FPS, Math.min(MAX_FPS, n));
+    fpsChip.textContent = fps + ' fps';
+    if(isPlaying){
+      clearInterval(playTimer);
+      playTimer = setInterval(tick, 1000 / fps);
+    }
+  }
+  document.getElementById('fpsMinus').addEventListener('click', ()=> setFps(fps - 1));
+  document.getElementById('fpsPlus').addEventListener('click', ()=> setFps(fps + 1));
+
+  function tick(){
+    fillWhite();
+    const src = frames[playIndex];
+    const img = playImgs[playIndex];
+    if(src && img && img.complete){
+      ctx.drawImage(img, 0, 0, canvas.width/ratio, canvas.height/ratio);
+    }
+    chip.textContent = 'Frame ' + (playIndex+1) + ' of ' + frames.length;
+    playIndex = (playIndex + 1) % frames.length;
+  }
+
+  function setControlsEnabled(enabled){
+    ['animPrev','animNext','animAddFrame','animDeleteFrame','fpsMinus','fpsPlus'].forEach(id=>{
+      document.getElementById(id).disabled = !enabled;
+    });
+    toolBtns.forEach(b=> b.disabled = !enabled);
+    swatches.forEach(s=> s.disabled = !enabled);
+  }
+
+  function playAnimation(){
+    if(frames.length < 2){
+      benny('Add a few more frames first, then hit play!');
+      msg.textContent = 'Add at least 2 frames to see it move.';
+      return;
+    }
+    saveFrame(frameIndex);
+    isPlaying = true;
+    msg.textContent = '';
+    playBtn.textContent = '⏸ Stop';
+    setControlsEnabled(false);
+    playImgs = frames.map(src=>{
+      if(!src) return null;
+      const img = new Image();
+      img.src = src;
+      return img;
+    });
+    playIndex = 0;
+    tick();
+    playTimer = setInterval(tick, 1000 / fps);
+  }
+
+  function stopAnimation(){
+    clearInterval(playTimer); playTimer = null;
+    isPlaying = false;
+    playBtn.textContent = '▶ Play';
+    setControlsEnabled(true);
+    loadFrame(frameIndex);
+  }
+
+  playBtn.addEventListener('click', ()=>{
+    if(isPlaying) stopAnimation(); else playAnimation();
+  });
+}
+
+/* ============ Basketball with Coach ============ */
+function gameBasketball(){
+  benny("Coach is running the drills today. 30 hoops — time your shot power!");
+  openStage(`
+    <div class="bar">
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><circle cx="30" cy="30" r="20" fill="#FF9F1C" stroke="#08313F" stroke-width="3"/><path d="M30 10 V50 M10 30 H50 M14 16 Q30 30 14 44 M46 16 Q30 30 46 44" stroke="#08313F" stroke-width="2" fill="none"/></svg> Basketball with Coach</h2>
+      <div class="counters">
+        <span class="chip" id="bbLevel">Level 1 of 30</span>
+      </div>
+    </div>
+    <div class="bb-court" id="bbCourt">
+      <div class="bb-hoop" id="bbHoop"><svg viewBox="0 0 80 70"><rect x="10" y="4" width="40" height="30" fill="#FFFFFF" stroke="#08313F" stroke-width="3"/><rect x="18" y="20" width="24" height="14" fill="none" stroke="#FF6B5B" stroke-width="2"/><ellipse cx="30" cy="36" rx="16" ry="4" fill="none" stroke="#FF6B5B" stroke-width="3"/><path d="M16 38 L20 54 M24 38 L26 56 M30 38 L30 58 M36 38 L34 56 M44 38 L40 54" stroke="#08313F" stroke-width="1.5" fill="none"/></svg></div>
+      <div class="bb-ball" id="bbBall"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#FF9F1C" stroke="#08313F" stroke-width="2"/><path d="M20 2 V38 M2 20 H38 M6 8 Q20 20 6 32 M34 8 Q20 20 34 32" stroke="#08313F" stroke-width="1.5" fill="none"/></svg></div>
+    </div>
+    <div class="bb-power-track">
+      <div class="bb-power-zone" id="bbZone"></div>
+      <div class="bb-power-marker" id="bbMarker"></div>
+    </div>
+    <p class="message" id="bbMsg">Tap Shoot when the marker's in the green!</p>
+    <div class="actions">
+      <button class="btn" id="bbShoot">Shoot!</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
+    </div>`);
+
+  const TOTAL_LEVELS = 30;
+  const court = document.getElementById('bbCourt');
+  const hoopEl = document.getElementById('bbHoop');
+  const ballEl = document.getElementById('bbBall');
+  const zoneEl = document.getElementById('bbZone');
+  const markerEl = document.getElementById('bbMarker');
+  const levelChip = document.getElementById('bbLevel');
+  const msg = document.getElementById('bbMsg');
+  const shootBtn = document.getElementById('bbShoot');
+
+  let level = 1;
+  let meterValue = 0, meterDir = 1, meterTimer = null;
+  let target = 0, tolerance = 12;
+  let animating = false, finished = false;
+  const BALL_START_X_PCT = 14, BALL_START_Y_PCT = 88;
+  const HOOP_Y_PCT = 20;
+
+  function levelSettings(lv){
+    const hoopXPct = 45 + (lv - 1) * (40 / (TOTAL_LEVELS - 1));
+    const tol = Math.max(2.5, 13 - (lv - 1) * 0.35);
+    return { hoopXPct, target: hoopXPct, tolerance: tol };
+  }
+
+  function layoutHoop(){
+    const s = levelSettings(level);
+    target = s.target;
+    tolerance = s.tolerance;
+    hoopEl.style.left = s.hoopXPct + '%';
+    hoopEl.style.top = HOOP_Y_PCT + '%';
+    zoneEl.style.left = Math.max(0, target - tolerance) + '%';
+    zoneEl.style.width = (tolerance * 2) + '%';
+    levelChip.textContent = 'Level ' + level + ' of ' + TOTAL_LEVELS;
+  }
+
+  function resetBall(){
+    ballEl.style.left = BALL_START_X_PCT + '%';
+    ballEl.style.top = BALL_START_Y_PCT + '%';
+  }
+
+  function startMeter(){
+    clearInterval(meterTimer);
+    meterValue = 0; meterDir = 1;
+    const speed = 2.0 + (level - 1) * 0.15;
+    meterTimer = setInterval(()=>{
+      meterValue += meterDir * speed;
+      if(meterValue >= 100){ meterValue = 100; meterDir = -1; }
+      if(meterValue <= 0){ meterValue = 0; meterDir = 1; }
+      markerEl.style.left = meterValue + '%';
+    }, 16);
+  }
+  function stopMeter(){ clearInterval(meterTimer); meterTimer = null; }
+
+  function pctToPx(xPct, yPct){
+    const rect = court.getBoundingClientRect();
+    return { x: rect.width * xPct / 100, y: rect.height * yPct / 100 };
+  }
+
+  function animateBall(endXPct, endYPct, onDone){
+    const start = pctToPx(BALL_START_X_PCT, BALL_START_Y_PCT);
+    const end = pctToPx(endXPct, endYPct);
+    const rect = court.getBoundingClientRect();
+    const t0 = performance.now();
+    const duration = 650;
+    const arcHeight = rect.height * 0.55;
+    function frame(now){
+      const t = Math.min(1, (now - t0) / duration);
+      const x = start.x + (end.x - start.x) * t;
+      const baseY = start.y + (end.y - start.y) * t;
+      const arc = -4 * arcHeight * t * (1 - t);
+      ballEl.style.left = (x / rect.width * 100) + '%';
+      ballEl.style.top = ((baseY + arc) / rect.height * 100) + '%';
+      if(t < 1){ requestAnimationFrame(frame); } else { onDone(); }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function shoot(){
+    if(animating) return;
+    animating = true;
+    stopMeter();
+    shootBtn.disabled = true;
+    const locked = meterValue;
+    const hit = Math.abs(locked - target) <= tolerance;
+    const s = levelSettings(level);
+    animateBall(s.hoopXPct, HOOP_Y_PCT + 4, ()=>{
+      if(hit){
+        tone(659.25, 160, 'triangle', 0.2);
+        if(level >= TOTAL_LEVELS){
+          finishGame();
+        } else {
+          msg.textContent = 'Swish! Level ' + level + ' complete!';
+          benny(level % 5 === 0 ? "Great shooting! Keep it up." : "Nice shot!");
+          level++;
+          setTimeout(()=>{
+            layoutHoop();
+            resetBall();
+            msg.textContent = "Tap Shoot when the marker's in the green!";
+            startMeter();
+            shootBtn.disabled = false;
+            animating = false;
+          }, 900);
+        }
+      } else {
+        buzzer();
+        msg.textContent = 'Off the rim — try again!';
+        benny("So close! Give it another go.");
+        setTimeout(()=>{
+          resetBall();
+          startMeter();
+          shootBtn.disabled = false;
+          animating = false;
+        }, 800);
+      }
+    });
+  }
+
+  function finishGame(){
+    finished = true;
+    msg.textContent = "You cleared all 30 levels! Coach is proud.";
+    benny("All 30 levels! You're a natural.");
+    chime();
+    const cv = document.createElement('canvas');
+    cv.style.position = 'absolute'; cv.style.inset = '0'; cv.style.width = '100%'; cv.style.height = '100%';
+    court.appendChild(cv);
+    const rect = court.getBoundingClientRect();
+    cv.width = rect.width; cv.height = rect.height;
+    runConfetti(cv, 4000);
+    shootBtn.textContent = 'Play again';
+    shootBtn.disabled = false;
+    animating = false;
+  }
+
+  function resetGame(){
+    const cv = court.querySelector('canvas');
+    if(cv) cv.remove();
+    finished = false;
+    shootBtn.textContent = 'Shoot!';
+    level = 1;
+    layoutHoop();
+    resetBall();
+    msg.textContent = "Tap Shoot when the marker's in the green!";
+    startMeter();
+    shootBtn.disabled = false;
+    animating = false;
+  }
+
+  shootBtn.addEventListener('click', ()=>{
+    if(finished){ resetGame(); return; }
+    shoot();
+  });
+
+  layoutHoop();
+  resetBall();
+  startMeter();
+}
+
+/* ============ Math with Bob ============ */
+const MATH_QUESTIONS = [
+  { q:'Benny ate 7 flies for breakfast and 5 more for a snack. How many flies did he eat?', options:[10,12,14,9], right:1 },
+  { q:'Grandpa left 4 socks in the living room and 6 in the backyard. How many socks is Grandma tripping over?', options:[8,10,12,9], right:1 },
+  { q:'Sam lost 3 rounds of rock-paper-scissors, then insisted on 2 more and lost those too. How many rounds did he lose?', options:[4,5,6,3], right:1 },
+  { q:'Jenny used 6 crayons on Monday and 9 on Tuesday. How many crayons has she gone through?', options:[13,15,17,14], right:1 },
+  { q:'The snowman has 3 buttons, and Martin added 2 more just because. How many buttons now?', options:[4,5,6,7], right:1 },
+  { q:'Frank has 4 guitar strings that need tuning, times 3 songs. How many total tunings?', options:[10,12,14,16], right:1 },
+  { q:"Señor's car game has 8 cars in each wave, for 3 waves. How many cars total?", options:[22,24,26,20], right:1 },
+  { q:'Coach set up 5 basketball hoops, then knocked over 2 by accident. How many hoops are left standing?', options:[2,3,4,5], right:1 },
+  { q:'Berty waters 9 plants every morning and 3 more every evening. How many plants get watered in a day?', options:[11,12,13,10], right:1 },
+  { q:"Elizabeth's recipe needs 8 strawberries, but Sam secretly ate 3. How many are left for baking?", options:[4,5,6,3], right:1 },
+  { q:'Jack translated 6 animal sounds this morning and 7 more this afternoon. How many did he translate?', options:[12,13,14,11], right:1 },
+  { q:'The pond has 20 lily pads, and a duck family claimed half of them. How many lily pads did the ducks take?', options:[8,10,12,15], right:1 },
+  { q:"Benny's basket caught 14 snacks, but 5 turned out to be trash. How many real snacks did he keep?", options:[8,9,10,7], right:1 },
+  { q:'Martin drew 3 frames every minute for 4 minutes straight. How many frames did he draw?', options:[10,12,14,16], right:1 },
+  { q:"Grandpa's messy trail had 2 socks, 3 newspapers, and 4 boots. How many things did Grandma clean up?", options:[8,9,10,7], right:1 },
+  { q:'Olivia built 5 mini-games on Monday and twice as many on Tuesday. How many did she build Tuesday?', options:[8,10,12,15], right:1 }
+];
+
+function gameMath(){
+  benny("Bob's here to make math fun — or at least less boring. Let's go!");
+  openStage(`
+    <div class="bar">
+      <h2 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 60 60" width="24" height="24"><rect x="8" y="10" width="44" height="30" rx="3" fill="#2E8B57" stroke="#08313F" stroke-width="3"/><line x1="16" y1="25" x2="26" y2="25" stroke="#FFF6E5" stroke-width="3"/><line x1="21" y1="20" x2="21" y2="30" stroke="#FFF6E5" stroke-width="3"/><line x1="34" y1="22" x2="44" y2="22" stroke="#FFF6E5" stroke-width="3"/><line x1="34" y1="28" x2="44" y2="28" stroke="#FFF6E5" stroke-width="3"/><rect x="8" y="44" width="44" height="6" fill="#8B5E34" stroke="#08313F" stroke-width="2"/></svg> Math with Bob</h2>
+      <div class="counters">
+        <span class="chip" id="mathScore">Correct: 0</span>
+        <span class="chip" id="mathRound">1 of 8</span>
+      </div>
+    </div>
+    <div class="critter" id="mathIcon"><svg viewBox="0 0 60 60"><circle cx="30" cy="28" r="20" fill="#F5C99B" stroke="#08313F" stroke-width="3"/><rect x="14" y="20" width="12" height="8" rx="2" fill="none" stroke="#08313F" stroke-width="2"/><rect x="34" y="20" width="12" height="8" rx="2" fill="none" stroke="#08313F" stroke-width="2"/><line x1="26" y1="24" x2="34" y2="24" stroke="#08313F" stroke-width="2"/><path d="M20 36 Q30 44 40 36" stroke="#08313F" stroke-width="2" fill="none"/><path d="M10 50 Q30 40 50 50 L50 58 L10 58 Z" fill="#12718F" stroke="#08313F" stroke-width="3"/><rect x="26" y="46" width="8" height="6" fill="#FF6B5B" stroke="#08313F" stroke-width="2"/></svg></div>
+    <p class="speech" id="mathQuestion"></p>
+    <div class="answers" id="mathAnswers"></div>
+    <p class="message" id="mathMsg"></p>
+    <div class="actions">
+      <button class="btn" id="mathAgain">New round</button>
+      <button class="btn quiet" data-back>← Back to the games</button>
+    </div>`);
+
+  const elQuestion = document.getElementById('mathQuestion');
+  const elAnswers = document.getElementById('mathAnswers');
+  const elScore = document.getElementById('mathScore');
+  const elRound = document.getElementById('mathRound');
+  const elMsg = document.getElementById('mathMsg');
+
+  const CORRECT_LINES = [
+    "Yes! You're a math-nificent genius!",
+    "Correct! That's some serious brain power!",
+    'Boom! Nailed it like a true numbers ninja!',
+    "Yes! I'm so proud, I might just do a happy dance. I will not be doing that."
+  ];
+  const WRONG_LINES = [
+    'Not quite! But hey, math is hard, unlike my jokes, which are terrible on purpose.',
+    'Ooh, so close! Actually — no, not close at all.',
+    'Nice try! Don\'t worry, I once forgot how to count to 10.',
+    'Close-ish! Well, not really. But nice try!'
+  ];
+
+  let deck = [], index = 0, correct = 0;
+  const TOTAL = 8;
+
+  function shuffle(a){ return a.slice().sort(()=>Math.random()-0.5); }
+
+  function newGame(){
+    deck = shuffle(MATH_QUESTIONS).slice(0, TOTAL);
+    index = 0; correct = 0;
+    elScore.textContent = 'Correct: 0';
+    elMsg.textContent = '';
+    showQuestion();
+  }
+
+  function showQuestion(){
+    const q = deck[index];
+    elRound.textContent = (index+1) + ' of ' + TOTAL;
+    elQuestion.textContent = q.q;
+    elMsg.textContent = '';
+    elAnswers.innerHTML = '';
+    q.options.forEach((opt,i)=>{
+      const b = document.createElement('button');
+      b.className = 'answer';
+      b.textContent = opt;
+      b.addEventListener('click', ()=> choose(b, i, q));
+      elAnswers.appendChild(b);
+    });
+  }
+
+  function choose(button, i, q){
+    const all = [...elAnswers.querySelectorAll('.answer')];
+    all.forEach(b=>b.disabled = true);
+    all[q.right].classList.add('right');
+
+    if(i === q.right){
+      correct++;
+      elScore.textContent = 'Correct: ' + correct;
+      elMsg.textContent = 'Correct!';
+      benny(CORRECT_LINES[Math.floor(Math.random()*CORRECT_LINES.length)]);
+      tone(659.25, 140, 'triangle', 0.18);
+    } else {
+      button.classList.add('wrong');
+      elMsg.textContent = 'The answer was ' + q.options[q.right] + '.';
+      benny(WRONG_LINES[Math.floor(Math.random()*WRONG_LINES.length)]);
+      buzzer();
+    }
+
+    index++;
+    setTimeout(()=>{
+      if(index < TOTAL){ showQuestion(); }
+      else {
+        elQuestion.textContent = '';
+        elAnswers.innerHTML = '';
+        let final;
+        if(correct === TOTAL) final = "Perfect score! You might be smarter than me, and I have a degree!";
+        else if(correct >= TOTAL * 0.6) final = "Solid work! You'd pass my class with flying colors.";
+        else final = "Hey, not bad! Math takes practice — and terrible puns, which I've got plenty of.";
+        elMsg.textContent = 'You got ' + correct + ' out of ' + TOTAL + '. ' + final;
+        benny(final);
+      }
+    }, 1700);
+  }
+
+  document.getElementById('mathAgain').addEventListener('click', newGame);
+  newGame();
+}
+
 /* Settings panel: music, voice, background, language */
 function setMusic(on){
   musicOn = on;
@@ -2590,10 +3570,36 @@ document.getElementById('settingsBtn').addEventListener('click', ()=>{ settingsO
 document.getElementById('settingsClose').addEventListener('click', ()=>{ settingsOverlay.style.display = 'none'; });
 
 /* Browsers block sound until the page is tapped once. This is that tap. */
+/* "Happy Birthday to You" — a public-domain tune. This is the accurate melody
+   (including the octave leap and the flatted note), played as piano with a
+   soft guitar pluck underneath for a fuller sound. */
+const HAPPY_BIRTHDAY_NOTES = ['C','C','D','C','F','E','C','C','D','C','G','F','C','C','C5','A','F','E','D','Bb','Bb','A','F','G','F'];
+const HAPPY_BIRTHDAY_FREQ = {C:261.63, D:293.66, E:329.63, F:349.23, G:392.00, A:440.00, B:493.88, C5:523.25, Bb:466.16};
+const HAPPY_BIRTHDAY_DURATIONS = [280,220,460,460,460,820, 280,220,460,460,460,820, 280,220,460,460,460,460,820, 280,220,460,460,460,820];
+/* Simplified, single-octave version for Berty's teachable piano (practice mode
+   can only check notes that exist as real keys on that one-octave keyboard). */
+const HAPPY_BIRTHDAY_NOTES_PIANO = ['C','C','D','C','F','E','C','C','D','C','G','F','C','C','C','A','F','E','D','B','B','A','F','G','F'];
+function happyBirthdayDurationTotal(){
+  return HAPPY_BIRTHDAY_DURATIONS.reduce((a,b)=>a+b, 0);
+}
+function playHappyBirthdayTune(){
+  let t = 0;
+  HAPPY_BIRTHDAY_NOTES.forEach((n,i)=>{
+    const d = HAPPY_BIRTHDAY_DURATIONS[i];
+    const freq = HAPPY_BIRTHDAY_FREQ[n];
+    setTimeout(()=>{
+      tone(freq, d * 0.85, 'sine', 0.3);
+      tone(freq / 2, d * 0.9, 'triangle', 0.16);
+    }, t);
+    t += d;
+  });
+}
+
 function unlockAudio(){
   audioCtx();
   if(onHub && musicOn) startMusic();
-  benny(UI[lang].greeting);
+  playHappyBirthdayTune();
+  setTimeout(()=> benny(UI[lang].greeting), happyBirthdayDurationTotal() + 300);
   document.removeEventListener('click', unlockAudio);
   document.removeEventListener('keydown', unlockAudio);
 }
