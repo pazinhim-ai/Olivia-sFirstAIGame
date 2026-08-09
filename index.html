@@ -1752,6 +1752,7 @@ function gameGrandma(){
     sceneChip.textContent = 'Scene ' + (sceneIndex+1) + ' of ' + SCENES.length;
     msg.textContent = '';
     tapped = 0;
+    benny(scene.instruction);
     for(let i=0;i<scene.count;i++){
       const el = document.createElement('button');
       el.className = 'gm-item';
@@ -1775,6 +1776,7 @@ function gameGrandma(){
     sceneChip.textContent = 'Scene ' + (sceneIndex+1) + ' of ' + SCENES.length;
     msg.textContent = '';
     tapped = 0;
+    benny(scene.instruction);
 
     const TOTAL = 10, INDOOR = 5;
     const grandpa = document.getElementById('gmGrandpa');
@@ -1806,6 +1808,7 @@ function gameGrandma(){
       if(tapped === INDOOR && !movedOutside){
         movedOutside = true;
         caption.textContent = "He's headed for the backyard!";
+        benny("He's headed for the backyard!");
         setTimeout(()=>{
           if(document.body.contains(stageEl)) stageEl.className = 'gm-stage scene-backyard';
         }, 500);
