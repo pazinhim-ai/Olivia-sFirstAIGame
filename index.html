@@ -1297,10 +1297,83 @@ function gameFrank(){
   const stageArea = document.getElementById('instrumentStage');
 
   const STRING_SETS = {
-    guitar: { open:[220.00,261.63,293.66,329.63,392.00,440.00], labels:['A','C','D','E','G','A'], color:'#8B5E34', waveType:'triangle' },
-    violin: { open:[196.00,293.66,440.00,659.25], labels:['G','D','A','E'], color:'#5A3A22', waveType:'sawtooth' }
+    guitar: { open:[220.00,261.63,293.66,329.63,392.00,440.00], labels:['A','C','D','E','G','A'], color:'#8B5E34' },
+    violin: { open:[196.00,293.66,440.00,659.25], labels:['G','D','A','E'], color:'#5A3A22' }
   };
   const FRET_COUNT = 6;
+
+  /* Karplus-Strong plucked string — sounds like a real plucked guitar string,
+     built from a decaying noise-fed delay loop rather than a plain tone. */
+  function playPluck(freq, duration, vol){
+    const c = audioCtx(); if(!c) return;
+    const sr = c.sampleRate;
+    const totalSamples = Math.max(1, Math.floor(sr * duration));
+    const N = Math.max(2, Math.round(sr / freq));
+    const ring = new Float32Array(N);
+    for(let i=0;i<N;i++) ring[i] = Math.random()*2 - 1;
+    const buffer = c.createBuffer(1, totalSamples, sr);
+    const data = buffer.getChannelData(0);
+    let idx = 0;
+    const decay = 0.994;
+    for(let i=0;i<totalSamples;i++){
+      const a = ring[idx];
+      const b = ring[(idx+1) % N];
+      data[i] = a;
+      ring[idx] = decay * 0.5 * (a + b);
+      idx = (idx + 1) % N;
+    }
+    const fadeSamples = Math.min(800, totalSamples);
+    for(let i=0;i<fadeSamples;i++){
+      const k = i / fadeSamples;
+      data[totalSamples - fadeSamples + i] *= (1 - k);
+    }
+    const src = c.createBufferSource();
+    src.buffer = buffer;
+    const gain = c.createGain();
+    gain.gain.value = vol;
+    src.connect(gain); gain.connect(c.destination);
+    src.start();
+  }
+
+  /* Bowed string — layered harmonics with a soft attack and gentle vibrato,
+     closer to a real violin than a single oscillator. */
+  function playBowed(freq, duration, vol){
+    const c = audioCtx(); if(!c) return;
+    const now = c.currentTime;
+    const master = c.createGain();
+    master.gain.setValueAtTime(0.0001, now);
+    master.gain.exponentialRampToValueAtTime(vol, now + 0.09);
+    master.gain.setValueAtTime(vol, now + duration * 0.6);
+    master.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    master.connect(c.destination);
+
+    const vibrato = c.createOscillator();
+    vibrato.frequency.value = 5.5;
+    const vibratoGain = c.createGain();
+    vibratoGain.gain.value = freq * 0.008;
+    vibrato.connect(vibratoGain);
+    vibrato.start(now);
+    vibrato.stop(now + duration + 0.05);
+
+    const harmonics = [
+      { mult:1, gain:0.5, type:'sawtooth' },
+      { mult:2, gain:0.22, type:'sine' },
+      { mult:3, gain:0.12, type:'sine' },
+      { mult:4, gain:0.06, type:'sine' }
+    ];
+    harmonics.forEach(h=>{
+      const o = c.createOscillator();
+      o.type = h.type;
+      o.frequency.value = freq * h.mult;
+      const g = c.createGain();
+      g.gain.value = h.gain;
+      vibratoGain.connect(o.frequency);
+      o.connect(g);
+      g.connect(master);
+      o.start(now);
+      o.stop(now + duration + 0.05);
+    });
+  }
 
   function renderStrings(key){
     const set = STRING_SETS[key];
@@ -1318,7 +1391,8 @@ function gameFrank(){
     cells.forEach(c=>c.addEventListener('click', ()=>{
       const si = +c.dataset.string, f = +c.dataset.fret;
       const freq = set.open[si] * Math.pow(2, f/12);
-      tone(freq, 380, set.waveType, 0.18);
+      if(key === 'guitar') playPluck(freq, 1.3, 0.5);
+      else playBowed(freq, 1.0, 0.16);
       c.style.transform = 'scale(0.9)';
       setTimeout(()=>{ c.style.transform=''; }, 120);
     }));
@@ -1965,7 +2039,7 @@ function gameGrandma(){
         caption.textContent = scene.instruction;
         msg.textContent = "Tidied up. Grandpa owes her one!";
         benny("Tidied up. Grandpa owes her one!");
-        setTimeout(nextScene, 1300);
+        setTimeout(nextScene, 2500);
       }
     }
 
@@ -1995,7 +2069,7 @@ function gameGrandma(){
     if(tapped >= scene.count){
       msg.textContent = scene.complete;
       benny(scene.complete);
-      setTimeout(nextScene, 1300);
+      setTimeout(nextScene, 2500);
     }
   }
 
